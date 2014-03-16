@@ -221,6 +221,7 @@ public class NewJFrame extends javax.swing.JFrame {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
         String[] lines = parseAsm();
+        //Hello
         System.out.println("lines.length "+lines.length );
         if(lines[0].length() > 0)
             new EmulatorFrame(lines,lines).setVisible(true);
