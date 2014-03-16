@@ -28,19 +28,10 @@ public class EmulatorFrame extends javax.swing.JFrame {
         jList1 = new javax.swing.JList(list1Content);
         jScrollPane2.setViewportView(jList1);
         jList2 = new javax.swing.JList(list2Content);
+        jList2.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jScrollPane3.setViewportView(jList2);
         
         jList1.setCellRenderer(new DefaultListCellRenderer() {
-
-            @Override
-            public Component getListCellRendererComponent(JList list, Object value, int index,
-                    boolean isSelected, boolean cellHasFocus) {
-                super.getListCellRendererComponent(list, value, index, false, false);
-
-                return this;
-            }
-        });
-        jList2.setCellRenderer(new DefaultListCellRenderer() {
 
             @Override
             public Component getListCellRendererComponent(JList list, Object value, int index,
@@ -343,6 +334,7 @@ public class EmulatorFrame extends javax.swing.JFrame {
 
         jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder("Assembly"));
 
+        jList2.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jList2.setEnabled(false);
         jScrollPane3.setViewportView(jList2);
 
