@@ -11,5 +11,7 @@ package emulator8086;
  * @author PRowLeR
  */
 public enum DegiskenTur {
-    REGISTER, ATTRIBUTE, VALUE
+    REGISTER, //AX,BX gibi Register
+    ATTRIBUTE, //DB DW türlerinde değişken
+    VALUE // 12h gibi bir değer
 }
