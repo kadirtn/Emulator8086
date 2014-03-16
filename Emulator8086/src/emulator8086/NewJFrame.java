@@ -220,7 +220,12 @@ public class NewJFrame extends javax.swing.JFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
-        new EmulatorFrame().setVisible(true);
+        String[] lines = parseAsm();
+        System.out.println("lines.length "+lines.length );
+        if(lines[0].length() > 0)
+            new EmulatorFrame(lines,lines).setVisible(true);
+        else
+            JOptionPane.showMessageDialog(this, "Nothing to emulate, open an asm file or write some asm!", "Error", JOptionPane.WARNING_MESSAGE );  
     }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
@@ -258,6 +263,11 @@ public class NewJFrame extends javax.swing.JFrame {
         });
     }
 
+    private String[] parseAsm() {
+        String[] lines = jTextArea1.getText().split("\\n");
+        return lines;
+
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton2;
     private javax.swing.JMenu jMenu1;
@@ -272,5 +282,6 @@ public class NewJFrame extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextArea jTextArea1;
     // End of variables declaration//GEN-END:variables
+
 
 }
