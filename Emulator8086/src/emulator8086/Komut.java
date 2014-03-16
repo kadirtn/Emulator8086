@@ -22,23 +22,32 @@ public class Komut {
         setKomut(komut);
         degiskenList = new ArrayList<Degisken>();
     }
-    private void addDegisken(Degisken degisken){
+    public void addDegisken(Degisken degisken){
         degiskenList.add(degisken);
     }
-    private void setKomut(String komut){
+    public void setKomut(String komut){
         this.komut = komut;
     }
-    private String getKomut(){
+    public String getKomut(){
         return komut;
     }
-    private void setLine(String line){
+    public void setLine(String line){
         this.line = line;
     }
-    private String getLine(){
+    public String getLine(){
         return line;
     }
-    private List getDegiskenList(){
+    public List getDegiskenList(){
         return degiskenList;
     }
-    
+    public String toString() {
+        return line;
+    }
+    public void yazdir(){
+        System.out.println("KOMUT: "+komut);
+        for (int i = 0; i < degiskenList.size(); i++) {
+			System.out.println((i+1)+". değişken: Türü"+degiskenList.get(i).getTur().toString()+ " Değeri:"+ degiskenList.get(i).getDeger());
+		}
+        System.out.println("-------");
+    }
 }

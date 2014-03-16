@@ -6,6 +6,9 @@
 package emulator8086;
 
 import java.awt.Component;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.StringTokenizer;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JList;
 
@@ -22,25 +25,26 @@ public class EmulatorFrame extends javax.swing.JFrame {
         initComponents();
     }
 
-
-    public EmulatorFrame(String[] list1Content, String[] list2Content) {
+    public EmulatorFrame(String[] listContent) {
         initComponents();
-        jList1 = new javax.swing.JList(list1Content);
-        jScrollPane2.setViewportView(jList1);
-        jList2 = new javax.swing.JList(list2Content);
+        Object[] komutList = asmToKomutList(listContent);
+        jList2 = new javax.swing.JList(komutList);
         jList2.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jScrollPane3.setViewportView(jList2);
-        
+
         jList1.setCellRenderer(new DefaultListCellRenderer() {
 
             @Override
-            public Component getListCellRendererComponent(JList list, Object value, int index,
-                    boolean isSelected, boolean cellHasFocus) {
-                super.getListCellRendererComponent(list, value, index, false, false);
+            public Component getListCellRendererComponent(JList list,
+                    Object value, int index, boolean isSelected,
+                    boolean cellHasFocus) {
+                super.getListCellRendererComponent(list, value, index, false,
+                        false);
 
                 return this;
             }
         });
+
     }
 
     /*
@@ -404,8 +408,8 @@ public class EmulatorFrame extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:,
-        
-        
+
+
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
@@ -501,4 +505,61 @@ public class EmulatorFrame extends javax.swing.JFrame {
     private javax.swing.JTextField jTextField9;
     // End of variables declaration//GEN-END:variables
 
+    private Object[] asmToKomutList(String[] listContent) {
+        Object[] resultList = new Object[listContent.length];
+        for (int i = 0; i < listContent.length; i++) {
+            StringTokenizer st = new StringTokenizer(listContent[i], " ,");
+            List<String> tokens = new ArrayList<String>();
+            while (st.hasMoreTokens()) {
+                tokens.add(st.nextToken());
+            }
+            if (tokens.size() > 1
+                    && (tokens.get(1).toLowerCase().equals("db") || tokens
+                    .get(1).toLowerCase().equals("dw"))) {
+                //Değişken tanımlama şu an yok
+
+            } else {
+                Komut yeniKomut = new Komut(listContent[i], tokens.get(0));
+                for (int j = 1; j < tokens.size(); j++) {
+                    String degisken = tokens.get(j);
+                    if (isARegister(degisken)) {
+                        yeniKomut.addDegisken(new Degisken(
+                                DegiskenTur.REGISTER, degisken));
+                    } else if (isAValue(degisken)) {
+                        yeniKomut.addDegisken(new Degisken(DegiskenTur.VALUE,
+                                degisken));
+                    } else {
+                    }
+                }
+                yeniKomut.yazdir();
+                resultList[i] = yeniKomut;
+            }
+
+        }
+        return resultList;
+    }
+
+    private boolean isAValue(String degisken) {
+        try {
+            if (degisken.length() > 0) {
+                Integer.parseInt(degisken.substring(0, 1));
+                return true;
+            }
+        } catch (Exception e) {
+             System.out.println(degisken+" is not a value");
+        }
+        return false;
+    }
+
+    private boolean isARegister(String degisken) {
+        if (degisken.equals("AX") || degisken.equals("BX")
+                || degisken.equals("CX") || degisken.equals("DX")
+                || degisken.equals("AL") || degisken.equals("BL")
+                || degisken.equals("CL") || degisken.equals("DL")
+                || degisken.equals("AH") || degisken.equals("BH")
+                || degisken.equals("CH") || degisken.equals("DH")) {
+            return true;
+        }
+        return false;
+    }
 }

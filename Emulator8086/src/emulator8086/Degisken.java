@@ -20,8 +20,8 @@ public class Degisken {
         index = -1;
     }
     public Degisken(DegiskenTur gelenTur, String deger){
-        tur = gelenTur;
-        deger = "";
+        setTur(gelenTur);
+        setDeger(deger);
         index = -1;
     }
     
