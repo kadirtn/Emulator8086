@@ -578,6 +578,6 @@ public class EmulatorFrame extends javax.swing.JFrame {
     }
 
     private void fillSystemMemoryWithKomuts(Memory systemMemory, Object[] komutList) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
     }
 }
