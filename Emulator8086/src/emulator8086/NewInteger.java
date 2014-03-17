@@ -11,8 +11,8 @@ package emulator8086;
  * @author kadirtuna
  */
 public class NewInteger{
-    int value = 0;
-    int address = 0;
+    public int value = 0;
+    public int address = 0;
 
     public NewInteger(int address, int value) {
         this.address = address;
