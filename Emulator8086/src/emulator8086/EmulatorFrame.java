@@ -24,14 +24,27 @@ public class EmulatorFrame extends javax.swing.JFrame {
     public EmulatorFrame() {
         initComponents();
     }
-
+    public Memory systemMemory;
     public EmulatorFrame(String[] listContent) {
         initComponents();
+        
+        systemMemory = new Memory(1024);
+        
+        
         Object[] komutList = asmToKomutList(listContent);
+        
+        fillSystemMemoryWithKomuts(systemMemory,komutList);// memory ye komutlar doldurulmak isteniyorsa
+        Register register = Register.getRegister();//register değerleri böyle alınıyor
+        Flag flags = Flag.getFlag();// flag değerleri böyle alınıyor
+        
+        //asm JList doldurma
         jList2 = new javax.swing.JList(komutList);
         jList2.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jScrollPane3.setViewportView(jList2);
 
+        
+        //bellek JList doldurma
+        jList1 = new javax.swing.JList(systemMemory.getList());
         jList1.setCellRenderer(new DefaultListCellRenderer() {
 
             @Override
@@ -44,6 +57,7 @@ public class EmulatorFrame extends javax.swing.JFrame {
                 return this;
             }
         });
+        jScrollPane2.setViewportView(jList1);
 
     }
 
@@ -561,5 +575,9 @@ public class EmulatorFrame extends javax.swing.JFrame {
             return true;
         }
         return false;
+    }
+
+    private void fillSystemMemoryWithKomuts(Memory systemMemory, Object[] komutList) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
