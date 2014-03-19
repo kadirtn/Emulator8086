@@ -13,35 +13,19 @@ import java.util.List;
  *
  * @author PRowLeR
  */
-public class Komut {
-    private String line;// ADD AX, BX
-    private String komut; //ADD
+public class Komut extends Line {
+    public String komut; //ADD
     private List<Degisken> degiskenList = null;// 0) AX  , 1)BX
-    public Komut(String line, String komut){
-        setLine(line);
-        setKomut(komut);
+    public Komut(String line, String komut, int satir){
+        super(line,satir);
+        this.komut = komut;
         degiskenList = new ArrayList<Degisken>();
     }
     public void addDegisken(Degisken degisken){
         degiskenList.add(degisken);
     }
-    public void setKomut(String komut){
-        this.komut = komut;
-    }
-    public String getKomut(){
-        return komut;
-    }
-    public void setLine(String line){
-        this.line = line;
-    }
-    public String getLine(){
-        return line;
-    }
     public List getDegiskenList(){
         return degiskenList;
-    }
-    public String toString() {
-        return line;
     }
     public void yazdir(){
         System.out.println("KOMUT: "+komut);

@@ -7,6 +7,7 @@ package emulator8086;
 
 import java.awt.Component;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.StringTokenizer;
 import javax.swing.DefaultListCellRenderer;
@@ -25,17 +26,24 @@ public class EmulatorFrame extends javax.swing.JFrame {
         initComponents();
     }
     public Memory systemMemory;
+    public HashMap<String, Integer[]> dbVariables;
+    public HashMap<String, Word[]> dwVariables;
+    public HashMap<String, Integer> functionMap;
+    Object[] komutList = null;
     public EmulatorFrame(String[] listContent) {
         initComponents();
         
         systemMemory = new Memory(1024);
-        
-        
-        Object[] komutList = asmToKomutList(listContent);
-        
-        fillSystemMemoryWithKomuts(systemMemory,komutList);// memory ye komutlar doldurulmak isteniyorsa
-        Register register = Register.getRegister();//register değerleri böyle alınıyor
-        Flag flags = Flag.getFlag();// flag değerleri böyle alınıyor
+        dbVariables = new HashMap<>();
+        dwVariables = new HashMap<>();
+        functionMap = new HashMap<String, Integer>();
+        komutList = asmToLineList(listContent);
+        System.out.println("function size"+functionMap.size());
+        System.out.println("function"+functionMap.get("k1"));
+        for(int i = 0;i < komutList.length; i++)
+            System.out.println(i+": "+((Line)komutList[i]).toString());
+        executeKomuts();// memory ye komutlar doldurulmak isteniyorsa
+
         
         //asm JList doldurma
         jList2 = new javax.swing.JList(komutList);
@@ -519,7 +527,7 @@ public class EmulatorFrame extends javax.swing.JFrame {
     private javax.swing.JTextField jTextField9;
     // End of variables declaration//GEN-END:variables
 
-    private Object[] asmToKomutList(String[] listContent) {
+    private Object[] asmToLineList(String[] listContent) {
         Object[] resultList = new Object[listContent.length];
         for (int i = 0; i < listContent.length; i++) {
             StringTokenizer st = new StringTokenizer(listContent[i], " ,");
@@ -528,24 +536,43 @@ public class EmulatorFrame extends javax.swing.JFrame {
                 tokens.add(st.nextToken());
             }
             if (tokens.size() > 1
-                    && (tokens.get(1).toLowerCase().equals("db") || tokens
-                    .get(1).toLowerCase().equals("dw"))) {
-                //Değişken tanımlama şu an yok
+                    && (tokens.get(1).toLowerCase().equals("db"))) {
+                Integer[] variables = new Integer[tokens.size()-2];
+                for(int j = 2; j < tokens.size(); j++){
+                    variables[j-2] = Integer.parseInt(tokens.get(j));
+                }
+                dbVariables.put(tokens.get(0), variables);
+                Line var = new Variable(listContent[i],tokens.get(0),i);
+                resultList[i] = var;
+            }
+            else if (tokens.size() > 1
+                    && (tokens.get(1).toLowerCase().equals("dw"))) {
+                Word[] variables = new Word[tokens.size()-2];
+                for(int j = 2; j < tokens.size(); j++){
+                    variables[j-2] = new Word(Integer.parseInt(tokens.get(j)));
+                }
+                dwVariables.put(tokens.get(0), variables);
+                Line var = new Variable(listContent[i],tokens.get(0),i);
+                resultList[i] = var;
 
-            } else {
-                Komut yeniKomut = new Komut(listContent[i], tokens.get(0));
+            } else if(listContent[i].contains(":")){//Fonksiyon Tanimi
+                Line yeniFonksiyonTanimi = new FonksiyonTanimi(listContent[i], listContent[i].substring(0, listContent[i].indexOf(":")), i);
+                functionMap.put(listContent[i].substring(0, listContent[i].indexOf(":")),i);
+                resultList[i] = yeniFonksiyonTanimi;
+            }
+            else {
+                Line yeniKomut = new Komut(listContent[i], tokens.get(0),i);
                 for (int j = 1; j < tokens.size(); j++) {
                     String degisken = tokens.get(j);
                     if (isARegister(degisken)) {
-                        yeniKomut.addDegisken(new Degisken(
+                        ((Komut)yeniKomut).addDegisken(new Degisken(
                                 DegiskenTur.REGISTER, degisken));
                     } else if (isAValue(degisken)) {
-                        yeniKomut.addDegisken(new Degisken(DegiskenTur.VALUE,
+                        ((Komut)yeniKomut).addDegisken(new Degisken(DegiskenTur.VALUE,
                                 degisken));
                     } else {
                     }
                 }
-                yeniKomut.yazdir();
                 resultList[i] = yeniKomut;
             }
 
@@ -577,7 +604,8 @@ public class EmulatorFrame extends javax.swing.JFrame {
         return false;
     }
 
-    private void fillSystemMemoryWithKomuts(Memory systemMemory, Object[] komutList) {
+    private void executeKomuts() {
+        
         
     }
 }
