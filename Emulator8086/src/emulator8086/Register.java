@@ -5,55 +5,26 @@
  */
 package emulator8086;
 
+import java.util.HashMap;
+
 /**
  *
  * @author kadirtuna
  */
 public class Register {
 
-    public Integer[] AX;
-    public Integer[] BX;
-    public Integer[] CX;
-    public Integer[] DX;
-    public Integer[] AL;
-    public Integer[] AH;
-    public Integer[] BL;
-    public Integer[] BH;
-    public Integer[] CL;
-    public Integer[] CH;
-    public Integer[] DL;
-    public Integer[] DH;
+    HashMap<String, Integer> registers = new HashMap<String, Integer>();
     private static Register register = null;
 
     private Register() {
-        AX = new Integer[2];
-        BX = new Integer[2];
-        CX = new Integer[2];
-        DX = new Integer[2];
-        AL = new Integer[1];
-        AH = new Integer[1];
-        BL = new Integer[1];
-        BH = new Integer[1];
-        CL = new Integer[1];
-        CH = new Integer[1];
-        DL = new Integer[1];
-        DH = new Integer[1];
-        AX[0] = 0;
-        AX[1] = 0;
-        BX[0] = 0;
-        BX[1] = 0;
-        CX[0] = 0;
-        CX[1] = 0;
-        DX[0] = 0;
-        DX[1] = 0;
-        AL[0] = AX[0];
-        AH[0] = AX[1];
-        BL[0] = BX[0];
-        BH[0] = BX[1];
-        CL[0] = CX[0];
-        CH[0] = CX[1];
-        DL[0] = DX[0];
-        DH[0] = DX[1];
+        registers.put("AL", 0);
+        registers.put("AH", 0);
+        registers.put("BL", 0);
+        registers.put("BH", 0);
+        registers.put("CL", 0);
+        registers.put("CH", 0);
+        registers.put("DL", 0);
+        registers.put("DH", 0);
     }
 
     public static Register getRegister() {
@@ -61,5 +32,42 @@ public class Register {
             register = new Register();
         }
         return register;
+    }
+    public Integer getValue(String reg){
+        switch (reg.toUpperCase()) {
+            case "AX":
+                return registers.get("AL") + registers.get("AH") * 256;
+            case "BX":
+                return registers.get("BL") + registers.get("BH") * 256;
+            case "CX":
+                return registers.get("CL") + registers.get("CH") * 256;
+            case "DX":
+                return registers.get("DL") + registers.get("DH") * 256;
+            default:
+                return registers.get(reg);
+        }
+    }
+    public void setValue(String reg, int value){
+        switch (reg.toUpperCase()) {
+            case "AX":
+                registers.put("AL", value %256);
+                registers.put("AH", (value - value%256) / 256);
+                break;
+            case "BX":
+                registers.put("BL", value %256);
+                registers.put("BH", (value - value%256) / 256);
+                break;
+            case "CX":
+                registers.put("CL", value %256);
+                registers.put("CH", (value - value%256) / 256);
+                break;
+            case "DX":
+                registers.put("DL", value %256);
+                registers.put("DH", (value - value%256) / 256);
+                break;
+            default:
+                registers.put(reg,value);
+                break;
+        }
     }
 }

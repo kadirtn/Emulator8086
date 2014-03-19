@@ -4,9 +4,7 @@
  * and open the template in the editor.
  */
 
-package emulator8086;
-
-import java.util.ArrayList;
+package line; 
 
 /**
  *

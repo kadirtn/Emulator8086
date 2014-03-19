@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package emulator8086;
 
 /**
@@ -11,46 +10,25 @@ package emulator8086;
  * @author PRowLeR
  */
 public class Degisken {
-    private DegiskenTur tur;
-    private String deger;
-    private int index;
-    public Degisken(DegiskenTur gelenTur){
-        tur = gelenTur;
-        deger = "";
-        index = -1;
+
+    public DegiskenTur tur;
+    public String deger;
+    public int value;
+
+    public Degisken(int value) {
+        tur = DegiskenTur.VALUE;
+        this.value = value;
     }
-    public Degisken(DegiskenTur gelenTur, String deger){
-        setTur(gelenTur);
-        setDeger(deger);
-        index = -1;
+
+    public Degisken(String reg) {
+        tur = DegiskenTur.REGISTER;
+        deger = reg;
     }
-    
-    public Degisken(DegiskenTur gelenTur, String deger, int index){
-        setTur(gelenTur);
-        setDeger(deger);
-        setIndex(index);
+
+    public enum DegiskenTur {
+        REGISTER, //AX,BX gibi Register
+        ATTRIBUTE, //DB DW türlerinde değişken
+        VALUE // 12h gibi bir değer
     }
-    public DegiskenTur getTur(){
-        return tur;
-    }
-    
-    public void setTur(DegiskenTur tur){
-        this.tur = tur;
-    }
-    
-    public String getDeger(){
-        return deger;
-    }
-    
-    public void setDeger(String deger){
-        this.deger= deger;
-    }
-    
-    public int getIndex(){
-        return index;
-    }
-    
-    public void setIndex(int index){
-        this.index= index;
-    }
+
 }

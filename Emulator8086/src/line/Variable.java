@@ -3,13 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package emulator8086;
+package line;
 
 /**
  *
  * @author kadirtuna
  */
-class Variable extends Line {
+public class Variable extends Line {
     public String name;
     public Variable(String line, String name, int satir) {
         super(line, satir);

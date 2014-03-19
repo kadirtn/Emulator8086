@@ -4,8 +4,9 @@
  * and open the template in the editor.
  */
 
-package emulator8086;
+package line;
 
+import emulator8086.Degisken;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,7 +31,7 @@ public class Komut extends Line {
     public void yazdir(){
         System.out.println("KOMUT: "+komut);
         for (int i = 0; i < degiskenList.size(); i++) {
-			System.out.println((i+1)+". değişken: Türü"+degiskenList.get(i).getTur().toString()+ " Değeri:"+ degiskenList.get(i).getDeger());
+			System.out.println((i+1)+". değişken: Türü"+degiskenList.get(i).tur+ " Değeri:"+ degiskenList.get(i).deger);
 		}
         System.out.println("-------");
     }

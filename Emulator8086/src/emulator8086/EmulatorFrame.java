@@ -5,6 +5,8 @@
  */
 package emulator8086;
 
+import line.Komut;
+import line.FonksiyonTanimi;
 import java.awt.Component;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,6 +14,9 @@ import java.util.List;
 import java.util.StringTokenizer;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JList;
+import line.Line;
+import line.Variable;
+import steps.CareTaker;
 
 /**
  *
@@ -26,31 +31,29 @@ public class EmulatorFrame extends javax.swing.JFrame {
         initComponents();
     }
     public Memory systemMemory;
-    public HashMap<String, Integer[]> dbVariables;
-    public HashMap<String, Word[]> dwVariables;
     public HashMap<String, Integer> functionMap;
     Object[] komutList = null;
+    CareTaker careTaker = null;
+
     public EmulatorFrame(String[] listContent) {
         initComponents();
-        
+        careTaker = new CareTaker();
         systemMemory = new Memory(1024);
-        dbVariables = new HashMap<>();
-        dwVariables = new HashMap<>();
         functionMap = new HashMap<String, Integer>();
         komutList = asmToLineList(listContent);
-        System.out.println("function size"+functionMap.size());
-        System.out.println("function"+functionMap.get("k1"));
-        for(int i = 0;i < komutList.length; i++)
-            System.out.println(i+": "+((Line)komutList[i]).toString());
+        System.out.println("function size" + functionMap.size());
+        System.out.println("function" + functionMap.get("k1"));
+        for (int i = 0; i < komutList.length; i++) {
+            System.out.println(i + ": " + ((Line) komutList[i]).toString());
+        }
+        careTaker.kaydet(0);
         executeKomuts();// memory ye komutlar doldurulmak isteniyorsa
 
-        
         //asm JList doldurma
         jList2 = new javax.swing.JList(komutList);
         jList2.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jScrollPane3.setViewportView(jList2);
 
-        
         //bellek JList doldurma
         jList1 = new javax.swing.JList(systemMemory.getList());
         jList1.setCellRenderer(new DefaultListCellRenderer() {
@@ -537,40 +540,36 @@ public class EmulatorFrame extends javax.swing.JFrame {
             }
             if (tokens.size() > 1
                     && (tokens.get(1).toLowerCase().equals("db"))) {
-                Integer[] variables = new Integer[tokens.size()-2];
-                for(int j = 2; j < tokens.size(); j++){
-                    variables[j-2] = Integer.parseInt(tokens.get(j));
-                }
-                dbVariables.put(tokens.get(0), variables);
-                Line var = new Variable(listContent[i],tokens.get(0),i);
+                //Integer[] variables = new Integer[tokens.size()-2];
+                //for(int j = 2; j < tokens.size(); j++){
+                //    variables[j-2] = Integer.parseInt(tokens.get(j));
+                //}
+                //dbVariables.put(tokens.get(0), variables);
+                Line var = new Variable(listContent[i], tokens.get(0), i);
                 resultList[i] = var;
-            }
-            else if (tokens.size() > 1
+            } else if (tokens.size() > 1
                     && (tokens.get(1).toLowerCase().equals("dw"))) {
-                Word[] variables = new Word[tokens.size()-2];
-                for(int j = 2; j < tokens.size(); j++){
-                    variables[j-2] = new Word(Integer.parseInt(tokens.get(j)));
-                }
-                dwVariables.put(tokens.get(0), variables);
-                Line var = new Variable(listContent[i],tokens.get(0),i);
+                //Word[] variables = new Word[tokens.size()-2];
+                //for(int j = 2; j < tokens.size(); j++){
+                //    variables[j-2] = new Word(Integer.parseInt(tokens.get(j)));
+                //}
+                //dwVariables.put(tokens.get(0), variables);
+                Line var = new Variable(listContent[i], tokens.get(0), i);
                 resultList[i] = var;
 
-            } else if(listContent[i].contains(":")){//Fonksiyon Tanimi
+            } else if (listContent[i].contains(":")) {//Fonksiyon Tanimi
                 Line yeniFonksiyonTanimi = new FonksiyonTanimi(listContent[i], listContent[i].substring(0, listContent[i].indexOf(":")), i);
-                functionMap.put(listContent[i].substring(0, listContent[i].indexOf(":")),i);
                 resultList[i] = yeniFonksiyonTanimi;
-            }
-            else {
-                Line yeniKomut = new Komut(listContent[i], tokens.get(0),i);
+            } else {
+                Line yeniKomut = new Komut(listContent[i], tokens.get(0), i);
                 for (int j = 1; j < tokens.size(); j++) {
                     String degisken = tokens.get(j);
                     if (isARegister(degisken)) {
-                        ((Komut)yeniKomut).addDegisken(new Degisken(
-                                DegiskenTur.REGISTER, degisken));
+                        ((Komut) yeniKomut).addDegisken(new Degisken(degisken));
                     } else if (isAValue(degisken)) {
-                        ((Komut)yeniKomut).addDegisken(new Degisken(DegiskenTur.VALUE,
-                                degisken));
+                        ((Komut) yeniKomut).addDegisken(new Degisken(Integer.parseInt(degisken)));
                     } else {
+                        System.out.println("PROBLEM VAR EmulatorFrame 579");
                     }
                 }
                 resultList[i] = yeniKomut;
@@ -583,29 +582,48 @@ public class EmulatorFrame extends javax.swing.JFrame {
     private boolean isAValue(String degisken) {
         try {
             if (degisken.length() > 0) {
-                Integer.parseInt(degisken.substring(0, 1));
                 return true;
             }
         } catch (Exception e) {
-             System.out.println(degisken+" is not a value");
+            System.out.println(degisken + " is not a value");
         }
         return false;
     }
 
     private boolean isARegister(String degisken) {
-        if (degisken.equals("AX") || degisken.equals("BX")
-                || degisken.equals("CX") || degisken.equals("DX")
-                || degisken.equals("AL") || degisken.equals("BL")
-                || degisken.equals("CL") || degisken.equals("DL")
-                || degisken.equals("AH") || degisken.equals("BH")
-                || degisken.equals("CH") || degisken.equals("DH")) {
-            return true;
-        }
-        return false;
+        return Register.getRegister().getValue(degisken) != null;
     }
 
     private void executeKomuts() {
-        
-        
+        int satir = 0;
+        while (true) {
+            Line line = (Line) komutList[satir];
+            if (line instanceof Variable) {
+
+            } else if (line instanceof FonksiyonTanimi) {
+
+            } else {
+                satir = komutIslet(satir, (Komut) line);
+            }
+            careTaker.kaydet(satir);
+            if(satir == komutList.length)
+                break;
+        }
+    }
+
+    private int komutIslet(int satir, Komut komut) {
+        switch (komut.komut.toUpperCase()) {
+            case "MOV":
+                return Instructions.MOV(satir, komut);
+            case "ADD":
+                return Instructions.ADD(satir, komut);
+            case "SUB":
+                return Instructions.SUB(satir, komut);
+            case "PUSH":
+                return Instructions.PUSH(satir, komut);
+            case "POP":
+                return Instructions.POP(satir, komut);
+        }
+        return -1;
     }
 }

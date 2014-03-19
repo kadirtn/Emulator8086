@@ -4,13 +4,13 @@
  * and open the template in the editor.
  */
 
-package emulator8086;
+package line;
 
 /**
  *
  * @author kadirtuna
  */
-class Line {
+public class Line {
     public String line;
     public int komutSatiri;
     public Line(String line,int komutSatiri){
