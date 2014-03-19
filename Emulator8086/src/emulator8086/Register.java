@@ -44,12 +44,12 @@ public class Register {
             case "DX":
                 return registers.get("DL") + registers.get("DH") * 256;
             default:
-                return registers.get(reg);
+                return registers.get(reg.toUpperCase());
         }
     }
     public String getHexValue(String reg){
         String result = "";
-        Integer value = registers.get(reg);
+        Integer value = getValue(reg);
         if(value == null)
             return "NULL";
         int val = value.intValue();
@@ -92,7 +92,7 @@ public class Register {
                 registers.put("DH", (value - value%256) / 256);
                 break;
             default:
-                registers.put(reg,value);
+                registers.put(reg.toUpperCase(),value);
                 break;
         }
     }
