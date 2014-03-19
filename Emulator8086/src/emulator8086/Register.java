@@ -47,6 +47,32 @@ public class Register {
                 return registers.get(reg);
         }
     }
+    public String getHexValue(String reg){
+        String result = "";
+        Integer value = registers.get(reg);
+        if(value == null)
+            return "NULL";
+        int val = value.intValue();
+        while(val >= 16){
+            int karakter = val % 16;
+            result += getChar(karakter);
+            val = (val-karakter)/16;
+        }
+        result += getChar(val);
+        if(result.endsWith("A") ||
+                result.endsWith("B") ||
+                result.endsWith("C") ||
+                result.endsWith("D") ||
+                result.endsWith("E"))
+            result +="0";
+        return new StringBuilder(result).reverse().toString();
+        
+    }
+    public String getChar(int val){
+        if(val < 10)
+            return val+"";
+        return ((char)(55+val))+"";
+    }
     public void setValue(String reg, int value){
         switch (reg.toUpperCase()) {
             case "AX":

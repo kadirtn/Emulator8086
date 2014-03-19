@@ -38,5 +38,8 @@ public class CareTaker {
 	Flag.getFlag().DF = memento.flags[5];
         
     }
+    public int getSize(){
+        return mementoList.size();
+    }
 
 }
