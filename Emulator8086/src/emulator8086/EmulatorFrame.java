@@ -627,6 +627,21 @@ public class EmulatorFrame extends javax.swing.JFrame {
                 break;
         }
     }
+    private int komutIslet(int satir, Komut komut) {
+        switch (komut.komut.toUpperCase()) {
+            case "MOV":
+                return Instructions.MOV(satir, komut);
+            case "ADD":
+                return Instructions.ADD(satir, komut);
+            case "SUB":
+                return Instructions.SUB(satir, komut);
+            case "PUSH":
+                return Instructions.PUSH(satir, komut);
+            case "POP":
+                return Instructions.POP(satir, komut);
+        }
+        return -1;
+    }
     public void load(){
         if(careTaker.getSize() <= stepPointer){
             JOptionPane.showMessageDialog(this, "Done Emulating!", "Complete", JOptionPane.INFORMATION_MESSAGE );  
@@ -649,19 +664,4 @@ public class EmulatorFrame extends javax.swing.JFrame {
         flagZF.setText(Flag.getFlag().ZF ? "1":"0");
     }
 
-    private int komutIslet(int satir, Komut komut) {
-        switch (komut.komut.toUpperCase()) {
-            case "MOV":
-                return Instructions.MOV(satir, komut);
-            case "ADD":
-                return Instructions.ADD(satir, komut);
-            case "SUB":
-                return Instructions.SUB(satir, komut);
-            case "PUSH":
-                return Instructions.PUSH(satir, komut);
-            case "POP":
-                return Instructions.POP(satir, komut);
-        }
-        return -1;
-    }
 }

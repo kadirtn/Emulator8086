@@ -59,13 +59,15 @@ public class Register {
             val = (val-karakter)/16;
         }
         result += getChar(val);
+        if(result.length() == 1)
+            result+="0";
         if(result.endsWith("A") ||
                 result.endsWith("B") ||
                 result.endsWith("C") ||
                 result.endsWith("D") ||
                 result.endsWith("E"))
             result +="0";
-        return new StringBuilder(result).reverse().toString();
+        return new StringBuilder(result).reverse().toString()+"h";
         
     }
     public String getChar(int val){
