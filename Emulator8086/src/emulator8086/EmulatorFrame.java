@@ -614,10 +614,11 @@ public class EmulatorFrame extends javax.swing.JFrame {
     private int isAValue(String degisken) {
         try {
             if (degisken.length() > 0) {
-                if(degisken.endsWith("h"))
-                    return Integer.parseInt(degisken.substring(0,degisken.length()-1), 16);
-                else
+                if (degisken.endsWith("h")) {
+                    return Integer.parseInt(degisken.substring(0, degisken.length() - 1), 16);
+                } else {
                     return Integer.parseInt(degisken);
+                }
             }
         } catch (Exception e) {
             System.out.println(degisken + " is not a value");
@@ -641,29 +642,112 @@ public class EmulatorFrame extends javax.swing.JFrame {
                 satir = komutIslet(satir, (Komut) line);
             }
             careTaker.kaydet(satir);
-            if(satir == komutList.length)
+            if (satir == komutList.length) {
                 break;
+            }
         }
     }
+
     private int komutIslet(int satir, Komut komut) {
         //gelen komutların ilgili instruction a yönlendirilip işletilmesi
         switch (komut.komut) {
-            case "MOV":
-                return Instructions.MOV(satir, komut);
+            case "ADC":
+                return Instructions.ADC(satir, komut);
             case "ADD":
                 return Instructions.ADD(satir, komut);
-            case "SUB":
-                return Instructions.SUB(satir, komut);
-            case "PUSH":
-                return Instructions.PUSH(satir, komut);
+            case "AND":
+                return Instructions.AND(satir, komut);
+            case "CLC":
+                return Instructions.CLC(satir, komut);
+            case "CLD":
+                return Instructions.CLD(satir, komut);
+            case "CMP":
+                return Instructions.CMP(satir, komut);
+            case "DEC":
+                return Instructions.DEC(satir, komut);
+            case "DIV":
+                return Instructions.DIV(satir, komut);
+            case "HLT":
+                return Instructions.HLT(satir, komut);
+            case "IDIV":
+                return Instructions.IDIV(satir, komut);
+            case "IMUL":
+                return Instructions.IMUL(satir, komut);
+            case "INC":
+                return Instructions.INC(satir, komut);
+            case "JA":
+                return Instructions.JA(satir, komut);
+            case "JAE":
+                return Instructions.JAE(satir, komut);
+            case "JB":
+                return Instructions.JB(satir, komut);
+            case "JBE":
+                return Instructions.JBE(satir, komut);
+            case "JE":
+                return Instructions.JE(satir, komut);
+            case "JG":
+                return Instructions.JG(satir, komut);
+            case "JGE":
+                return Instructions.JGE(satir, komut);
+            case "JL":
+                return Instructions.JL(satir, komut);
+            case "JLE":
+                return Instructions.JLE(satir, komut);
+            case "JMP":
+                return Instructions.JMP(satir, komut);
+            case "JNE":
+                return Instructions.JNE(satir, komut);
+            case "JNP":
+                return Instructions.JNP(satir, komut);
+            case "JP":
+                return Instructions.JP(satir, komut);
+            case "JPO":
+                return Instructions.JPO(satir, komut);
+            case "LEA":
+                return Instructions.LEA(satir, komut);
+            case "LOOP":
+                return Instructions.LOOP(satir, komut);
+            case "MOV":
+                return Instructions.MOV(satir, komut);
+            case "MUL":
+                return Instructions.MUL(satir, komut);
+            case "NEG":
+                return Instructions.NEG(satir, komut);
+            case "NOP":
+                return Instructions.NOP(satir, komut);
+            case "NOT":
+                return Instructions.NOT(satir, komut);
+            case "OR":
+                return Instructions.OR(satir, komut);
             case "POP":
                 return Instructions.POP(satir, komut);
+            case "PUSH":
+                return Instructions.PUSH(satir, komut);
+            case "ROL":
+                return Instructions.ROL(satir, komut);
+            case "ROR":
+                return Instructions.ROR(satir, komut);
+            case "SBB":
+                return Instructions.SBB(satir, komut);
+            case "SHL":
+                return Instructions.SHL(satir, komut);
+            case "SHR":
+                return Instructions.SHR(satir, komut);
+            case "STC":
+                return Instructions.STC(satir, komut);
+            case "STD":
+                return Instructions.STD(satir, komut);
+            case "SUB":
+                return Instructions.SUB(satir, komut);
+            case "XOR":
+                return Instructions.XOR(satir, komut);
         }
         return -1;
     }
-    public void load(){
-        if(careTaker.getSize() <= stepPointer){
-            JOptionPane.showMessageDialog(this, "Done Emulating!", "Complete", JOptionPane.INFORMATION_MESSAGE );  
+
+    public void load() {
+        if (careTaker.getSize() <= stepPointer) {
+            JOptionPane.showMessageDialog(this, "Done Emulating!", "Complete", JOptionPane.INFORMATION_MESSAGE);
             return;
         }
         careTaker.load(stepPointer);
@@ -676,12 +760,12 @@ public class EmulatorFrame extends javax.swing.JFrame {
         registerCL.setText(Register.getRegister().getHexValue("CL"));
         registerDH.setText(Register.getRegister().getHexValue("DH"));
         registerDL.setText(Register.getRegister().getHexValue("DL"));
-        flagCF.setText(Flag.getFlag().CF ? "1":"0");
-        flagDF.setText(Flag.getFlag().DF ? "1":"0");
-        flagOF.setText(Flag.getFlag().OF ? "1":"0");
-        flagPF.setText(Flag.getFlag().PF ? "1":"0");
-        flagSF.setText(Flag.getFlag().SF ? "1":"0");
-        flagZF.setText(Flag.getFlag().ZF ? "1":"0");
+        flagCF.setText(Flag.getFlag().CF ? "1" : "0");
+        flagDF.setText(Flag.getFlag().DF ? "1" : "0");
+        flagOF.setText(Flag.getFlag().OF ? "1" : "0");
+        flagPF.setText(Flag.getFlag().PF ? "1" : "0");
+        flagSF.setText(Flag.getFlag().SF ? "1" : "0");
+        flagZF.setText(Flag.getFlag().ZF ? "1" : "0");
     }
 
 }

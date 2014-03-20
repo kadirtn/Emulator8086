@@ -41,4 +41,164 @@ public class Instructions {
         Register.getRegister().setValue(degisken.deger, steps.Stack.getStack().pop());
         return ++satir;
     }
+
+    public static int ADC(int satir, Komut komut) {
+        return -1;
+    }
+
+    public static int AND(int satir, Komut komut) {
+        return -1;
+    }
+
+    public static int CLC(int satir, Komut komut) {
+        return -1;
+    }
+
+    public static int CLD(int satir, Komut komut) {
+        return -1;
+    }
+
+    public static int CMP(int satir, Komut komut) {
+        return -1;
+    }
+
+    public static int DEC(int satir, Komut komut) {
+        return -1;
+    }
+
+    public static int DIV(int satir, Komut komut) {
+        return -1;
+    }
+
+    public static int HLT(int satir, Komut komut) {
+        return -1;
+    }
+
+    public static int IDIV(int satir, Komut komut) {
+        return -1;
+    }
+
+    public static int IMUL(int satir, Komut komut) {
+        return -1;
+    }
+
+    public static int INC(int satir, Komut komut) {
+        return -1;
+    }
+
+    public static int JA(int satir, Komut komut) {
+        return -1;
+    }
+
+    public static int JAE(int satir, Komut komut) {
+        return -1;
+    }
+
+    public static int JB(int satir, Komut komut) {
+        return -1;
+    }
+
+    public static int JBE(int satir, Komut komut) {
+        return -1;
+    }
+
+    public static int JE(int satir, Komut komut) {
+        return -1;
+    }
+
+    public static int JG(int satir, Komut komut) {
+        return -1;
+    }
+
+    public static int JGE(int satir, Komut komut) {
+        return -1;
+    }
+
+    public static int JL(int satir, Komut komut) {
+        return -1;
+    }
+
+    public static int JMP(int satir, Komut komut) {
+        return -1;
+    }
+
+    public static int JLE(int satir, Komut komut) {
+        return -1;
+    }
+
+    public static int JNE(int satir, Komut komut) {
+        return -1;
+    }
+
+    public static int JNP(int satir, Komut komut) {
+        return -1;
+    }
+
+    public static int JP(int satir, Komut komut) {
+        return -1;
+    }
+
+    public static int JPO(int satir, Komut komut) {
+        return -1;
+    }
+
+    public static int LEA(int satir, Komut komut) {
+        return -1;
+    }
+
+    public static int LOOP(int satir, Komut komut) {
+        return -1;
+    }
+
+    public static int MUL(int satir, Komut komut) {
+        return -1;
+    }
+
+    public static int NEG(int satir, Komut komut) {
+        return -1;
+    }
+
+    public static int NOP(int satir, Komut komut) {
+        return -1;
+    }
+
+    public static int NOT(int satir, Komut komut) {
+        return -1;
+    }
+
+    public static int OR(int satir, Komut komut) {
+        return -1;
+    }
+
+    public static int XOR(int satir, Komut komut) {
+        return -1;
+    }
+
+    public static int STD(int satir, Komut komut) {
+        return -1;
+    }
+
+    public static int STC(int satir, Komut komut) {
+        return -1;
+    }
+
+    public static int SHR(int satir, Komut komut) {
+        return -1;
+    }
+
+    public static int SHL(int satir, Komut komut) {
+        return -1;
+    }
+
+    public static int SBB(int satir, Komut komut) {
+        return -1;
+    }
+
+    public static int ROR(int satir, Komut komut) {
+        return -1;
+    }
+
+    public static int ROL(int satir, Komut komut) {
+        return -1;
+    }
 }
