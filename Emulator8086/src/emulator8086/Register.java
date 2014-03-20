@@ -34,7 +34,7 @@ public class Register {
         return register;
     }
     public Integer getValue(String reg){
-        switch (reg.toUpperCase()) {
+        switch (reg) {
             case "AX":
                 return registers.get("AL") + registers.get("AH") * 256;
             case "BX":
@@ -44,7 +44,7 @@ public class Register {
             case "DX":
                 return registers.get("DL") + registers.get("DH") * 256;
             default:
-                return registers.get(reg.toUpperCase());
+                return registers.get(reg);
         }
     }
     public String getHexValue(String reg){
@@ -76,7 +76,7 @@ public class Register {
         return ((char)(55+val))+"";
     }
     public void setValue(String reg, int value){
-        switch (reg.toUpperCase()) {
+        switch (reg) {
             case "AX":
                 registers.put("AL", value %256);
                 registers.put("AH", (value - value%256) / 256);
@@ -94,7 +94,7 @@ public class Register {
                 registers.put("DH", (value - value%256) / 256);
                 break;
             default:
-                registers.put(reg.toUpperCase(),value);
+                registers.put(reg,value);
                 break;
         }
     }

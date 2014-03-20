@@ -263,7 +263,7 @@ public class NewJFrame extends javax.swing.JFrame {
     }
 
     private String[] parseAsm() {
-        String[] lines = jTextArea1.getText().split("\\n");
+        String[] lines = jTextArea1.getText().toUpperCase().split("\\n");
         return lines;
 
     }

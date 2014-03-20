@@ -634,9 +634,9 @@ public class EmulatorFrame extends javax.swing.JFrame {
         while (true) {
             Line line = (Line) komutList[satir];
             if (line instanceof Variable) {
-
+                satir++;
             } else if (line instanceof FonksiyonTanimi) {
-
+                satir++;
             } else {
                 satir = komutIslet(satir, (Komut) line);
             }
@@ -646,7 +646,8 @@ public class EmulatorFrame extends javax.swing.JFrame {
         }
     }
     private int komutIslet(int satir, Komut komut) {
-        switch (komut.komut.toUpperCase()) {
+        //gelen komutların ilgili instruction a yönlendirilip işletilmesi
+        switch (komut.komut) {
             case "MOV":
                 return Instructions.MOV(satir, komut);
             case "ADD":
