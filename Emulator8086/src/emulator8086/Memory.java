@@ -6,28 +6,33 @@
 
 package emulator8086;
 
-import java.util.Arrays;
-import java.util.HashMap;
+import java.util.List;
 
 /**
  *
  * @author kadirtuna
  */
 public class Memory {
-    private NewInteger[] memory;
-    public Memory(int size){
-        memory = new NewInteger[size];
-        for(int i = 0;i < memory.length; i++)
-            memory[i] = new NewInteger(4096+i, 0);
+    private VariableType type;
+    private List<Integer> varList = null;
+    public Memory(VariableType type, List<Integer> varList){
+        this.type = type;
+        this.varList = varList;
     }
-    public int get(int index){
-        return memory[index].value;
+    public Integer getValue(int index){
+        return varList.get(index);
     }
-    public void set(int index, int value){
-        memory[index].value = value;
+    public void setValue(int index, int value){
+        varList.set(index, value);
     }
-    public NewInteger[] getList(){
-        return memory;
+    public void addValue(int value){
+        varList.add(value);
+    }
+    public VariableType getType(){
+        return type;
+    }
+    public enum VariableType{
+        DB,DW
     }
     
 }

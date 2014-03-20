@@ -31,8 +31,9 @@ public class EmulatorFrame extends javax.swing.JFrame {
     public EmulatorFrame() {
         initComponents();
     }
-    public Memory systemMemory;
+    public MemoryView systemMemory;
     public HashMap<String, Integer> functionMap;
+    public static HashMap<String, Memory> variableMap;
     Object[] komutList = null;
     CareTaker careTaker = null;
     int stepPointer;
@@ -41,8 +42,9 @@ public class EmulatorFrame extends javax.swing.JFrame {
         initComponents();
         stepPointer = 0;
         careTaker = new CareTaker();
-        systemMemory = new Memory(1024);
+        systemMemory = new MemoryView(1024);
         functionMap = new HashMap<String, Integer>();
+        variableMap = new HashMap<String, Memory>();
         komutList = asmToLineList(listContent);
         System.out.println("function size" + functionMap.size());
         System.out.println("function" + functionMap.get("k1"));
@@ -571,37 +573,43 @@ public class EmulatorFrame extends javax.swing.JFrame {
             }
             if (tokens.size() > 1
                     && (tokens.get(1).toLowerCase().equals("db"))) {
-                //Integer[] variables = new Integer[tokens.size()-2];
-                //for(int j = 2; j < tokens.size(); j++){
-                //    variables[j-2] = Integer.parseInt(tokens.get(j));
-                //}
-                //dbVariables.put(tokens.get(0), variables);
+                List<Integer> variables = new ArrayList<>();
+                for(int j = 2; j < tokens.size(); j++){
+                    variables.add(isAValue(tokens.get(j)));
+                }
+                variableMap.put(tokens.get(0), new Memory(Memory.VariableType.DB,variables));
+                
                 Line var = new Variable(listContent[i], tokens.get(0), i);
                 resultList[i] = var;
             } else if (tokens.size() > 1
                     && (tokens.get(1).toLowerCase().equals("dw"))) {
-                //Word[] variables = new Word[tokens.size()-2];
-                //for(int j = 2; j < tokens.size(); j++){
-                //    variables[j-2] = new Word(Integer.parseInt(tokens.get(j)));
-                //}
-                //dwVariables.put(tokens.get(0), variables);
+                List<Integer> variables = new ArrayList<>();
+                for(int j = 2; j < tokens.size(); j++){
+                    variables.add(isAValue(tokens.get(j)));
+                }
+                variableMap.put(tokens.get(1), new Memory(Memory.VariableType.DW,variables));
                 Line var = new Variable(listContent[i], tokens.get(0), i);
                 resultList[i] = var;
 
             } else if (listContent[i].contains(":")) {//Fonksiyon Tanimi
                 Line yeniFonksiyonTanimi = new FonksiyonTanimi(listContent[i], listContent[i].substring(0, listContent[i].indexOf(":")), i);
+                functionMap.put(listContent[i].substring(0, listContent[i].indexOf(":")), i);
                 resultList[i] = yeniFonksiyonTanimi;
             } else {
                 Line yeniKomut = new Komut(listContent[i], tokens.get(0), i);
                 for (int j = 1; j < tokens.size(); j++) {
                     String degisken = tokens.get(j);
                     int value = isAValue(degisken);
-                    if (isARegister(degisken)) {
+                    if (isARegister(degisken)) {//Register
                         ((Komut) yeniKomut).addDegisken(new Degisken(degisken));
-                    } else if (value != -1) {
+                    } else if (value != -1) {//Immediate
                         ((Komut) yeniKomut).addDegisken(new Degisken(value));
-                    } else {
-                        System.out.println("PROBLEM VAR EmulatorFrame 579");
+                    } else {//Memory
+                        if(degisken.contains("[") && degisken.contains("]")){
+                            ((Komut) yeniKomut).addDegisken(new Degisken(degisken.substring(0,degisken.indexOf("[")),Integer.parseInt(degisken.substring(degisken.indexOf("[")+1,degisken.indexOf("]")))));
+                        }
+                        else
+                            ((Komut) yeniKomut).addDegisken(new Degisken(degisken,0));
                     }
                 }
                 resultList[i] = yeniKomut;
@@ -614,7 +622,7 @@ public class EmulatorFrame extends javax.swing.JFrame {
     private int isAValue(String degisken) {
         try {
             if (degisken.length() > 0) {
-                if (degisken.endsWith("h")) {
+                if (degisken.endsWith("H")) {
                     return Integer.parseInt(degisken.substring(0, degisken.length() - 1), 16);
                 } else {
                     return Integer.parseInt(degisken);

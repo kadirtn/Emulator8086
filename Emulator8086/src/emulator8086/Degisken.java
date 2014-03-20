@@ -13,10 +13,10 @@ public class Degisken {
 
     public DegiskenTur tur;
     public String deger;
-    public int value;
+    public int value;//decimal değer
 
     public Degisken(int value) {
-        tur = DegiskenTur.VALUE;
+        tur = DegiskenTur.IMMEDIATE;
         this.value = value;
     }
 
@@ -24,11 +24,16 @@ public class Degisken {
         tur = DegiskenTur.REGISTER;
         deger = reg;
     }
+    public Degisken(String degiskenAdi, int index){
+        tur = DegiskenTur.MEMORY;
+        deger = degiskenAdi;
+        value = index;
+    }
 
     public enum DegiskenTur {
         REGISTER, //AX,BX gibi Register
-        ATTRIBUTE, //DB DW türlerinde değişken
-        VALUE // 12h gibi bir değer
+        MEMORY, //DB DW türlerinde değişken
+        IMMEDIATE // 12h gibi bir değer
     }
 
 }

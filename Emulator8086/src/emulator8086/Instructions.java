@@ -7,6 +7,7 @@
 package emulator8086;
 
 import emulator8086.Degisken.DegiskenTur;
+import emulator8086.Memory.VariableType;
 import line.Komut;
 import java.util.List;
 
@@ -19,8 +20,16 @@ public class Instructions {
             List<Degisken> list = komut.getDegiskenList();
         if(list.get(0).tur == DegiskenTur.REGISTER && list.get(1).tur == DegiskenTur.REGISTER)
             Register.getRegister().setValue(list.get(0).deger, Register.getRegister().getValue(list.get(1).deger));
-        else if(list.get(0).tur == DegiskenTur.REGISTER && list.get(1).tur == DegiskenTur.VALUE)
+        else if(list.get(0).tur == DegiskenTur.REGISTER && list.get(1).tur == DegiskenTur.IMMEDIATE)
             Register.getRegister().setValue(list.get(0).deger, list.get(1).value);
+        else if(list.get(0).tur == DegiskenTur.REGISTER && list.get(1).tur == DegiskenTur.MEMORY)
+            Register.getRegister().setValue(list.get(0).deger,EmulatorFrame.variableMap.get(list.get(1).deger).getValue(list.get(1).value));
+        else if(list.get(0).tur == DegiskenTur.MEMORY && list.get(1).tur == DegiskenTur.REGISTER)
+            EmulatorFrame.variableMap.get(list.get(0).deger).setValue(list.get(0).value, Register.getRegister().getValue(list.get(1).deger));
+        else if(list.get(0).tur == DegiskenTur.MEMORY && list.get(1).tur == DegiskenTur.IMMEDIATE)
+            EmulatorFrame.variableMap.get(list.get(0).deger).setValue(list.get(0).value, list.get(1).value);
+        else if(list.get(0).tur == DegiskenTur.MEMORY && list.get(1).tur == DegiskenTur.MEMORY)
+            EmulatorFrame.variableMap.get(list.get(0).deger).setValue(list.get(0).value, list.get(1).value);
         return ++satir;
     }
     public static int ADD(int satir, Komut komut){
@@ -33,25 +42,31 @@ public class Instructions {
     }
     public static int PUSH(int satir, Komut komut){
         Degisken degisken = (Degisken) komut.getDegiskenList().get(0);
-        steps.Stack.getStack().push(Register.getRegister().getValue(degisken.deger));
+        if(degisken.tur == DegiskenTur.REGISTER)
+            steps.Stack.getStack().push(Register.getRegister().getValue(degisken.deger));
+        else if(degisken.tur == DegiskenTur.MEMORY)
+            steps.Stack.getStack().push(EmulatorFrame.variableMap.get(degisken.deger).getValue(degisken.value));
         return ++satir;
     }
     public static int POP(int satir, Komut komut){
         Degisken degisken = (Degisken) komut.getDegiskenList().get(0);
-        Register.getRegister().setValue(degisken.deger, steps.Stack.getStack().pop());
+        if(degisken.tur == DegiskenTur.REGISTER)
+            Register.getRegister().setValue(degisken.deger, steps.Stack.getStack().pop());
+        else if(degisken.tur == DegiskenTur.MEMORY)
+            EmulatorFrame.variableMap.get(degisken.deger).setValue(satir, satir);
         return ++satir;
     }
 
     public static int ADC(int satir, Komut komut) {
-        return -1;
+        return ++satir;
     }
 
     public static int AND(int satir, Komut komut) {
-        return -1;
+        return ++satir;
     }
 
     public static int CLC(int satir, Komut komut) {
-        return -1;
+        return ++satir;
     }
 
     public static int CLD(int satir, Komut komut) {
@@ -200,5 +215,9 @@ public class Instructions {
 
     public static int ROL(int satir, Komut komut) {
         return -1;
+    }
+    
+    public boolean variableSizeControl(VariableType type, int value){
+        return (type == VariableType.DB && value < 256) || (type == VariableType.DW && value < 256*256 - 1);
     }
 }
