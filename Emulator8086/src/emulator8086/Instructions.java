@@ -33,7 +33,7 @@ public class Instructions {
     }
     public static int PUSH(int satir, Komut komut){
         Degisken degisken = (Degisken) komut.getDegiskenList().get(0);
-        steps.Stack.getStack().push(degisken.value);
+        steps.Stack.getStack().push(Register.getRegister().getValue(degisken.deger));
         return ++satir;
     }
     public static int POP(int satir, Komut komut){
