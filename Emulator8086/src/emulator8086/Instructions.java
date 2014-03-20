@@ -32,11 +32,13 @@ public class Instructions {
         return ++satir;
     }
     public static int PUSH(int satir, Komut komut){
-        
+        Degisken degisken = (Degisken) komut.getDegiskenList().get(0);
+        steps.Stack.getStack().push(degisken.value);
         return ++satir;
     }
     public static int POP(int satir, Komut komut){
-        
+        Degisken degisken = (Degisken) komut.getDegiskenList().get(0);
+        Register.getRegister().setValue(degisken.deger, steps.Stack.getStack().pop());
         return ++satir;
     }
 }

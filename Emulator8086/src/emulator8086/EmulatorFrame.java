@@ -666,6 +666,7 @@ public class EmulatorFrame extends javax.swing.JFrame {
             return;
         }
         careTaker.load(stepPointer);
+        jList2.setSelectedIndex(careTaker.get(stepPointer).satir);
         registerAH.setText(Register.getRegister().getHexValue("AH"));
         registerAL.setText(Register.getRegister().getHexValue("AL"));
         registerBH.setText(Register.getRegister().getHexValue("BH"));

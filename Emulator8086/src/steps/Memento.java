@@ -14,7 +14,7 @@ import java.util.HashMap;
  *
  * @author kadirtuna
  */
-class Memento {
+public class Memento {
     public HashMap<String,Integer> registers;
     public boolean[] flags;
     public int satir;
