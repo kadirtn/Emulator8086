@@ -148,6 +148,11 @@ public class EmulatorFrame extends javax.swing.JFrame {
         });
 
         jButton5.setText("Run");
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton5ActionPerformed(evt);
+            }
+        });
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Registers"));
 
@@ -442,7 +447,8 @@ public class EmulatorFrame extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:,
-
+        stepPointer = 0;
+        load();
 
     }//GEN-LAST:event_jButton1ActionPerformed
 
@@ -470,6 +476,14 @@ public class EmulatorFrame extends javax.swing.JFrame {
         stepPointer--;
         load();
     }//GEN-LAST:event_stepBack
+
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+        // TODO add your handling code here:
+        stepPointer = komutList.length;
+        load();
+        stepPointer = komutList.length + 1;
+        load();
+    }//GEN-LAST:event_jButton5ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -581,10 +595,11 @@ public class EmulatorFrame extends javax.swing.JFrame {
                 Line yeniKomut = new Komut(listContent[i], tokens.get(0), i);
                 for (int j = 1; j < tokens.size(); j++) {
                     String degisken = tokens.get(j);
+                    int value = isAValue(degisken);
                     if (isARegister(degisken)) {
                         ((Komut) yeniKomut).addDegisken(new Degisken(degisken));
-                    } else if (isAValue(degisken)) {
-                        ((Komut) yeniKomut).addDegisken(new Degisken(Integer.parseInt(degisken)));
+                    } else if (value != -1) {
+                        ((Komut) yeniKomut).addDegisken(new Degisken(value));
                     } else {
                         System.out.println("PROBLEM VAR EmulatorFrame 579");
                     }
@@ -596,15 +611,18 @@ public class EmulatorFrame extends javax.swing.JFrame {
         return resultList;
     }
 
-    private boolean isAValue(String degisken) {
+    private int isAValue(String degisken) {
         try {
             if (degisken.length() > 0) {
-                return true;
+                if(degisken.endsWith("h"))
+                    return Integer.parseInt(degisken.substring(0,degisken.length()-1), 16);
+                else
+                    return Integer.parseInt(degisken);
             }
         } catch (Exception e) {
             System.out.println(degisken + " is not a value");
         }
-        return false;
+        return -1;
     }
 
     private boolean isARegister(String degisken) {
