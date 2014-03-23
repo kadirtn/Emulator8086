@@ -168,7 +168,34 @@ public class Instructions {
     }
 
     public static int DEC(int satir, Komut komut) {
-        return -1;
+        List<Degisken> list = komut.getDegiskenList();
+        Degisken degisken = list.get(0);
+        int result = 0;
+        if (degisken.tur == DegiskenTur.REGISTER) {
+            result = Register.getRegister().getValue(degisken.deger);
+            result -= 1;
+            if (degisken.size == 1 && result == 256) {
+                result = 0;
+            }
+            if (degisken.size == 2 && result == 65536) {
+                result = 0;
+            }
+            Register.getRegister().setValue(degisken.deger, result);
+
+        } else if (degisken.tur == DegiskenTur.MEMORY) {
+            result = EmulatorFrame.variableMap.get(degisken.deger).getValue(degisken.value);
+            result += 1;
+            if (degisken.size == 1 && result == 256) {
+                result = 0;
+            }
+            if (degisken.size == 2 && result == 65536) {
+                result = 0;
+            }
+            EmulatorFrame.variableMap.get(degisken.deger).setValue(degisken.value, result);
+        }
+        Flag.getFlag().ZF = (result == 0);
+        Flag.getFlag().PF = (result % 2 == 0);
+        return ++satir;
     }
 
     public static int DIV(int satir, Komut komut) {
@@ -188,7 +215,34 @@ public class Instructions {
     }
 
     public static int INC(int satir, Komut komut) {
-        return -1;
+        List<Degisken> list = komut.getDegiskenList();
+        Degisken degisken = list.get(0);
+        int result = 0;
+        if (degisken.tur == DegiskenTur.REGISTER) {
+            result = Register.getRegister().getValue(degisken.deger);
+            result += 1;
+            if (degisken.size == 1 && result == 256) {
+                result = 0;
+            }
+            if (degisken.size == 2 && result == 65536) {
+                result = 0;
+            }
+            Register.getRegister().setValue(degisken.deger, result);
+
+        } else if (degisken.tur == DegiskenTur.MEMORY) {
+            result = EmulatorFrame.variableMap.get(degisken.deger).getValue(degisken.value);
+            result += 1;
+            if (degisken.size == 1 && result == 256) {
+                result = 0;
+            }
+            if (degisken.size == 2 && result == 65536) {
+                result = 0;
+            }
+            EmulatorFrame.variableMap.get(degisken.deger).setValue(degisken.value, result);
+        }
+        Flag.getFlag().ZF = (result == 0);
+        Flag.getFlag().PF = (result % 2 == 0);
+        return ++satir;
     }
 
     public static int JA(int satir, Komut komut) {
