@@ -14,8 +14,11 @@ import java.util.HashMap;
  * @author kadirtuna
  */
 public class MemoryView {
+    
     private NewInteger[] memory;
+    
     public MemoryView(int size){
+        
         memory = new NewInteger[size];
         for(int i = 0;i < memory.length; i++)
             memory[i] = new NewInteger(4096+i, 0);
