@@ -6,6 +6,7 @@
 
 package steps;
 
+import emulator8086.Degisken;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,24 +15,24 @@ import java.util.List;
  * @author kadirtuna
  */
 public class Stack {
-    List<Integer>stackList = null;
+    List<StackElement>stackList = null;
     
     private static Stack stack = null;
     
     private Stack(){
-        stackList = new ArrayList<Integer>();
+        stackList = new ArrayList<StackElement>();
     }
     public static Stack getStack(){
         if(stack == null)
             stack = new Stack();
         return stack;
     }
-    public Integer pop(){
-        Integer result = stackList.get(stackList.size()-1);
+    public StackElement pop(){
+        StackElement result = stackList.get(stackList.size()-1);
         stackList.remove(stackList.size()-1);
         return result;
     }
-    public void push(Integer value){
+    public void push(StackElement value){
         stackList.add(value);
     }
     
