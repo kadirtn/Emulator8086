@@ -11,8 +11,10 @@ package line;
  */
 public class Variable extends Line {
     public String name;
-    public Variable(String line, String name, int satir) {
+    public int size;
+    public Variable(String line, int boyut, String name, int satir) {
         super(line, satir);
         this.name = name;
+        this.size = boyut;
     }
 }
