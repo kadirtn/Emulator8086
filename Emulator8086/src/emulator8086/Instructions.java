@@ -3,13 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package emulator8086;
 
 import emulator8086.Degisken.DegiskenTur;
 import emulator8086.Memory.VariableType;
 import line.Komut;
-import steps.Stack;
 import java.util.List;
 
 /**
@@ -17,51 +15,53 @@ import java.util.List;
  * @author kadirtuna
  */
 public class Instructions {
-    public static int MOV(int satir, Komut komut){
-        
+
+    public static int MOV(int satir, Komut komut) throws Exception {
         List<Degisken> list = komut.getDegiskenList();
-            
-        if(list.get(0).tur == DegiskenTur.REGISTER && list.get(1).tur == DegiskenTur.REGISTER)
+        sizeControl(list.get(0),list.get(1));
+        if (list.get(0).tur == DegiskenTur.REGISTER && list.get(1).tur == DegiskenTur.REGISTER) {
             Register.getRegister().setValue(list.get(0).deger, Register.getRegister().getValue(list.get(1).deger));
-        else if(list.get(0).tur == DegiskenTur.REGISTER && list.get(1).tur == DegiskenTur.IMMEDIATE)
+        } else if (list.get(0).tur == DegiskenTur.REGISTER && list.get(1).tur == DegiskenTur.IMMEDIATE) {
             Register.getRegister().setValue(list.get(0).deger, list.get(1).value);
-        else if(list.get(0).tur == DegiskenTur.REGISTER && list.get(1).tur == DegiskenTur.MEMORY)
-            Register.getRegister().setValue(list.get(0).deger,EmulatorFrame.variableMap.get(list.get(1).deger).getValue(list.get(1).value));
-        else if(list.get(0).tur == DegiskenTur.MEMORY && list.get(1).tur == DegiskenTur.REGISTER)
+        } else if (list.get(0).tur == DegiskenTur.REGISTER && list.get(1).tur == DegiskenTur.MEMORY) {
+            Register.getRegister().setValue(list.get(0).deger, EmulatorFrame.variableMap.get(list.get(1).deger).getValue(list.get(1).value));
+        } else if (list.get(0).tur == DegiskenTur.MEMORY && list.get(1).tur == DegiskenTur.REGISTER) {
             EmulatorFrame.variableMap.get(list.get(0).deger).setValue(list.get(0).value, Register.getRegister().getValue(list.get(1).deger));
-        else if(list.get(0).tur == DegiskenTur.MEMORY && list.get(1).tur == DegiskenTur.IMMEDIATE)
+        } else if (list.get(0).tur == DegiskenTur.MEMORY && list.get(1).tur == DegiskenTur.IMMEDIATE) {
             EmulatorFrame.variableMap.get(list.get(0).deger).setValue(list.get(0).value, list.get(1).value);
-        else if(list.get(0).tur == DegiskenTur.MEMORY && list.get(1).tur == DegiskenTur.MEMORY)
+        } else if (list.get(0).tur == DegiskenTur.MEMORY && list.get(1).tur == DegiskenTur.MEMORY) {
             EmulatorFrame.variableMap.get(list.get(0).deger).setValue(list.get(0).value, list.get(1).value);
-        
+        }
         return ++satir;
     }
-    public static int ADD(int satir, Komut komut){
-        
+
+    public static int ADD(int satir, Komut komut) {
+
         return ++satir;
     }
-    public static int SUB(int satir, Komut komut){
-        
+
+    public static int SUB(int satir, Komut komut) {
+
         return ++satir;
     }
-    public static int PUSH(int satir, Komut komut){
-        
+
+    public static int PUSH(int satir, Komut komut) {
         Degisken degisken = (Degisken) komut.getDegiskenList().get(0);
-        
-        if(degisken.tur == DegiskenTur.REGISTER)
-            Stack.getStack().push(Register.getRegister().getValue(degisken.deger));
-        else if(degisken.tur == DegiskenTur.MEMORY)
-            Stack.getStack().push(EmulatorFrame.variableMap.get(degisken.deger).getValue(degisken.value));
+        if (degisken.tur == DegiskenTur.REGISTER) {
+            steps.Stack.getStack().push(Register.getRegister().getValue(degisken.deger));
+        } else if (degisken.tur == DegiskenTur.MEMORY) {
+            steps.Stack.getStack().push(EmulatorFrame.variableMap.get(degisken.deger).getValue(degisken.value));
+        }
         return ++satir;
     }
-    public static int POP(int satir, Komut komut){
-        
+
+    public static int POP(int satir, Komut komut) {
         Degisken degisken = (Degisken) komut.getDegiskenList().get(0);
-        
-        if(degisken.tur == DegiskenTur.REGISTER)
-            Register.getRegister().setValue(degisken.deger, Stack.getStack().pop());
-        else if(degisken.tur == DegiskenTur.MEMORY)
+        if (degisken.tur == DegiskenTur.REGISTER) {
+            Register.getRegister().setValue(degisken.deger, steps.Stack.getStack().pop());
+        } else if (degisken.tur == DegiskenTur.MEMORY) {
             EmulatorFrame.variableMap.get(degisken.deger).setValue(satir, satir);
+        }
         return ++satir;
     }
 
@@ -224,8 +224,23 @@ public class Instructions {
     public static int ROL(int satir, Komut komut) {
         return -1;
     }
-    
-    public boolean variableSizeControl(VariableType type, int value){
-        return (type == VariableType.DB && value < 256) || (type == VariableType.DW && value < 256*256 - 1);
+
+    private static void sizeControl(Degisken dest, Degisken src) throws Exception {
+        if(dest.tur == DegiskenTur.REGISTER && src.tur == DegiskenTur.REGISTER)
+            if(dest.size != src.size) throw new Exception("Boyut hatası");
+        else if(dest.tur == DegiskenTur.MEMORY && src.tur == DegiskenTur.REGISTER)
+            if(dest.size != src.size) throw new Exception("Boyut hatası");
+        else if(dest.tur == DegiskenTur.REGISTER && src.tur == DegiskenTur.MEMORY)
+            if(dest.size != src.size) throw new Exception("Boyut hatası");
+        else if(dest.tur == DegiskenTur.MEMORY && src.tur == DegiskenTur.MEMORY)
+            if(dest.size != src.size) throw new Exception("Boyut hatası");
+        else if(dest.tur == DegiskenTur.REGISTER && src.tur == DegiskenTur.IMMEDIATE){
+            if((dest.size == 2 && src.value > 65535) || (dest.size == 1 && src.value > 255))
+                throw new Exception("Boyut hatası");
+        }
+        else if(dest.tur == DegiskenTur.MEMORY && src.tur == DegiskenTur.IMMEDIATE);
+            if((dest.size == 2 && src.value > 65535) || (dest.size == 1 && src.value > 255))
+                throw new Exception("Boyut hatası");
+        
     }
 }
