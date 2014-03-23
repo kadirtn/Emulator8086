@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.StringTokenizer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
@@ -574,20 +576,20 @@ public class EmulatorFrame extends javax.swing.JFrame {
             if (tokens.size() > 1
                     && (tokens.get(1).toLowerCase().equals("db"))) {
                 List<Integer> variables = new ArrayList<>();
-                for(int j = 2; j < tokens.size(); j++){
+                for (int j = 2; j < tokens.size(); j++) {
                     variables.add(isAValue(tokens.get(j)));
                 }
-                variableMap.put(tokens.get(0), new Memory(Memory.VariableType.DB,variables));
-                
+                variableMap.put(tokens.get(0), new Memory(Memory.VariableType.DB, variables));
+
                 Line var = new Variable(listContent[i], 1, tokens.get(0), i);
                 resultList[i] = var;
             } else if (tokens.size() > 1
                     && (tokens.get(1).toLowerCase().equals("dw"))) {
                 List<Integer> variables = new ArrayList<>();
-                for(int j = 2; j < tokens.size(); j++){
+                for (int j = 2; j < tokens.size(); j++) {
                     variables.add(isAValue(tokens.get(j)));
                 }
-                variableMap.put(tokens.get(1), new Memory(Memory.VariableType.DW,variables));
+                variableMap.put(tokens.get(1), new Memory(Memory.VariableType.DW, variables));
                 Line var = new Variable(listContent[i], 2, tokens.get(0), i);
                 resultList[i] = var;
 
@@ -605,12 +607,11 @@ public class EmulatorFrame extends javax.swing.JFrame {
                     } else if (value != -1) {//Immediate
                         ((Komut) yeniKomut).addDegisken(new Degisken(value));
                     } else {//Memory
-                        if(degisken.contains("[") && degisken.contains("]")){
-                            
-                            ((Komut) yeniKomut).addDegisken(new Degisken(degisken.substring(0,degisken.indexOf("[")),variableMap.get(degisken.substring(0,degisken.indexOf("["))).getType() == Memory.VariableType.DB ? 1 : 2, Integer.parseInt(degisken.substring(degisken.indexOf("[")+1,degisken.indexOf("]")))));
-                        }
-                        else{
-                            ((Komut) yeniKomut).addDegisken(new Degisken(degisken,variableMap.get(degisken).getType() == Memory.VariableType.DB ? 1 : 2,0));
+                        if (degisken.contains("[") && degisken.contains("]")) {
+
+                            ((Komut) yeniKomut).addDegisken(new Degisken(degisken.substring(0, degisken.indexOf("[")), variableMap.get(degisken.substring(0, degisken.indexOf("["))).getType() == Memory.VariableType.DB ? 1 : 2, Integer.parseInt(degisken.substring(degisken.indexOf("[") + 1, degisken.indexOf("]")))));
+                        } else {
+                            ((Komut) yeniKomut).addDegisken(new Degisken(degisken, variableMap.get(degisken).getType() == Memory.VariableType.DB ? 1 : 2, 0));
                         }
                     }
                 }
@@ -642,23 +643,27 @@ public class EmulatorFrame extends javax.swing.JFrame {
 
     private void executeKomuts() {
         int satir = 0;
-        while (true) {
-            Line line = (Line) komutList[satir];
-            if (line instanceof Variable) {
-                satir++;
-            } else if (line instanceof FonksiyonTanimi) {
-                satir++;
-            } else {
-                satir = komutIslet(satir, (Komut) line);
+        try {
+            while (true) {
+                Line line = (Line) komutList[satir];
+                if (line instanceof Variable) {
+                    satir++;
+                } else if (line instanceof FonksiyonTanimi) {
+                    satir++;
+                } else {
+                    satir = komutIslet(satir, (Komut) line);
+                }
+                careTaker.kaydet(satir);
+                if (satir == komutList.length) {
+                    break;
+                }
             }
-            careTaker.kaydet(satir);
-            if (satir == komutList.length) {
-                break;
-            }
+        } catch (Exception ex) {  
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.WARNING_MESSAGE);
         }
     }
 
-    private int komutIslet(int satir, Komut komut) {
+    private int komutIslet(int satir, Komut komut) throws Exception {
         //gelen komutların ilgili instruction a yönlendirilip işletilmesi
         switch (komut.komut) {
             case "ADC":
