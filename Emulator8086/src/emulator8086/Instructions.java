@@ -312,7 +312,7 @@ public class Instructions {
     private static int setFlagStatesForAdd(int size, int result) {
         switch (size) {
             case 1:
-                if (result > 255) {
+                if (result > 255 || result < 0) {
                     Flag.getFlag().CF = true;
                     result %= 256;
                 }
@@ -323,7 +323,7 @@ public class Instructions {
                 
                 break;
             case 2:
-                if (result > 65535) {
+                if (result > 65535 || result < 0) {
                     Flag.getFlag().CF = true;
                     result %= 256;
                 }
