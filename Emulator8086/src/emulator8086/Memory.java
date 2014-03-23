@@ -13,8 +13,10 @@ import java.util.List;
  * @author kadirtuna
  */
 public class Memory {
+    
     private VariableType type;
     private List<Integer> varList = null;
+    
     public Memory(VariableType type, List<Integer> varList){
         this.type = type;
         this.varList = varList;
