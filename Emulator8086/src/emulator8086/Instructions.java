@@ -9,6 +9,7 @@ package emulator8086;
 import emulator8086.Degisken.DegiskenTur;
 import emulator8086.Memory.VariableType;
 import line.Komut;
+import steps.Stack;
 import java.util.List;
 
 /**
@@ -17,7 +18,9 @@ import java.util.List;
  */
 public class Instructions {
     public static int MOV(int satir, Komut komut){
-            List<Degisken> list = komut.getDegiskenList();
+        
+        List<Degisken> list = komut.getDegiskenList();
+            
         if(list.get(0).tur == DegiskenTur.REGISTER && list.get(1).tur == DegiskenTur.REGISTER)
             Register.getRegister().setValue(list.get(0).deger, Register.getRegister().getValue(list.get(1).deger));
         else if(list.get(0).tur == DegiskenTur.REGISTER && list.get(1).tur == DegiskenTur.IMMEDIATE)
@@ -30,6 +33,7 @@ public class Instructions {
             EmulatorFrame.variableMap.get(list.get(0).deger).setValue(list.get(0).value, list.get(1).value);
         else if(list.get(0).tur == DegiskenTur.MEMORY && list.get(1).tur == DegiskenTur.MEMORY)
             EmulatorFrame.variableMap.get(list.get(0).deger).setValue(list.get(0).value, list.get(1).value);
+        
         return ++satir;
     }
     public static int ADD(int satir, Komut komut){
@@ -41,17 +45,21 @@ public class Instructions {
         return ++satir;
     }
     public static int PUSH(int satir, Komut komut){
+        
         Degisken degisken = (Degisken) komut.getDegiskenList().get(0);
+        
         if(degisken.tur == DegiskenTur.REGISTER)
-            steps.Stack.getStack().push(Register.getRegister().getValue(degisken.deger));
+            Stack.getStack().push(Register.getRegister().getValue(degisken.deger));
         else if(degisken.tur == DegiskenTur.MEMORY)
-            steps.Stack.getStack().push(EmulatorFrame.variableMap.get(degisken.deger).getValue(degisken.value));
+            Stack.getStack().push(EmulatorFrame.variableMap.get(degisken.deger).getValue(degisken.value));
         return ++satir;
     }
     public static int POP(int satir, Komut komut){
+        
         Degisken degisken = (Degisken) komut.getDegiskenList().get(0);
+        
         if(degisken.tur == DegiskenTur.REGISTER)
-            Register.getRegister().setValue(degisken.deger, steps.Stack.getStack().pop());
+            Register.getRegister().setValue(degisken.deger, Stack.getStack().pop());
         else if(degisken.tur == DegiskenTur.MEMORY)
             EmulatorFrame.variableMap.get(degisken.deger).setValue(satir, satir);
         return ++satir;
