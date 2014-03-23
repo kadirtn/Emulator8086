@@ -41,21 +41,16 @@ public class EmulatorFrame extends javax.swing.JFrame {
     public EmulatorFrame(String[] listContent) {
         initComponents();
         stepPointer = 0;
-        
         careTaker = new CareTaker();
         systemMemory = new MemoryView(1024);
         functionMap = new HashMap<String, Integer>();
         variableMap = new HashMap<String, Memory>();
-        
         komutList = asmToLineList(listContent);
-        
         System.out.println("function size" + functionMap.size());
         System.out.println("function" + functionMap.get("k1"));
-        
         for (int i = 0; i < komutList.length; i++) {
             System.out.println(i + ": " + ((Line) komutList[i]).toString());
         }
-        
         careTaker.kaydet(0);
         executeKomuts();// memory ye komutlar doldurulmak isteniyorsa
 
@@ -569,13 +564,10 @@ public class EmulatorFrame extends javax.swing.JFrame {
     // End of variables declaration//GEN-END:variables
 
     private Object[] asmToLineList(String[] listContent) {
-        
         Object[] resultList = new Object[listContent.length];
-        
         for (int i = 0; i < listContent.length; i++) {
             StringTokenizer st = new StringTokenizer(listContent[i], " ,");
             List<String> tokens = new ArrayList<String>();
-            
             while (st.hasMoreTokens()) {
                 tokens.add(st.nextToken());
             }
@@ -587,7 +579,7 @@ public class EmulatorFrame extends javax.swing.JFrame {
                 }
                 variableMap.put(tokens.get(0), new Memory(Memory.VariableType.DB,variables));
                 
-                Line var = new Variable(listContent[i], tokens.get(0), i);
+                Line var = new Variable(listContent[i], 1, tokens.get(0), i);
                 resultList[i] = var;
             } else if (tokens.size() > 1
                     && (tokens.get(1).toLowerCase().equals("dw"))) {
@@ -596,7 +588,7 @@ public class EmulatorFrame extends javax.swing.JFrame {
                     variables.add(isAValue(tokens.get(j)));
                 }
                 variableMap.put(tokens.get(1), new Memory(Memory.VariableType.DW,variables));
-                Line var = new Variable(listContent[i], tokens.get(0), i);
+                Line var = new Variable(listContent[i], 2, tokens.get(0), i);
                 resultList[i] = var;
 
             } else if (listContent[i].contains(":")) {//Fonksiyon Tanimi
@@ -614,10 +606,12 @@ public class EmulatorFrame extends javax.swing.JFrame {
                         ((Komut) yeniKomut).addDegisken(new Degisken(value));
                     } else {//Memory
                         if(degisken.contains("[") && degisken.contains("]")){
-                            ((Komut) yeniKomut).addDegisken(new Degisken(degisken.substring(0,degisken.indexOf("[")),Integer.parseInt(degisken.substring(degisken.indexOf("[")+1,degisken.indexOf("]")))));
+                            
+                            ((Komut) yeniKomut).addDegisken(new Degisken(degisken.substring(0,degisken.indexOf("[")),variableMap.get(degisken.substring(0,degisken.indexOf("["))).getType() == Memory.VariableType.DB ? 1 : 2, Integer.parseInt(degisken.substring(degisken.indexOf("[")+1,degisken.indexOf("]")))));
                         }
-                        else
-                            ((Komut) yeniKomut).addDegisken(new Degisken(degisken,0));
+                        else{
+                            ((Komut) yeniKomut).addDegisken(new Degisken(degisken,variableMap.get(degisken).getType() == Memory.VariableType.DB ? 1 : 2,0));
+                        }
                     }
                 }
                 resultList[i] = yeniKomut;
@@ -762,15 +756,12 @@ public class EmulatorFrame extends javax.swing.JFrame {
     }
 
     public void load() {
-        
         if (careTaker.getSize() <= stepPointer) {
             JOptionPane.showMessageDialog(this, "Done Emulating!", "Complete", JOptionPane.INFORMATION_MESSAGE);
             return;
         }
-        
         careTaker.load(stepPointer);
         jList2.setSelectedIndex(careTaker.get(stepPointer).satir);
-        
         registerAH.setText(Register.getRegister().getHexValue("AH"));
         registerAL.setText(Register.getRegister().getHexValue("AL"));
         registerBH.setText(Register.getRegister().getHexValue("BH"));
@@ -779,7 +770,6 @@ public class EmulatorFrame extends javax.swing.JFrame {
         registerCL.setText(Register.getRegister().getHexValue("CL"));
         registerDH.setText(Register.getRegister().getHexValue("DH"));
         registerDL.setText(Register.getRegister().getHexValue("DL"));
-        
         flagCF.setText(Flag.getFlag().CF ? "1" : "0");
         flagDF.setText(Flag.getFlag().DF ? "1" : "0");
         flagOF.setText(Flag.getFlag().OF ? "1" : "0");
