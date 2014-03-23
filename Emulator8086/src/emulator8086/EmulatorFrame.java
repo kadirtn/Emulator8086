@@ -41,16 +41,21 @@ public class EmulatorFrame extends javax.swing.JFrame {
     public EmulatorFrame(String[] listContent) {
         initComponents();
         stepPointer = 0;
+        
         careTaker = new CareTaker();
         systemMemory = new MemoryView(1024);
         functionMap = new HashMap<String, Integer>();
         variableMap = new HashMap<String, Memory>();
+        
         komutList = asmToLineList(listContent);
+        
         System.out.println("function size" + functionMap.size());
         System.out.println("function" + functionMap.get("k1"));
+        
         for (int i = 0; i < komutList.length; i++) {
             System.out.println(i + ": " + ((Line) komutList[i]).toString());
         }
+        
         careTaker.kaydet(0);
         executeKomuts();// memory ye komutlar doldurulmak isteniyorsa
 
@@ -564,10 +569,13 @@ public class EmulatorFrame extends javax.swing.JFrame {
     // End of variables declaration//GEN-END:variables
 
     private Object[] asmToLineList(String[] listContent) {
+        
         Object[] resultList = new Object[listContent.length];
+        
         for (int i = 0; i < listContent.length; i++) {
             StringTokenizer st = new StringTokenizer(listContent[i], " ,");
             List<String> tokens = new ArrayList<String>();
+            
             while (st.hasMoreTokens()) {
                 tokens.add(st.nextToken());
             }
@@ -754,12 +762,15 @@ public class EmulatorFrame extends javax.swing.JFrame {
     }
 
     public void load() {
+        
         if (careTaker.getSize() <= stepPointer) {
             JOptionPane.showMessageDialog(this, "Done Emulating!", "Complete", JOptionPane.INFORMATION_MESSAGE);
             return;
         }
+        
         careTaker.load(stepPointer);
         jList2.setSelectedIndex(careTaker.get(stepPointer).satir);
+        
         registerAH.setText(Register.getRegister().getHexValue("AH"));
         registerAL.setText(Register.getRegister().getHexValue("AL"));
         registerBH.setText(Register.getRegister().getHexValue("BH"));
@@ -768,6 +779,7 @@ public class EmulatorFrame extends javax.swing.JFrame {
         registerCL.setText(Register.getRegister().getHexValue("CL"));
         registerDH.setText(Register.getRegister().getHexValue("DH"));
         registerDL.setText(Register.getRegister().getHexValue("DL"));
+        
         flagCF.setText(Flag.getFlag().CF ? "1" : "0");
         flagDF.setText(Flag.getFlag().DF ? "1" : "0");
         flagOF.setText(Flag.getFlag().OF ? "1" : "0");
