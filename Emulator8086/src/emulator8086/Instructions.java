@@ -152,6 +152,43 @@ public class Instructions {
     }
 
     public static int AND(int satir, Komut komut) {
+        List<Degisken> list = komut.getDegiskenList();
+        int result = 0;
+        int operand1, operand2 = 0;
+
+        //kararsızlık var kontrol edilmeli
+        if (list.get(0).tur == DegiskenTur.REGISTER && list.get(1).tur == DegiskenTur.REGISTER) {
+            operand1 = Register.getRegister().getValue(list.get(0).deger);
+            operand2 = Register.getRegister().getValue(list.get(1).deger);
+            
+            if(operand1==1 && operand2==1)
+                result = 1;
+            else
+                result = 0;
+            Register.getRegister().setValue(list.get(0).deger, result);
+        } else if (list.get(0).tur == DegiskenTur.REGISTER && list.get(1).tur == DegiskenTur.IMMEDIATE) {
+             operand1 = Register.getRegister().getValue(list.get(0).deger);
+            operand2 = list.get(1).value;
+            
+            if(operand1==1 && operand2==1)
+                result = 1;
+            else
+                result = 0;
+            Register.getRegister().setValue(list.get(0).deger, result);
+            
+        } else if (list.get(0).tur == DegiskenTur.REGISTER && list.get(1).tur == DegiskenTur.MEMORY) {
+            result = Register.getRegister().getValue(list.get(0).deger) + EmulatorFrame.variableMap.get(list.get(1).deger).getValue(list.get(1).value);
+            Register.getRegister().setValue(list.get(0).deger, setFlagStatesForAdd(list.get(0).size, result));
+        } else if (list.get(0).tur == DegiskenTur.MEMORY && list.get(1).tur == DegiskenTur.REGISTER) {
+            result = EmulatorFrame.variableMap.get(list.get(0).deger).getValue(list.get(0).value) + Register.getRegister().getValue(list.get(1).deger);
+            EmulatorFrame.variableMap.get(list.get(0).deger).setValue(list.get(0).value, setFlagStatesForAdd(list.get(0).size, result));
+        } else if (list.get(0).tur == DegiskenTur.MEMORY && list.get(1).tur == DegiskenTur.IMMEDIATE) {
+            result = EmulatorFrame.variableMap.get(list.get(0).deger).getValue(list.get(0).value) + list.get(1).value;
+            EmulatorFrame.variableMap.get(list.get(0).deger).setValue(list.get(0).value, setFlagStatesForAdd(list.get(0).size, result));
+        } else if (list.get(0).tur == DegiskenTur.MEMORY && list.get(1).tur == DegiskenTur.MEMORY) {
+            result = EmulatorFrame.variableMap.get(list.get(0).deger).getValue(list.get(0).value) + list.get(1).value;
+            EmulatorFrame.variableMap.get(list.get(0).deger).setValue(list.get(0).value, setFlagStatesForAdd(list.get(0).size, result));
+        }
         return ++satir;
     }
 
@@ -232,6 +269,7 @@ public class Instructions {
         } else if (degisken.tur == DegiskenTur.MEMORY) {
             result = EmulatorFrame.variableMap.get(degisken.deger).getValue(degisken.value);
             result += 1;
+            System.out.println("reseult: "+result);
             if (degisken.size == 1 && result == 256) {
                 result = 0;
             }
@@ -314,15 +352,68 @@ public class Instructions {
     }
 
     public static int NEG(int satir, Komut komut) {
-        return -1;
+        //sayının negatifi
+        List<Degisken> list = komut.getDegiskenList();
+        Degisken degisken = list.get(0);
+        int result = 0;
+        if (degisken.tur == DegiskenTur.REGISTER) {
+            result = Register.getRegister().getValue(degisken.deger);
+            if (degisken.size == 1) {
+                result = 256 - result;
+            }
+            if (degisken.size == 2) {
+                result = 65536 - result;
+            }
+            Register.getRegister().setValue(degisken.deger, result);
+
+        } else if (degisken.tur == DegiskenTur.MEMORY) {
+            result = EmulatorFrame.variableMap.get(degisken.deger).getValue(degisken.value);
+            if (degisken.size == 1) {
+                result = 256 - result;
+            }
+            if (degisken.size == 2) {
+                result = 65536 - result;
+            }
+            System.out.println("result: "+result);
+            EmulatorFrame.variableMap.get(degisken.deger).setValue(degisken.value, result);
+        }
+    //    Flag.getFlag().ZF = (result == 0);
+     //   Flag.getFlag().PF = (result % 2 == 0);
+        return ++satir;
     }
 
     public static int NOP(int satir, Komut komut) {
+        //beklemeye sebep olan komut, etkisi yok 
+        //Do nothing
         return -1;
     }
 
     public static int NOT(int satir, Komut komut) {
-        return -1;
+        List<Degisken> list = komut.getDegiskenList();
+        Degisken degisken = list.get(0);
+        int result = 0;
+        if (degisken.tur == DegiskenTur.REGISTER) {
+            result = Register.getRegister().getValue(degisken.deger);
+            if (degisken.size == 1) {
+                result = 255 - result;
+            }
+            if (degisken.size == 2) {
+                result = 65535 - result;
+            }
+            Register.getRegister().setValue(degisken.deger, result);
+
+        } else if (degisken.tur == DegiskenTur.MEMORY) {
+            result = EmulatorFrame.variableMap.get(degisken.deger).getValue(degisken.value);
+            if (degisken.size == 1) {
+                result = 255 - result;
+            }
+            if (degisken.size == 2) {
+                result = 65535 - result;
+            }
+            System.out.println("result: "+result);
+            EmulatorFrame.variableMap.get(degisken.deger).setValue(degisken.value, result);
+        }
+        return ++satir;
     }
 
     public static int OR(int satir, Komut komut) {
@@ -357,22 +448,22 @@ public class Instructions {
             result -= 1;
         }
         if (list.get(0).tur == DegiskenTur.REGISTER && list.get(1).tur == DegiskenTur.REGISTER) {
-            result = Register.getRegister().getValue(list.get(0).deger) + Register.getRegister().getValue(list.get(1).deger);
+            result = Register.getRegister().getValue(list.get(0).deger) - Register.getRegister().getValue(list.get(1).deger);
             Register.getRegister().setValue(list.get(0).deger, setFlagStatesForAdd(list.get(0).size, result));
         } else if (list.get(0).tur == DegiskenTur.REGISTER && list.get(1).tur == DegiskenTur.IMMEDIATE) {
-            result = Register.getRegister().getValue(list.get(0).deger) + list.get(1).value;
+            result = Register.getRegister().getValue(list.get(0).deger) - list.get(1).value;
             Register.getRegister().setValue(list.get(0).deger, setFlagStatesForAdd(list.get(0).size, result));
         } else if (list.get(0).tur == DegiskenTur.REGISTER && list.get(1).tur == DegiskenTur.MEMORY) {
-            result = Register.getRegister().getValue(list.get(0).deger) + EmulatorFrame.variableMap.get(list.get(1).deger).getValue(list.get(1).value);
+            result = Register.getRegister().getValue(list.get(0).deger) - EmulatorFrame.variableMap.get(list.get(1).deger).getValue(list.get(1).value);
             Register.getRegister().setValue(list.get(0).deger, setFlagStatesForAdd(list.get(0).size, result));
         } else if (list.get(0).tur == DegiskenTur.MEMORY && list.get(1).tur == DegiskenTur.REGISTER) {
-            result = EmulatorFrame.variableMap.get(list.get(0).deger).getValue(list.get(0).value) + Register.getRegister().getValue(list.get(1).deger);
+            result = EmulatorFrame.variableMap.get(list.get(0).deger).getValue(list.get(0).value) - Register.getRegister().getValue(list.get(1).deger);
             EmulatorFrame.variableMap.get(list.get(0).deger).setValue(list.get(0).value, setFlagStatesForAdd(list.get(0).size, result));
         } else if (list.get(0).tur == DegiskenTur.MEMORY && list.get(1).tur == DegiskenTur.IMMEDIATE) {
-            result = EmulatorFrame.variableMap.get(list.get(0).deger).getValue(list.get(0).value) + list.get(1).value;
+            result = EmulatorFrame.variableMap.get(list.get(0).deger).getValue(list.get(0).value) - list.get(1).value;
             EmulatorFrame.variableMap.get(list.get(0).deger).setValue(list.get(0).value, setFlagStatesForAdd(list.get(0).size, result));
         } else if (list.get(0).tur == DegiskenTur.MEMORY && list.get(1).tur == DegiskenTur.MEMORY) {
-            result = EmulatorFrame.variableMap.get(list.get(0).deger).getValue(list.get(0).value) + list.get(1).value;
+            result = EmulatorFrame.variableMap.get(list.get(0).deger).getValue(list.get(0).value) - list.get(1).value;
             EmulatorFrame.variableMap.get(list.get(0).deger).setValue(list.get(0).value, setFlagStatesForAdd(list.get(0).size, result));
         }
         return ++satir;
