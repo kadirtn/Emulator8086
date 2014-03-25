@@ -53,13 +53,13 @@ public class Degisken {
 
     public void setDeger(StackElement element) throws Exception {
         if (tur == DegiskenTur.REGISTER && (element.size == size || element.size == 0)) {
-            Register.getRegister().setValue(deger, element.value);
+            Register.getRegister().setValue(deger, element.getValue());
         } else if (tur == DegiskenTur.MEMORY && (element.size == size || element.size == 0)) {
-            EmulatorFrame.variableMap.get(deger).setValue(value, element.value);
+            EmulatorFrame.variableMap.get(deger).setValue(value, element.getValue());
         } else if ((tur == DegiskenTur.REGISTER && element.size != size) || (tur == DegiskenTur.MEMORY && element.size != size)) {
             throw new Exception("Boyut Hatası.");
         } else {
-            throw new Exception("Memory ye değer setlenemez.");
+            throw new Exception("değere değer setlenemez.");
         }
 
     }

@@ -30,7 +30,7 @@ public class Instructions {
         List<Degisken> list = komut.getDegiskenList();
         Degisken dest = list.get(0);
         Degisken src = list.get(1);
-        int result = dest.getDeger().value + src.getDeger().value;
+        int result = dest.getDeger().getValue() + src.getDeger().getValue();
         setFlagStatesForAdd(dest.size, result);
         dest.setDeger(new StackElement(dest.size,result));
         return ++satir;
@@ -39,7 +39,7 @@ public class Instructions {
         List<Degisken> list = komut.getDegiskenList();
         Degisken dest = list.get(0);
         Degisken src = list.get(1);
-        int result = dest.getDeger().value - src.getDeger().value;
+        int result = dest.getDeger().getValue() - src.getDeger().getValue();
         setFlagStatesForAdd(dest.size, result);
         dest.setDeger(new StackElement(dest.size,result));
         return ++satir;
@@ -58,11 +58,11 @@ public class Instructions {
     }
 
     public static int POP(int satir, Komut komut) throws Exception {
-        Degisken degisken = (Degisken) komut.getDegiskenList().get(0);
+        Degisken dest = (Degisken) komut.getDegiskenList().get(0);
         StackElement element = Stack.getStack().pop();
-        if(degisken.size < 2)
+        if(dest.size < 2)
             throw new Exception("Pop edilen destination boyutu word(2 byte) olmalı.");
-        degisken.setDeger(element);
+        dest.setDeger(element);
         return ++satir;
     }
 
@@ -70,7 +70,7 @@ public class Instructions {
         List<Degisken> list = komut.getDegiskenList();
         Degisken dest = list.get(0);
         Degisken src = list.get(1);
-        int result = dest.getDeger().value + src.getDeger().value + (Flag.getFlag().CF ? 1 : 0);
+        int result = dest.getDeger().getValue() + src.getDeger().getValue() + (Flag.getFlag().CF ? 1 : 0);
         setFlagStatesForAdd(dest.size, result);
         dest.setDeger(new StackElement(dest.size,result));
         return ++satir;
@@ -131,34 +131,15 @@ public class Instructions {
         return -1;
     }
 
-    public static int DEC(int satir, Komut komut) {
+    public static int DEC(int satir, Komut komut) throws Exception {
         List<Degisken> list = komut.getDegiskenList();
-        Degisken degisken = list.get(0);
-        int result = 0;
-        if (degisken.tur == DegiskenTur.REGISTER) {
-            result = Register.getRegister().getValue(degisken.deger);
-            result -= 1;
-            if (degisken.size == 1 && result == 256) {
-                result = 0;
-            }
-            if (degisken.size == 2 && result == 65536) {
-                result = 0;
-            }
-            Register.getRegister().setValue(degisken.deger, result);
-
-        } else if (degisken.tur == DegiskenTur.MEMORY) {
-            result = EmulatorFrame.variableMap.get(degisken.deger).getValue(degisken.value);
-            result += 1;
-            if (degisken.size == 1 && result == 256) {
-                result = 0;
-            }
-            if (degisken.size == 2 && result == 65536) {
-                result = 0;
-            }
-            EmulatorFrame.variableMap.get(degisken.deger).setValue(degisken.value, result);
-        }
-        Flag.getFlag().ZF = (result == 0);
-        Flag.getFlag().PF = (result % 2 == 0);
+        Degisken dest = list.get(0);
+        StackElement result = dest.getDeger();
+        result.setValue(result.getValue() -1);
+        
+        dest.setDeger(result);
+        Flag.getFlag().ZF = (result.getValue() == 0);
+        //TODO PF yazılcak
         return ++satir;
     }
 
@@ -178,35 +159,15 @@ public class Instructions {
         return -1;
     }
 
-    public static int INC(int satir, Komut komut) {
+    public static int INC(int satir, Komut komut) throws Exception {
         List<Degisken> list = komut.getDegiskenList();
-        Degisken degisken = list.get(0);
-        int result = 0;
-        if (degisken.tur == DegiskenTur.REGISTER) {
-            result = Register.getRegister().getValue(degisken.deger);
-            result += 1;
-            if (degisken.size == 1 && result == 256) {
-                result = 0;
-            }
-            if (degisken.size == 2 && result == 65536) {
-                result = 0;
-            }
-            Register.getRegister().setValue(degisken.deger, result);
-
-        } else if (degisken.tur == DegiskenTur.MEMORY) {
-            result = EmulatorFrame.variableMap.get(degisken.deger).getValue(degisken.value);
-            result += 1;
-            System.out.println("reseult: " + result);
-            if (degisken.size == 1 && result == 256) {
-                result = 0;
-            }
-            if (degisken.size == 2 && result == 65536) {
-                result = 0;
-            }
-            EmulatorFrame.variableMap.get(degisken.deger).setValue(degisken.value, result);
-        }
-        Flag.getFlag().ZF = (result == 0);
-        Flag.getFlag().PF = (result % 2 == 0);
+        Degisken dest = list.get(0);
+        StackElement result = dest.getDeger();
+        result.setValue(result.getValue() +1);
+        
+        dest.setDeger(result);
+        Flag.getFlag().ZF = (result.getValue() == 0);
+        //TODO PF yazılcak
         return ++satir;
     }
 
@@ -371,7 +332,7 @@ public class Instructions {
         List<Degisken> list = komut.getDegiskenList();
         Degisken dest = list.get(0);
         Degisken src = list.get(1);
-        int result = dest.getDeger().value - (src.getDeger().value + (Flag.getFlag().CF ? 1 : 0));
+        int result = dest.getDeger().getValue() - (src.getDeger().getValue() + (Flag.getFlag().CF ? 1 : 0));
         setFlagStatesForAdd(dest.size, result);
         dest.setDeger(new StackElement(dest.size,result));
         return ++satir;
