@@ -76,7 +76,7 @@ public class Instructions {
         return ++satir;
     }
 
-    public static int AND(int satir, Komut komut) {
+    public static int AND(int satir, Komut komut) throws Exception {
         List<Degisken> list = komut.getDegiskenList();
         int result = 0;
         int operand1, operand2 = 0;
@@ -239,7 +239,7 @@ public class Instructions {
         return -1;
     }
 
-    public static int NEG(int satir, Komut komut) {
+    public static int NEG(int satir, Komut komut) throws Exception {
         //sayının negatifi
         List<Degisken> list = komut.getDegiskenList();
         Degisken degisken = list.get(0);
@@ -276,7 +276,7 @@ public class Instructions {
         return -1;
     }
 
-    public static int NOT(int satir, Komut komut) {
+    public static int NOT(int satir, Komut komut) throws Exception {
         List<Degisken> list = komut.getDegiskenList();
         Degisken degisken = list.get(0);
         int result = 0;
