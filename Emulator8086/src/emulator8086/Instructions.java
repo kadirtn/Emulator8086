@@ -296,12 +296,32 @@ public class Instructions {
         return -1;
     }
 
-    public static int SHR(int satir, Komut komut) {
-        return -1;
+    public static int SHR(int satir, Komut komut) throws Exception {
+        List<Degisken> list = komut.getDegiskenList();
+        Degisken dest = list.get(0);
+        Degisken src = list.get(1);
+        String result = "";
+        if(dest.tur == DegiskenTur.REGISTER && src.tur == DegiskenTur.IMMEDIATE){
+            result = kaydir(dest.getBinaryDeger(), -1 * src.value,false);
+        }
+        else
+            throw new Exception("Wrong types for ROL instruction");
+        dest.setDeger(new StackElement(dest.size, result));
+        return ++satir;
     }
 
-    public static int SHL(int satir, Komut komut) {
-        return -1;
+    public static int SHL(int satir, Komut komut) throws Exception {
+        List<Degisken> list = komut.getDegiskenList();
+        Degisken dest = list.get(0);
+        Degisken src = list.get(1);
+        String result = "";
+        if(dest.tur == DegiskenTur.REGISTER && src.tur == DegiskenTur.IMMEDIATE){
+            result = kaydir(dest.getBinaryDeger(),src.value,false);
+        }
+        else
+            throw new Exception("Wrong types for ROL instruction");
+        dest.setDeger(new StackElement(dest.size, result));
+        return ++satir;
     }
 
     public static int SBB(int satir, Komut komut) throws Exception {
@@ -320,7 +340,7 @@ public class Instructions {
         Degisken src = list.get(1);
         String result = "";
         if(dest.tur == DegiskenTur.REGISTER && src.tur == DegiskenTur.IMMEDIATE){
-            result = kaydir(dest.getBinaryDeger(), -1 * src.value);
+            result = kaydir(dest.getBinaryDeger(), -1 * src.value, true);
         }
         else
             throw new Exception("Wrong types for ROL instruction");
@@ -334,29 +354,32 @@ public class Instructions {
         Degisken src = list.get(1);
         String result = "";
         if(dest.tur == DegiskenTur.REGISTER && src.tur == DegiskenTur.IMMEDIATE){
-            result = kaydir(dest.getBinaryDeger(),src.value);
+            result = kaydir(dest.getBinaryDeger(),src.value, true);
         }
         else
             throw new Exception("Wrong types for ROL instruction");
         dest.setDeger(new StackElement(dest.size, result));
         return ++satir;
     }
-    private static String kaydir(String binary, int i){
+    private static String kaydir(String binary, int i, boolean roOperation){
         String buffer;
         for(int j = 0;j < i; j++){//sola
             buffer = binary.toString();
-            binary += binary.charAt(0);
+            binary = binary + (roOperation ? binary.charAt(0) : '0');
             binary = binary.substring(1);
             Flag.getFlag().CF = binary.charAt(buffer.length()-1) == '1';
             Flag.getFlag().OF = buffer.charAt(0) != binary.charAt(0);
-                
+            if(!roOperation)
+                Flag.getFlag().ZF = !binary.contains("1");
         }
         for(int j = 0; i < j; j--){//sağa
             buffer = binary.toString();
-            binary = binary.charAt(binary.length()-1)+binary;
+            binary = (roOperation ? binary.charAt(binary.length()-1) : '0')+binary;
             binary = binary.substring(0,binary.length() - 1);
             Flag.getFlag().CF = binary.charAt(0) == '1';
             Flag.getFlag().OF = buffer.charAt(0) != binary.charAt(0);
+            if(!roOperation)
+                Flag.getFlag().ZF = !binary.contains("1");
         }
         return binary;
     }
