@@ -16,7 +16,7 @@ public class Register {
     HashMap<String, Integer> registers = new HashMap<String, Integer>();
     private static Register register = null;
 
-    private Register() {
+    private Register() {//ilk yaratılışta register tanımları yapılıyor
         registers.put("AL", 0);
         registers.put("AH", 0);
         registers.put("BL", 0);
@@ -27,13 +27,13 @@ public class Register {
         registers.put("DH", 0);
     }
 
-    public static Register getRegister() {
+    public static Register getRegister() {//her çağrıldığında aynı register nesnesi döndürülüyor
         if (register == null) {
             register = new Register();
         }
         return register;
     }
-    public Integer getValue(String reg){
+    public Integer getValue(String reg){//parametre olarak yollanan register değeri decimal olarak döndürülüyor
         switch (reg) {
             case "AX":
                 return registers.get("AL") + registers.get("AH") * 256;
@@ -47,7 +47,7 @@ public class Register {
                 return registers.get(reg);
         }
     }
-    public String getHexValue(String reg){
+    public String getHexValue(String reg){//parametre olarak yollanan register değeri hexadecimal olarak döndürülüyor
         String result = "";
         Integer value = getValue(reg);
         if(value == null)
@@ -72,7 +72,7 @@ public class Register {
         return new StringBuilder(result).reverse().toString()+"h";
         
     }
-    public String getBinaryValue(String reg){
+    public String getBinaryValue(String reg){//parametre olarak yollanan register değeri binary olarak döndürülüyor
         String result = "";
         Integer value = getValue(reg);
         if(value == null)
@@ -91,18 +91,21 @@ public class Register {
         return new StringBuilder(result).reverse().toString()+"h";
         
     }
-    public String getChar(int val){
+    private String getChar(int val){
         if(val < 10)
             return val+"";
         return ((char)(55+val))+"";
     }
-    private String fillWithZero(int lngth, String result) {
+    private String fillWithZero(int lngth, String result) {//lngth değerinde girilen kadar sıfırla tamamlanır
+        //örnek:
+        //lngth = 8  result = 11010
+        //return edilen değer 11010000
         while(result.length() < lngth){
             result+="0";
         }
         return result;
     }
-    public void setValue(String reg, int value) throws Exception{
+    public void setValue(String reg, int value) throws Exception{//reg değeri olarak yollanan register a value alanındaki değer set edilir.
         switch (reg) {
             case "AX":
                 if(value >= 256 * 256)
