@@ -17,6 +17,16 @@ public class Degisken {
     public String deger;
     public int value;//decimal değer
     public int size;//byte büyüklüğü 1-2 byte
+    
+    //örnek değerler
+    //MOV AX, var[3] için;
+    // AX için değer = "AX", value = 0, size = 2(2 byte) lık Degisken nesnesi
+    // var[3] deger = "var", value = 3, size = (var değişkeni tanımı db olarak yapılmışsa 1, dw ise 2 olur)
+    
+    //MOV AL, 12h
+    // AL için değer = "AL", value = 0, size = 1(1 byte) lık Degisken nesnesi
+    // 12h için değer = null, value = 18(1*16 + 2*1), size = 0(değer için boyut belirsiz olduğundan)
+    
 
     public Degisken(int value) {
         tur = DegiskenTur.IMMEDIATE;

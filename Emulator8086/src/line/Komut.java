@@ -16,7 +16,7 @@ import java.util.List;
  */
 public class Komut extends Line {
     public String komut; //ADD
-    private List<Degisken> degiskenList = null;// 0) AX  , 1)BX
+    private List<Degisken> degiskenList = null;// komut tanımından sonra gelen değişkenlerin listesi 0) AX  , 1)BX
     public Komut(String line, String komut, int satir){
         super(line,satir);
         this.komut = komut;
@@ -28,7 +28,7 @@ public class Komut extends Line {
     public List getDegiskenList(){
         return degiskenList;
     }
-    public void yazdir(){
+    public void yazdir(){//outline da özeti görmek için
         System.out.println("KOMUT: "+komut);
         for (int i = 0; i < degiskenList.size(); i++) {
 			System.out.println((i+1)+". değişken: Türü"+degiskenList.get(i).tur+ " Değeri:"+ degiskenList.get(i).deger);
