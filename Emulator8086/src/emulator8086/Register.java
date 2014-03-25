@@ -75,25 +75,35 @@ public class Register {
             return val+"";
         return ((char)(55+val))+"";
     }
-    public void setValue(String reg, int value){
+    public void setValue(String reg, int value) throws Exception{
         switch (reg) {
             case "AX":
+                if(value >= 256 * 256)
+                    throw new Exception("Boyut Hatası!");
                 registers.put("AL", value %256);
                 registers.put("AH", (value - value%256) / 256);
                 break;
             case "BX":
+                if(value >= 256 * 256)
+                    throw new Exception("Boyut Hatası!");
                 registers.put("BL", value %256);
                 registers.put("BH", (value - value%256) / 256);
                 break;
             case "CX":
+                if(value >= 256 * 256)
+                    throw new Exception("Boyut Hatası!");
                 registers.put("CL", value %256);
                 registers.put("CH", (value - value%256) / 256);
                 break;
             case "DX":
+                if(value >= 256 * 256)
+                    throw new Exception("Boyut Hatası!");
                 registers.put("DL", value %256);
                 registers.put("DH", (value - value%256) / 256);
                 break;
             default:
+                if(value >= 256)
+                    throw new Exception("Boyut Hatası!");
                 registers.put(reg,value);
                 break;
         }
