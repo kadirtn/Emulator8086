@@ -24,7 +24,7 @@ public class CareTaker {
     public Memento get(int i){
         return mementoList.get(i);
     }
-    public void load(int i){
+    public void load(int i) throws Exception{
         Memento memento = mementoList.get(i);
         Register.getRegister().setValue("AX", memento.registers.get("AX"));
         Register.getRegister().setValue("BX", memento.registers.get("BX"));
