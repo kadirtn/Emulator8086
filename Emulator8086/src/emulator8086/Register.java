@@ -59,8 +59,10 @@ public class Register {
             val = (val-karakter)/16;
         }
         result += getChar(val);
-        if(result.length() == 1)
-            result+="0";
+        if(reg.contains("X"))
+            result = fillWithZero(4,result);
+        else
+            result = fillWithZero(2,result);
         if(result.endsWith("A") ||
                 result.endsWith("B") ||
                 result.endsWith("C") ||
@@ -70,10 +72,35 @@ public class Register {
         return new StringBuilder(result).reverse().toString()+"h";
         
     }
+    public String getBinaryValue(String reg){
+        String result = "";
+        Integer value = getValue(reg);
+        if(value == null)
+            return "NULL";
+        int val = value.intValue();
+        while(val >= 2){
+            int karakter = val % 2;
+            result += getChar(karakter);
+            val = (val-karakter)/2;
+        }
+        result += getChar(val);
+        if(reg.contains("X"))
+            result = fillWithZero(16,result);
+        else
+            result = fillWithZero(8,result);
+        return new StringBuilder(result).reverse().toString()+"h";
+        
+    }
     public String getChar(int val){
         if(val < 10)
             return val+"";
         return ((char)(55+val))+"";
+    }
+    private String fillWithZero(int lngth, String result) {
+        while(result.length() < lngth){
+            result+="0";
+        }
+        return result;
     }
     public void setValue(String reg, int value) throws Exception{
         switch (reg) {

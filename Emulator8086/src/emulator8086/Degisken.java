@@ -79,9 +79,9 @@ public class Degisken {
         }
         result += getChar(val);
         if(size == 1)
-            fillWithZero(2,result);
+            result = fillWithZero(2,result);
         if(size == 2)
-            fillWithZero(4,result);
+            result = fillWithZero(4,result);
         if(result.endsWith("A") ||
                 result.endsWith("B") ||
                 result.endsWith("C") ||
@@ -106,9 +106,9 @@ public class Degisken {
         }
         result += getChar(val);
         if(size == 1)
-            fillWithZero(8,result);
+            result = fillWithZero(8,result);
         if(size == 2)
-            fillWithZero(16,result);
+            result = fillWithZero(16,result);
         return new StringBuilder(result).reverse().toString();
     }
     private String getChar(int val){
@@ -116,10 +116,11 @@ public class Degisken {
             return val+"";
         return ((char)(55+val))+"";
     }
-    private void fillWithZero(int lngth, String result) {
+    private String fillWithZero(int lngth, String result) {
         while(result.length() < lngth){
             result+="0";
         }
+        return result;
     }
 
     public enum DegiskenTur {
