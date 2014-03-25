@@ -31,6 +31,7 @@ public class Instructions {
         Degisken src = list.get(1);
         int result = dest.getDeger().getValue() + src.getDeger().getValue();
         dest.setDeger(new StackElement(dest.size,setFlagStatesForAdd(dest.size, result)));
+        Flag.getFlag().PF = (dest.getBinaryDeger().length() - dest.getBinaryDeger().replace("1", "").length()) % 2 == 1;
         return ++satir;
     }
     public static int SUB(int satir, Komut komut) throws Exception {
@@ -39,6 +40,7 @@ public class Instructions {
         Degisken src = list.get(1);
         int result = dest.getDeger().getValue() - src.getDeger().getValue();
         dest.setDeger(new StackElement(dest.size,setFlagStatesForAdd(dest.size, result)));
+        Flag.getFlag().PF = (dest.getBinaryDeger().length() - dest.getBinaryDeger().replace("1", "").length()) % 2 == 1;
         return ++satir;
     }
 
@@ -69,6 +71,7 @@ public class Instructions {
         Degisken src = list.get(1);
         int result = dest.getDeger().getValue() + src.getDeger().getValue() + (Flag.getFlag().CF ? 1 : 0);
         dest.setDeger(new StackElement(dest.size,setFlagStatesForAdd(dest.size, result)));
+        Flag.getFlag().PF = (dest.getBinaryDeger().length() - dest.getBinaryDeger().replace("1", "").length()) % 2 == 1;
         return ++satir;
     }
 
@@ -307,6 +310,7 @@ public class Instructions {
         Degisken src = list.get(1);
         int result = dest.getDeger().getValue() - (src.getDeger().getValue() + (Flag.getFlag().CF ? 1 : 0));
         dest.setDeger(new StackElement(dest.size,setFlagStatesForAdd(dest.size, result)));
+        Flag.getFlag().PF = (dest.getBinaryDeger().length() - dest.getBinaryDeger().replace("1", "").length()) % 2 == 1;
         return ++satir;
     }
 
@@ -368,7 +372,6 @@ public class Instructions {
                     Flag.getFlag().CF = false;
                 Flag.getFlag().ZF = result == 0;
                 Flag.getFlag().SF = result > 127;
-
                 break;
             case 2:
                 if (result > 65535 || result < 0) {
