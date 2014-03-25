@@ -607,7 +607,14 @@ public class EmulatorFrame extends javax.swing.JFrame {
                     } else if (value != -1) {//Immediate
                         ((Komut) yeniKomut).addDegisken(new Degisken(value));
                     } else if(tokens.get(0).equals("LOOP") || tokens.get(0).equals("JMP")
-                            ||tokens.get(0).equals("JAE") || tokens.get(0).equals("JA")){
+                            ||tokens.get(0).equals("JAE") || tokens.get(0).equals("JA")
+                            ||tokens.get(0).equals("JBE") || tokens.get(0).equals("JB")
+                            ||tokens.get(0).equals("JAE") || tokens.get(0).equals("JA")
+                            ||tokens.get(0).equals("JE") || tokens.get(0).equals("JG")
+                            ||tokens.get(0).equals("JGE") || tokens.get(0).equals("JL")
+                            ||tokens.get(0).equals("JLE") || tokens.get(0).equals("JNE")
+                            ||tokens.get(0).equals("JNP") || tokens.get(0).equals("JP")
+                            ||tokens.get(0).equals("JPO")){
                         ((Komut) yeniKomut).functionLine = functionMap.get(tokens.get(1));
                     }
                     else {//Memory

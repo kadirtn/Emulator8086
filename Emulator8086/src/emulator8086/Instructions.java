@@ -119,15 +119,23 @@ public class Instructions {
     }
 
     public static int CLC(int satir, Komut komut) {
+        Flag.getFlag().CF = false;
         return ++satir;
     }
 
     public static int CLD(int satir, Komut komut) {
-        return -1;
+        Flag.getFlag().DF = false;
+        return ++satir;
     }
 
     public static int CMP(int satir, Komut komut) {
-        return -1;
+        List<Degisken> list = komut.getDegiskenList();
+        Degisken dest = list.get(0);
+        Degisken src = list.get(1);
+        int result = dest.getDeger().getValue() - src.getDeger().getValue();
+        Degisken dummy = new Degisken(setFlagStatesForAdd(dest.size, result));
+        Flag.getFlag().PF = (dummy.getBinaryDeger().length() - dummy.getBinaryDeger().replace("1", "").length()) % 2 == 1;
+        return ++satir;
     }
 
     public static int DEC(int satir, Komut komut) throws Exception {
@@ -177,33 +185,45 @@ public class Instructions {
     }
 
     public static int JAE(int satir, Komut komut) {
-        if(Flag.getFlag().CF)
+        if(!Flag.getFlag().CF)
             return komut.functionLine;
         return ++satir;
     }
 
     public static int JB(int satir, Komut komut) {
-        return -1;
+        if(Flag.getFlag().CF)
+            return komut.functionLine;
+        return ++satir;
     }
 
     public static int JBE(int satir, Komut komut) {
-        return -1;
+        if(Flag.getFlag().CF && Flag.getFlag().ZF)
+            return komut.functionLine;
+        return ++satir;
     }
 
     public static int JE(int satir, Komut komut) {
-        return -1;
+        if(Flag.getFlag().ZF)
+            return komut.functionLine;
+        return ++satir;
     }
 
     public static int JG(int satir, Komut komut) {
-        return -1;
+        if(!Flag.getFlag().ZF && Flag.getFlag().SF == Flag.getFlag().OF)
+            return komut.functionLine;
+        return ++satir;
     }
 
     public static int JGE(int satir, Komut komut) {
-        return -1;
+        if(Flag.getFlag().SF == Flag.getFlag().OF)
+            return komut.functionLine;
+        return ++satir;
     }
 
     public static int JL(int satir, Komut komut) {
-        return -1;
+        if(Flag.getFlag().SF != Flag.getFlag().OF)
+            return komut.functionLine;
+        return ++satir;
     }
 
     public static int JMP(int satir, Komut komut) {
@@ -211,27 +231,37 @@ public class Instructions {
     }
 
     public static int JLE(int satir, Komut komut) {
-        return -1;
+        if(Flag.getFlag().SF != Flag.getFlag().OF && Flag.getFlag().ZF)
+            return komut.functionLine;
+        return ++satir;
     }
 
     public static int JNE(int satir, Komut komut) {
-        return -1;
+        if(!Flag.getFlag().ZF)
+            return komut.functionLine;
+        return ++satir;
     }
 
     public static int JNP(int satir, Komut komut) {
-        return -1;
+        if(!Flag.getFlag().PF)
+            return komut.functionLine;
+        return ++satir;
     }
 
     public static int JP(int satir, Komut komut) {
-        return -1;
+        if(Flag.getFlag().PF)
+            return komut.functionLine;
+        return ++satir;
     }
 
     public static int JPO(int satir, Komut komut) {
-        return -1;
+        if(!Flag.getFlag().PF)
+            return komut.functionLine;
+        return ++satir;
     }
 
-    public static int LEA(int satir, Komut komut) {
-        return -1;
+    public static int LEA(int satir, Komut komut) throws Exception {
+        throw new Exception("LEA instruction is not supported");
     }
 
     public static int LOOP(int satir, Komut komut) throws Exception {
@@ -266,7 +296,7 @@ public class Instructions {
     public static int NOP(int satir, Komut komut) {
         //beklemeye sebep olan komut, etkisi yok 
         //Do nothing
-        return -1;
+        return ++satir;
     }
 
     public static int NOT(int satir, Komut komut) throws Exception {
@@ -296,11 +326,13 @@ public class Instructions {
     }
 
     public static int STD(int satir, Komut komut) {
-        return -1;
+        Flag.getFlag().DF = true;
+        return ++satir;
     }
 
     public static int STC(int satir, Komut komut) {
-        return -1;
+        Flag.getFlag().CF = true;
+        return ++satir;
     }
 
     public static int SHR(int satir, Komut komut) throws Exception {
