@@ -346,33 +346,6 @@ public class Instructions {
         return -1;
     }
 
-    private static void sizeControl(Degisken dest, Degisken src) throws Exception {
-        if (dest.tur == DegiskenTur.REGISTER && src.tur == DegiskenTur.REGISTER) {
-            if (dest.size != src.size) {
-                throw new Exception("Boyut hatası");
-            }
-        } else if (dest.tur == DegiskenTur.MEMORY && src.tur == DegiskenTur.REGISTER) {
-            if (dest.size != src.size) {
-                throw new Exception("Boyut hatası");
-            } else if (dest.tur == DegiskenTur.REGISTER && src.tur == DegiskenTur.MEMORY) {
-                if (dest.size != src.size) {
-                    throw new Exception("Boyut hatası");
-                }
-            } else if (dest.tur == DegiskenTur.MEMORY && src.tur == DegiskenTur.MEMORY) {
-                if (dest.size != src.size) {
-                    throw new Exception("Boyut hatası");
-                }
-            } else if (dest.tur == DegiskenTur.REGISTER && src.tur == DegiskenTur.IMMEDIATE) {
-                if ((dest.size == 2 && src.value > 65535) || (dest.size == 1 && src.value > 255)) {
-                    throw new Exception("Boyut hatası");
-                }
-            } else if (dest.tur == DegiskenTur.MEMORY && src.tur == DegiskenTur.IMMEDIATE);
-        }
-        if ((dest.size == 2 && src.value > 65535) || (dest.size == 1 && src.value > 255)) {
-            throw new Exception("Boyut hatası");
-        }
-    }
-
     private static int setFlagStatesForAdd(int size, int result) {
         switch (size) {
             case 1:
