@@ -63,6 +63,16 @@ public class Instructions {
         return ++satir;
     }
 
+    public static int ADDNEW(int satir, Komut komut) throws Exception {
+        List<Degisken> list = komut.getDegiskenList();
+        Degisken dest = list.get(0);
+        Degisken src = list.get(1);
+        int result = dest.getDeger().value + src.getDeger().value;
+        setFlagStatesForAdd(dest.size, result);
+        dest.setDeger(new StackElement(dest.size,result));
+        return ++satir;
+    }
+
     public static int SUB(int satir, Komut komut) throws Exception {
         List<Degisken> list = komut.getDegiskenList();
         sizeControl(list.get(0), list.get(1));
@@ -160,22 +170,24 @@ public class Instructions {
         if (list.get(0).tur == DegiskenTur.REGISTER && list.get(1).tur == DegiskenTur.REGISTER) {
             operand1 = Register.getRegister().getValue(list.get(0).deger);
             operand2 = Register.getRegister().getValue(list.get(1).deger);
-            
-            if(operand1==1 && operand2==1)
+
+            if (operand1 == 1 && operand2 == 1) {
                 result = 1;
-            else
+            } else {
                 result = 0;
+            }
             Register.getRegister().setValue(list.get(0).deger, result);
         } else if (list.get(0).tur == DegiskenTur.REGISTER && list.get(1).tur == DegiskenTur.IMMEDIATE) {
-             operand1 = Register.getRegister().getValue(list.get(0).deger);
+            operand1 = Register.getRegister().getValue(list.get(0).deger);
             operand2 = list.get(1).value;
-            
-            if(operand1==1 && operand2==1)
+
+            if (operand1 == 1 && operand2 == 1) {
                 result = 1;
-            else
+            } else {
                 result = 0;
+            }
             Register.getRegister().setValue(list.get(0).deger, result);
-            
+
         } else if (list.get(0).tur == DegiskenTur.REGISTER && list.get(1).tur == DegiskenTur.MEMORY) {
             result = Register.getRegister().getValue(list.get(0).deger) + EmulatorFrame.variableMap.get(list.get(1).deger).getValue(list.get(1).value);
             Register.getRegister().setValue(list.get(0).deger, setFlagStatesForAdd(list.get(0).size, result));
@@ -269,7 +281,7 @@ public class Instructions {
         } else if (degisken.tur == DegiskenTur.MEMORY) {
             result = EmulatorFrame.variableMap.get(degisken.deger).getValue(degisken.value);
             result += 1;
-            System.out.println("reseult: "+result);
+            System.out.println("reseult: " + result);
             if (degisken.size == 1 && result == 256) {
                 result = 0;
             }
@@ -374,11 +386,11 @@ public class Instructions {
             if (degisken.size == 2) {
                 result = 65536 - result;
             }
-            System.out.println("result: "+result);
+            System.out.println("result: " + result);
             EmulatorFrame.variableMap.get(degisken.deger).setValue(degisken.value, result);
         }
-    //    Flag.getFlag().ZF = (result == 0);
-     //   Flag.getFlag().PF = (result % 2 == 0);
+        //    Flag.getFlag().ZF = (result == 0);
+        //   Flag.getFlag().PF = (result % 2 == 0);
         return ++satir;
     }
 
@@ -410,7 +422,7 @@ public class Instructions {
             if (degisken.size == 2) {
                 result = 65535 - result;
             }
-            System.out.println("result: "+result);
+            System.out.println("result: " + result);
             EmulatorFrame.variableMap.get(degisken.deger).setValue(degisken.value, result);
         }
         return ++satir;
@@ -481,23 +493,23 @@ public class Instructions {
         if (dest.tur == DegiskenTur.REGISTER && src.tur == DegiskenTur.REGISTER) {
             if (dest.size != src.size) {
                 throw new Exception("Boyut hatası");
-            } else if (dest.tur == DegiskenTur.MEMORY && src.tur == DegiskenTur.REGISTER) {
+            }
+        } else if (dest.tur == DegiskenTur.MEMORY && src.tur == DegiskenTur.REGISTER) {
+            if (dest.size != src.size) {
+                throw new Exception("Boyut hatası");
+            } else if (dest.tur == DegiskenTur.REGISTER && src.tur == DegiskenTur.MEMORY) {
                 if (dest.size != src.size) {
                     throw new Exception("Boyut hatası");
-                } else if (dest.tur == DegiskenTur.REGISTER && src.tur == DegiskenTur.MEMORY) {
-                    if (dest.size != src.size) {
-                        throw new Exception("Boyut hatası");
-                    } else if (dest.tur == DegiskenTur.MEMORY && src.tur == DegiskenTur.MEMORY) {
-                        if (dest.size != src.size) {
-                            throw new Exception("Boyut hatası");
-                        } else if (dest.tur == DegiskenTur.REGISTER && src.tur == DegiskenTur.IMMEDIATE) {
-                            if ((dest.size == 2 && src.value > 65535) || (dest.size == 1 && src.value > 255)) {
-                                throw new Exception("Boyut hatası");
-                            }
-                        } else if (dest.tur == DegiskenTur.MEMORY && src.tur == DegiskenTur.IMMEDIATE);
-                    }
                 }
-            }
+            } else if (dest.tur == DegiskenTur.MEMORY && src.tur == DegiskenTur.MEMORY) {
+                if (dest.size != src.size) {
+                    throw new Exception("Boyut hatası");
+                }
+            } else if (dest.tur == DegiskenTur.REGISTER && src.tur == DegiskenTur.IMMEDIATE) {
+                if ((dest.size == 2 && src.value > 65535) || (dest.size == 1 && src.value > 255)) {
+                    throw new Exception("Boyut hatası");
+                }
+            } else if (dest.tur == DegiskenTur.MEMORY && src.tur == DegiskenTur.IMMEDIATE);
         }
         if ((dest.size == 2 && src.value > 65535) || (dest.size == 1 && src.value > 255)) {
             throw new Exception("Boyut hatası");
