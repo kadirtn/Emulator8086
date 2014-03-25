@@ -20,50 +20,13 @@ public class Instructions {
 
     public static int MOV(int satir, Komut komut) throws Exception {
         List<Degisken> list = komut.getDegiskenList();
-        sizeControl(list.get(0), list.get(1));
-        if (list.get(0).tur == DegiskenTur.REGISTER && list.get(1).tur == DegiskenTur.REGISTER) {
-            Register.getRegister().setValue(list.get(0).deger, Register.getRegister().getValue(list.get(1).deger));
-        } else if (list.get(0).tur == DegiskenTur.REGISTER && list.get(1).tur == DegiskenTur.IMMEDIATE) {
-            Register.getRegister().setValue(list.get(0).deger, list.get(1).value);
-        } else if (list.get(0).tur == DegiskenTur.REGISTER && list.get(1).tur == DegiskenTur.MEMORY) {
-            Register.getRegister().setValue(list.get(0).deger, EmulatorFrame.variableMap.get(list.get(1).deger).getValue(list.get(1).value));
-        } else if (list.get(0).tur == DegiskenTur.MEMORY && list.get(1).tur == DegiskenTur.REGISTER) {
-            EmulatorFrame.variableMap.get(list.get(0).deger).setValue(list.get(0).value, Register.getRegister().getValue(list.get(1).deger));
-        } else if (list.get(0).tur == DegiskenTur.MEMORY && list.get(1).tur == DegiskenTur.IMMEDIATE) {
-            EmulatorFrame.variableMap.get(list.get(0).deger).setValue(list.get(0).value, list.get(1).value);
-        } else if (list.get(0).tur == DegiskenTur.MEMORY && list.get(1).tur == DegiskenTur.MEMORY) {
-            EmulatorFrame.variableMap.get(list.get(0).deger).setValue(list.get(0).value, list.get(1).value);
-        }
+        Degisken dest = list.get(0);
+        Degisken src = list.get(1);
+        dest.setDeger(src.getDeger());
         return ++satir;
     }
 
     public static int ADD(int satir, Komut komut) throws Exception {
-        List<Degisken> list = komut.getDegiskenList();
-        sizeControl(list.get(0), list.get(1));
-        int result = 0;
-        if (list.get(0).tur == DegiskenTur.REGISTER && list.get(1).tur == DegiskenTur.REGISTER) {
-            result = Register.getRegister().getValue(list.get(0).deger) + Register.getRegister().getValue(list.get(1).deger);
-            Register.getRegister().setValue(list.get(0).deger, setFlagStatesForAdd(list.get(0).size, result));
-        } else if (list.get(0).tur == DegiskenTur.REGISTER && list.get(1).tur == DegiskenTur.IMMEDIATE) {
-            result = Register.getRegister().getValue(list.get(0).deger) + list.get(1).value;
-            Register.getRegister().setValue(list.get(0).deger, setFlagStatesForAdd(list.get(0).size, result));
-        } else if (list.get(0).tur == DegiskenTur.REGISTER && list.get(1).tur == DegiskenTur.MEMORY) {
-            result = Register.getRegister().getValue(list.get(0).deger) + EmulatorFrame.variableMap.get(list.get(1).deger).getValue(list.get(1).value);
-            Register.getRegister().setValue(list.get(0).deger, setFlagStatesForAdd(list.get(0).size, result));
-        } else if (list.get(0).tur == DegiskenTur.MEMORY && list.get(1).tur == DegiskenTur.REGISTER) {
-            result = EmulatorFrame.variableMap.get(list.get(0).deger).getValue(list.get(0).value) + Register.getRegister().getValue(list.get(1).deger);
-            EmulatorFrame.variableMap.get(list.get(0).deger).setValue(list.get(0).value, setFlagStatesForAdd(list.get(0).size, result));
-        } else if (list.get(0).tur == DegiskenTur.MEMORY && list.get(1).tur == DegiskenTur.IMMEDIATE) {
-            result = EmulatorFrame.variableMap.get(list.get(0).deger).getValue(list.get(0).value) + list.get(1).value;
-            EmulatorFrame.variableMap.get(list.get(0).deger).setValue(list.get(0).value, setFlagStatesForAdd(list.get(0).size, result));
-        } else if (list.get(0).tur == DegiskenTur.MEMORY && list.get(1).tur == DegiskenTur.MEMORY) {
-            result = EmulatorFrame.variableMap.get(list.get(0).deger).getValue(list.get(0).value) + list.get(1).value;
-            EmulatorFrame.variableMap.get(list.get(0).deger).setValue(list.get(0).value, setFlagStatesForAdd(list.get(0).size, result));
-        }
-        return ++satir;
-    }
-
-    public static int ADDNEW(int satir, Komut komut) throws Exception {
         List<Degisken> list = komut.getDegiskenList();
         Degisken dest = list.get(0);
         Degisken src = list.get(1);
@@ -72,39 +35,22 @@ public class Instructions {
         dest.setDeger(new StackElement(dest.size,result));
         return ++satir;
     }
-
     public static int SUB(int satir, Komut komut) throws Exception {
         List<Degisken> list = komut.getDegiskenList();
-        sizeControl(list.get(0), list.get(1));
-        int result = 0;
-        if (list.get(0).tur == DegiskenTur.REGISTER && list.get(1).tur == DegiskenTur.REGISTER) {
-            result = Register.getRegister().getValue(list.get(0).deger) - Register.getRegister().getValue(list.get(1).deger);
-            Register.getRegister().setValue(list.get(0).deger, setFlagStatesForAdd(list.get(0).size, result));
-        } else if (list.get(0).tur == DegiskenTur.REGISTER && list.get(1).tur == DegiskenTur.IMMEDIATE) {
-            result = Register.getRegister().getValue(list.get(0).deger) - list.get(1).value;
-            Register.getRegister().setValue(list.get(0).deger, setFlagStatesForAdd(list.get(0).size, result));
-        } else if (list.get(0).tur == DegiskenTur.REGISTER && list.get(1).tur == DegiskenTur.MEMORY) {
-            result = Register.getRegister().getValue(list.get(0).deger) - EmulatorFrame.variableMap.get(list.get(1).deger).getValue(list.get(1).value);
-            Register.getRegister().setValue(list.get(0).deger, setFlagStatesForAdd(list.get(0).size, result));
-        } else if (list.get(0).tur == DegiskenTur.MEMORY && list.get(1).tur == DegiskenTur.REGISTER) {
-            result = EmulatorFrame.variableMap.get(list.get(0).deger).getValue(list.get(0).value) - Register.getRegister().getValue(list.get(1).deger);
-            EmulatorFrame.variableMap.get(list.get(0).deger).setValue(list.get(0).value, setFlagStatesForAdd(list.get(0).size, result));
-        } else if (list.get(0).tur == DegiskenTur.MEMORY && list.get(1).tur == DegiskenTur.IMMEDIATE) {
-            result = EmulatorFrame.variableMap.get(list.get(0).deger).getValue(list.get(0).value) - list.get(1).value;
-            EmulatorFrame.variableMap.get(list.get(0).deger).setValue(list.get(0).value, setFlagStatesForAdd(list.get(0).size, result));
-        } else if (list.get(0).tur == DegiskenTur.MEMORY && list.get(1).tur == DegiskenTur.MEMORY) {
-            result = EmulatorFrame.variableMap.get(list.get(0).deger).getValue(list.get(0).value) - list.get(1).value;
-            EmulatorFrame.variableMap.get(list.get(0).deger).setValue(list.get(0).value, setFlagStatesForAdd(list.get(0).size, result));
-        }
+        Degisken dest = list.get(0);
+        Degisken src = list.get(1);
+        int result = dest.getDeger().value - src.getDeger().value;
+        setFlagStatesForAdd(dest.size, result);
+        dest.setDeger(new StackElement(dest.size,result));
         return ++satir;
     }
 
     public static int PUSH(int satir, Komut komut) throws Exception {
         Degisken degisken = (Degisken) komut.getDegiskenList().get(0);
         if (degisken.tur == DegiskenTur.REGISTER) {
-            Stack.getStack().push(new StackElement(degisken.size, Register.getRegister().getValue(degisken.deger)));
+            Stack.getStack().push(degisken.getDeger());
         } else if (degisken.tur == DegiskenTur.MEMORY) {
-            Stack.getStack().push(new StackElement(degisken.size, EmulatorFrame.variableMap.get(degisken.deger).getValue(degisken.value)));
+            Stack.getStack().push(degisken.getDeger());
         } else {
             throw new Exception("Push edilen değer register veya memory olmalı");
         }
@@ -114,50 +60,19 @@ public class Instructions {
     public static int POP(int satir, Komut komut) throws Exception {
         Degisken degisken = (Degisken) komut.getDegiskenList().get(0);
         StackElement element = Stack.getStack().pop();
-        if (degisken.tur == DegiskenTur.REGISTER) {
-            if (degisken.size == element.size) {
-                Register.getRegister().setValue(degisken.deger, element.value);
-            } else {
-                throw new Exception("Boyut hatası");
-            }
-        } else if (degisken.tur == DegiskenTur.MEMORY) {
-            if (degisken.size == element.size) {
-                EmulatorFrame.variableMap.get(degisken.deger).setValue(degisken.value, element.value);
-            } else {
-                throw new Exception("Boyut hatası");
-            }
-        } else {
-            throw new Exception("Pop edilen değer register veya memory olmalı");
-        }
+        if(degisken.size < 2)
+            throw new Exception("Pop edilen destination boyutu word(2 byte) olmalı.");
+        degisken.setDeger(element);
         return ++satir;
     }
 
     public static int ADC(int satir, Komut komut) throws Exception {
         List<Degisken> list = komut.getDegiskenList();
-        sizeControl(list.get(0), list.get(1));
-        int result = 0;
-        if (Flag.getFlag().CF) {
-            result += 1;
-        }
-        if (list.get(0).tur == DegiskenTur.REGISTER && list.get(1).tur == DegiskenTur.REGISTER) {
-            result = Register.getRegister().getValue(list.get(0).deger) + Register.getRegister().getValue(list.get(1).deger);
-            Register.getRegister().setValue(list.get(0).deger, setFlagStatesForAdd(list.get(0).size, result));
-        } else if (list.get(0).tur == DegiskenTur.REGISTER && list.get(1).tur == DegiskenTur.IMMEDIATE) {
-            result = Register.getRegister().getValue(list.get(0).deger) + list.get(1).value;
-            Register.getRegister().setValue(list.get(0).deger, setFlagStatesForAdd(list.get(0).size, result));
-        } else if (list.get(0).tur == DegiskenTur.REGISTER && list.get(1).tur == DegiskenTur.MEMORY) {
-            result = Register.getRegister().getValue(list.get(0).deger) + EmulatorFrame.variableMap.get(list.get(1).deger).getValue(list.get(1).value);
-            Register.getRegister().setValue(list.get(0).deger, setFlagStatesForAdd(list.get(0).size, result));
-        } else if (list.get(0).tur == DegiskenTur.MEMORY && list.get(1).tur == DegiskenTur.REGISTER) {
-            result = EmulatorFrame.variableMap.get(list.get(0).deger).getValue(list.get(0).value) + Register.getRegister().getValue(list.get(1).deger);
-            EmulatorFrame.variableMap.get(list.get(0).deger).setValue(list.get(0).value, setFlagStatesForAdd(list.get(0).size, result));
-        } else if (list.get(0).tur == DegiskenTur.MEMORY && list.get(1).tur == DegiskenTur.IMMEDIATE) {
-            result = EmulatorFrame.variableMap.get(list.get(0).deger).getValue(list.get(0).value) + list.get(1).value;
-            EmulatorFrame.variableMap.get(list.get(0).deger).setValue(list.get(0).value, setFlagStatesForAdd(list.get(0).size, result));
-        } else if (list.get(0).tur == DegiskenTur.MEMORY && list.get(1).tur == DegiskenTur.MEMORY) {
-            result = EmulatorFrame.variableMap.get(list.get(0).deger).getValue(list.get(0).value) + list.get(1).value;
-            EmulatorFrame.variableMap.get(list.get(0).deger).setValue(list.get(0).value, setFlagStatesForAdd(list.get(0).size, result));
-        }
+        Degisken dest = list.get(0);
+        Degisken src = list.get(1);
+        int result = dest.getDeger().value + src.getDeger().value + (Flag.getFlag().CF ? 1 : 0);
+        setFlagStatesForAdd(dest.size, result);
+        dest.setDeger(new StackElement(dest.size,result));
         return ++satir;
     }
 
@@ -454,30 +369,11 @@ public class Instructions {
 
     public static int SBB(int satir, Komut komut) throws Exception {
         List<Degisken> list = komut.getDegiskenList();
-        sizeControl(list.get(0), list.get(1));
-        int result = 0;
-        if (Flag.getFlag().CF) {
-            result -= 1;
-        }
-        if (list.get(0).tur == DegiskenTur.REGISTER && list.get(1).tur == DegiskenTur.REGISTER) {
-            result = Register.getRegister().getValue(list.get(0).deger) - Register.getRegister().getValue(list.get(1).deger);
-            Register.getRegister().setValue(list.get(0).deger, setFlagStatesForAdd(list.get(0).size, result));
-        } else if (list.get(0).tur == DegiskenTur.REGISTER && list.get(1).tur == DegiskenTur.IMMEDIATE) {
-            result = Register.getRegister().getValue(list.get(0).deger) - list.get(1).value;
-            Register.getRegister().setValue(list.get(0).deger, setFlagStatesForAdd(list.get(0).size, result));
-        } else if (list.get(0).tur == DegiskenTur.REGISTER && list.get(1).tur == DegiskenTur.MEMORY) {
-            result = Register.getRegister().getValue(list.get(0).deger) - EmulatorFrame.variableMap.get(list.get(1).deger).getValue(list.get(1).value);
-            Register.getRegister().setValue(list.get(0).deger, setFlagStatesForAdd(list.get(0).size, result));
-        } else if (list.get(0).tur == DegiskenTur.MEMORY && list.get(1).tur == DegiskenTur.REGISTER) {
-            result = EmulatorFrame.variableMap.get(list.get(0).deger).getValue(list.get(0).value) - Register.getRegister().getValue(list.get(1).deger);
-            EmulatorFrame.variableMap.get(list.get(0).deger).setValue(list.get(0).value, setFlagStatesForAdd(list.get(0).size, result));
-        } else if (list.get(0).tur == DegiskenTur.MEMORY && list.get(1).tur == DegiskenTur.IMMEDIATE) {
-            result = EmulatorFrame.variableMap.get(list.get(0).deger).getValue(list.get(0).value) - list.get(1).value;
-            EmulatorFrame.variableMap.get(list.get(0).deger).setValue(list.get(0).value, setFlagStatesForAdd(list.get(0).size, result));
-        } else if (list.get(0).tur == DegiskenTur.MEMORY && list.get(1).tur == DegiskenTur.MEMORY) {
-            result = EmulatorFrame.variableMap.get(list.get(0).deger).getValue(list.get(0).value) - list.get(1).value;
-            EmulatorFrame.variableMap.get(list.get(0).deger).setValue(list.get(0).value, setFlagStatesForAdd(list.get(0).size, result));
-        }
+        Degisken dest = list.get(0);
+        Degisken src = list.get(1);
+        int result = dest.getDeger().value - (src.getDeger().value + (Flag.getFlag().CF ? 1 : 0));
+        setFlagStatesForAdd(dest.size, result);
+        dest.setDeger(new StackElement(dest.size,result));
         return ++satir;
     }
 
