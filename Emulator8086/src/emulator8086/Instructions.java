@@ -238,31 +238,18 @@ public class Instructions {
     public static int NEG(int satir, Komut komut) throws Exception {
         //sayının negatifi
         List<Degisken> list = komut.getDegiskenList();
-        Degisken degisken = list.get(0);
-        int result;
-        if (degisken.tur == DegiskenTur.REGISTER) {
-            result = Register.getRegister().getValue(degisken.deger);
-            if (degisken.size == 1) {
-                result = 256 - result;
-            }
-            if (degisken.size == 2) {
-                result = 65536 - result;
-            }
-            Register.getRegister().setValue(degisken.deger, result);
-
-        } else if (degisken.tur == DegiskenTur.MEMORY) {
-            result = EmulatorFrame.variableMap.get(degisken.deger).getValue(degisken.value);
-            if (degisken.size == 1) {
-                result = 256 - result;
-            }
-            if (degisken.size == 2) {
-                result = 65536 - result;
-            }
-            System.out.println("result: " + result);
-            EmulatorFrame.variableMap.get(degisken.deger).setValue(degisken.value, result);
+        Degisken dest = list.get(0);
+        StackElement result = dest.getDeger();
+  
+        if(dest.size == 1){
+            result.setValue(256 - result.getValue());
         }
-        //    Flag.getFlag().ZF = (result == 0);
-        //   Flag.getFlag().PF = (result % 2 == 0);
+        if(dest.size == 2){
+            result.setValue(65536 - result.getValue());
+        }
+        dest.setDeger(result);
+        Flag.getFlag().ZF = (result.getValue() == 0);
+        //TODO PF yazılcak
         return ++satir;
     }
 
@@ -273,30 +260,20 @@ public class Instructions {
     }
 
     public static int NOT(int satir, Komut komut) throws Exception {
+        //sayının değili
         List<Degisken> list = komut.getDegiskenList();
-        Degisken degisken = list.get(0);
-        int result;
-        if (degisken.tur == DegiskenTur.REGISTER) {
-            result = Register.getRegister().getValue(degisken.deger);
-            if (degisken.size == 1) {
-                result = 255 - result;
-            }
-            if (degisken.size == 2) {
-                result = 65535 - result;
-            }
-            Register.getRegister().setValue(degisken.deger, result);
-
-        } else if (degisken.tur == DegiskenTur.MEMORY) {
-            result = EmulatorFrame.variableMap.get(degisken.deger).getValue(degisken.value);
-            if (degisken.size == 1) {
-                result = 255 - result;
-            }
-            if (degisken.size == 2) {
-                result = 65535 - result;
-            }
-            System.out.println("result: " + result);
-            EmulatorFrame.variableMap.get(degisken.deger).setValue(degisken.value, result);
+        Degisken dest = list.get(0);
+        StackElement result = dest.getDeger();
+  
+        if(dest.size == 1){
+            result.setValue(255 - result.getValue());
         }
+        if(dest.size == 2){
+            result.setValue(65535 - result.getValue());
+        }
+        dest.setDeger(result);
+        Flag.getFlag().ZF = (result.getValue() == 0);
+        //TODO PF yazılcak
         return ++satir;
     }
 
