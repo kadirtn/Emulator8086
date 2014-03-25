@@ -5,6 +5,8 @@
  */
 package emulator8086;
 
+import steps.StackElement;
+
 /**
  *
  * @author PRowLeR
@@ -25,19 +27,45 @@ public class Degisken {
     public Degisken(String reg) {
         tur = DegiskenTur.REGISTER;
         deger = reg;
-        if(reg.equals("AX") || reg.equals("BX") || reg.equals("CX") || reg.equals("DX"))
+        if (reg.equals("AX") || reg.equals("BX") || reg.equals("CX") || reg.equals("DX")) {
             size = 2;
-        else
+        } else {
             size = 1;
+        }
     }
-    public Degisken(String degiskenAdi, int boyut, int index){
+
+    public Degisken(String degiskenAdi, int boyut, int index) {
         tur = DegiskenTur.MEMORY;
         deger = degiskenAdi;
         size = boyut;
         value = index;
     }
 
+    public StackElement getDeger() {
+        if (tur == DegiskenTur.REGISTER) {
+            return new StackElement(size, Register.getRegister().getValue(deger));
+        } else if (tur == DegiskenTur.MEMORY) {
+            return new StackElement(size, EmulatorFrame.variableMap.get(deger).getValue(value));
+        } else {
+            return new StackElement(0, value);
+        }
+    }
+
+    public void setDeger(StackElement element) throws Exception {
+        if (tur == DegiskenTur.REGISTER && element.size == size) {
+            Register.getRegister().setValue(deger, element.value);
+        } else if (tur == DegiskenTur.MEMORY) {
+            EmulatorFrame.variableMap.get(deger).setValue(value, element.value);
+        } else if ((tur == DegiskenTur.REGISTER && element.size != size) || (tur == DegiskenTur.MEMORY && element.size != size)) {
+            throw new Exception("Boyut Hatası.");
+        } else {
+            throw new Exception("Memory ye değer setlenemez.");
+        }
+
+    }
+
     public enum DegiskenTur {
+
         REGISTER, //AX,BX gibi Register
         MEMORY, //DB DW türlerinde değişken
         IMMEDIATE // 12h gibi bir değer
