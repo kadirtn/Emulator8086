@@ -230,8 +230,11 @@ public class Instructions {
         return -1;
     }
 
-    public static int LOOP(int satir, Komut komut) {
-        return -1;
+    public static int LOOP(int satir, Komut komut) throws Exception {
+        Register.getRegister().setValue("CX", Register.getRegister().getValue("CX") - 1);
+        if(Register.getRegister().getValue("CX") != 0)
+            return komut.functionLine;
+        return ++satir;
     }
 
     public static int MUL(int satir, Komut komut) {

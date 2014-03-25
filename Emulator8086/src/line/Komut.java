@@ -16,6 +16,7 @@ import java.util.List;
  */
 public class Komut extends Line {
     public String komut; //ADD
+    public int functionLine; // komut loop ise loop edilecek(gidilecek) fonksiyon tanımının satırı
     private List<Degisken> degiskenList = null;// komut tanımından sonra gelen değişkenlerin listesi 0) AX  , 1)BX
     public Komut(String line, String komut, int satir){
         super(line,satir);

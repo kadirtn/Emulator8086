@@ -606,7 +606,10 @@ public class EmulatorFrame extends javax.swing.JFrame {
                         ((Komut) yeniKomut).addDegisken(new Degisken(degisken));
                     } else if (value != -1) {//Immediate
                         ((Komut) yeniKomut).addDegisken(new Degisken(value));
-                    } else {//Memory
+                    } else if(tokens.get(0).equals("LOOP")){
+                        ((Komut) yeniKomut).functionLine = functionMap.get(tokens.get(1));
+                    }
+                    else {//Memory
                         if (degisken.contains("[") && degisken.contains("]")) {
 
                             ((Komut) yeniKomut).addDegisken(new Degisken(degisken.substring(0, degisken.indexOf("[")), variableMap.get(degisken.substring(0, degisken.indexOf("["))).getType() == Memory.VariableType.DB ? 1 : 2, Integer.parseInt(degisken.substring(degisken.indexOf("[") + 1, degisken.indexOf("]")))));
