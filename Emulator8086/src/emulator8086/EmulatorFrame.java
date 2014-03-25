@@ -653,7 +653,10 @@ public class EmulatorFrame extends javax.swing.JFrame {
                 } else {
                     satir = komutIslet(satir, (Komut) line);
                 }
+                if(satir == -1)
+                    break;
                 careTaker.kaydet(satir);
+                
                 if (satir == komutList.length) {
                     break;
                 }
