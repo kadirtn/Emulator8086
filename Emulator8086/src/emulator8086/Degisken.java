@@ -63,6 +63,64 @@ public class Degisken {
         }
 
     }
+    public String getHexDeger(){
+        String result = "";
+        int val = -1;
+        if(tur == DegiskenTur.REGISTER)
+            val = Register.getRegister().getValue(deger);
+        else if(tur == DegiskenTur.MEMORY)
+            val = EmulatorFrame.variableMap.get(deger).getValue(value);
+        else
+            val = value;
+        while(val >= 16){
+            int karakter = val % 16;
+            result += getChar(karakter);
+            val = (val-karakter)/16;
+        }
+        result += getChar(val);
+        if(size == 1)
+            fillWithZero(2,result);
+        if(size == 2)
+            fillWithZero(4,result);
+        if(result.endsWith("A") ||
+                result.endsWith("B") ||
+                result.endsWith("C") ||
+                result.endsWith("D") ||
+                result.endsWith("E"))
+            result +="0";
+        return new StringBuilder(result).reverse().toString()+"h";
+    }
+    public String getBinaryDeger(){
+        String result = "";
+        int val = -1;
+        if(tur == DegiskenTur.REGISTER)
+            val = Register.getRegister().getValue(deger);
+        else if(tur == DegiskenTur.MEMORY)
+            val = EmulatorFrame.variableMap.get(deger).getValue(value);
+        else
+            val = value;
+        while(val >= 2){
+            int karakter = val % 2;
+            result += getChar(karakter);
+            val = (val-karakter)/2;
+        }
+        result += getChar(val);
+        if(size == 1)
+            fillWithZero(8,result);
+        if(size == 2)
+            fillWithZero(16,result);
+        return new StringBuilder(result).reverse().toString();
+    }
+    private String getChar(int val){
+        if(val < 10)
+            return val+"";
+        return ((char)(55+val))+"";
+    }
+    private void fillWithZero(int lngth, String result) {
+        while(result.length() < lngth){
+            result+="0";
+        }
+    }
 
     public enum DegiskenTur {
 
