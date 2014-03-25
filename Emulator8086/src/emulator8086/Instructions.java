@@ -6,7 +6,6 @@
 package emulator8086;
 
 import emulator8086.Degisken.DegiskenTur;
-import emulator8086.Memory.VariableType;
 import line.Komut;
 import java.util.List;
 import steps.Stack;
