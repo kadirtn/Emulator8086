@@ -203,7 +203,7 @@ public class Instructions {
     }
 
     public static int JMP(int satir, Komut komut) {
-        return -1;
+        return komut.functionLine;
     }
 
     public static int JLE(int satir, Komut komut) {
