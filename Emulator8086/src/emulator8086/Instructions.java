@@ -74,8 +74,8 @@ public class Instructions {
 
     public static int AND(int satir, Komut komut) throws Exception {
         List<Degisken> list = komut.getDegiskenList();
-        int result = 0;
-        int operand1, operand2 = 0;
+        int result;
+        int operand1, operand2;
 
         //kararsızlık var kontrol edilmeli
         if (list.get(0).tur == DegiskenTur.REGISTER && list.get(1).tur == DegiskenTur.REGISTER) {
@@ -239,7 +239,7 @@ public class Instructions {
         //sayının negatifi
         List<Degisken> list = komut.getDegiskenList();
         Degisken degisken = list.get(0);
-        int result = 0;
+        int result;
         if (degisken.tur == DegiskenTur.REGISTER) {
             result = Register.getRegister().getValue(degisken.deger);
             if (degisken.size == 1) {
@@ -275,7 +275,7 @@ public class Instructions {
     public static int NOT(int satir, Komut komut) throws Exception {
         List<Degisken> list = komut.getDegiskenList();
         Degisken degisken = list.get(0);
-        int result = 0;
+        int result;
         if (degisken.tur == DegiskenTur.REGISTER) {
             result = Register.getRegister().getValue(degisken.deger);
             if (degisken.size == 1) {
