@@ -144,7 +144,7 @@ public class Instructions {
     }
 
     public static int HLT(int satir, Komut komut) {
-        return -1;
+        return -1;//-1 = programı sonlandır
     }
 
     public static int IDIV(int satir, Komut komut) {

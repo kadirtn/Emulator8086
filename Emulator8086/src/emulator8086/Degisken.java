@@ -71,7 +71,18 @@ public class Degisken {
         } else {
             throw new Exception("değere değer setlenemez.");
         }
-
+    }
+    public void setBinaryDeger(int size, String strg) throws Exception {
+        
+        if (tur == DegiskenTur.REGISTER && (size == size || size == 0)) {
+            Register.getRegister().setValue(deger, Integer.parseInt(strg, 2));
+        } else if (tur == DegiskenTur.MEMORY && (size == size || size == 0)) {
+            EmulatorFrame.variableMap.get(deger).setValue(value, Integer.parseInt(strg, 2));
+        } else if ((tur == DegiskenTur.REGISTER && size != size) || (tur == DegiskenTur.MEMORY && size != size)) {
+            throw new Exception("Boyut Hatası.");
+        } else {
+            throw new Exception("değere değer setlenemez.");
+        }
     }
     public String getHexDeger(){
         String result = "";
