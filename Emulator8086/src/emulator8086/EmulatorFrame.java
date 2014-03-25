@@ -606,7 +606,8 @@ public class EmulatorFrame extends javax.swing.JFrame {
                         ((Komut) yeniKomut).addDegisken(new Degisken(degisken));
                     } else if (value != -1) {//Immediate
                         ((Komut) yeniKomut).addDegisken(new Degisken(value));
-                    } else if(tokens.get(0).equals("LOOP")){
+                    } else if(tokens.get(0).equals("LOOP") || tokens.get(0).equals("JMP")
+                            ||tokens.get(0).equals("JAE")){
                         ((Komut) yeniKomut).functionLine = functionMap.get(tokens.get(1));
                     }
                     else {//Memory

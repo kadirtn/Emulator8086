@@ -175,7 +175,9 @@ public class Instructions {
     }
 
     public static int JAE(int satir, Komut komut) {
-        return -1;
+        if(Flag.getFlag().CF)
+            return komut.functionLine;
+        return ++satir;
     }
 
     public static int JB(int satir, Komut komut) {
