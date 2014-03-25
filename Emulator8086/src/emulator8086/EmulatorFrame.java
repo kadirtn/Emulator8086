@@ -765,7 +765,11 @@ public class EmulatorFrame extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Done Emulating!", "Complete", JOptionPane.INFORMATION_MESSAGE);
             return;
         }
-        careTaker.load(stepPointer);
+        try {
+            careTaker.load(stepPointer);
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.WARNING_MESSAGE);
+        }
         jList2.setSelectedIndex(careTaker.get(stepPointer).satir);
         registerAH.setText(Register.getRegister().getHexValue("AH"));
         registerAL.setText(Register.getRegister().getHexValue("AL"));

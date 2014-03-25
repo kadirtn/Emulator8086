@@ -31,8 +31,7 @@ public class Instructions {
         Degisken dest = list.get(0);
         Degisken src = list.get(1);
         int result = dest.getDeger().getValue() + src.getDeger().getValue();
-        setFlagStatesForAdd(dest.size, result);
-        dest.setDeger(new StackElement(dest.size,result));
+        dest.setDeger(new StackElement(dest.size,setFlagStatesForAdd(dest.size, result)));
         return ++satir;
     }
     public static int SUB(int satir, Komut komut) throws Exception {
@@ -40,8 +39,7 @@ public class Instructions {
         Degisken dest = list.get(0);
         Degisken src = list.get(1);
         int result = dest.getDeger().getValue() - src.getDeger().getValue();
-        setFlagStatesForAdd(dest.size, result);
-        dest.setDeger(new StackElement(dest.size,result));
+        dest.setDeger(new StackElement(dest.size,setFlagStatesForAdd(dest.size, result)));
         return ++satir;
     }
 
@@ -71,8 +69,7 @@ public class Instructions {
         Degisken dest = list.get(0);
         Degisken src = list.get(1);
         int result = dest.getDeger().getValue() + src.getDeger().getValue() + (Flag.getFlag().CF ? 1 : 0);
-        setFlagStatesForAdd(dest.size, result);
-        dest.setDeger(new StackElement(dest.size,result));
+        dest.setDeger(new StackElement(dest.size,setFlagStatesForAdd(dest.size, result)));
         return ++satir;
     }
 
@@ -333,8 +330,7 @@ public class Instructions {
         Degisken dest = list.get(0);
         Degisken src = list.get(1);
         int result = dest.getDeger().getValue() - (src.getDeger().getValue() + (Flag.getFlag().CF ? 1 : 0));
-        setFlagStatesForAdd(dest.size, result);
-        dest.setDeger(new StackElement(dest.size,result));
+        dest.setDeger(new StackElement(dest.size,setFlagStatesForAdd(dest.size, result)));
         return ++satir;
     }
 
@@ -353,12 +349,10 @@ public class Instructions {
                     Flag.getFlag().CF = true;
                     result %= 256;
                 }
-                if (result == 0) {
-                    Flag.getFlag().ZF = true;
-                }
-                if (result > 127) {
-                    Flag.getFlag().SF = true;
-                }
+                else
+                    Flag.getFlag().CF = false;
+                Flag.getFlag().ZF = result == 0;
+                Flag.getFlag().SF = result > 127;
 
                 break;
             case 2:
@@ -366,12 +360,10 @@ public class Instructions {
                     Flag.getFlag().CF = true;
                     result %= 256;
                 }
-                if (result == 0) {
-                    Flag.getFlag().ZF = true;
-                }
-                if (result > 32767) {
-                    Flag.getFlag().SF = true;
-                }
+                else
+                    Flag.getFlag().CF = false;
+                Flag.getFlag().ZF = result == 0;
+                Flag.getFlag().SF = result > 32767;
                 break;
 
         }
