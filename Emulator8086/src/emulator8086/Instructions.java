@@ -135,7 +135,7 @@ public class Instructions {
         
         dest.setDeger(result);
         Flag.getFlag().ZF = (result.getValue() == 0);
-        //TODO PF yazılcak
+        Flag.getFlag().PF = (dest.getBinaryDeger().length() - dest.getBinaryDeger().replace("1", "").length()) % 2 == 1;
         return ++satir;
     }
 
@@ -163,7 +163,7 @@ public class Instructions {
         
         dest.setDeger(result);
         Flag.getFlag().ZF = (result.getValue() == 0);
-        //TODO PF yazılcak
+        Flag.getFlag().PF = (dest.getBinaryDeger().length() - dest.getBinaryDeger().replace("1", "").length()) % 2 == 1;
         return ++satir;
     }
 
@@ -249,7 +249,7 @@ public class Instructions {
         }
         dest.setDeger(result);
         Flag.getFlag().ZF = (result.getValue() == 0);
-        //TODO PF yazılcak
+        Flag.getFlag().PF = (dest.getBinaryDeger().length() - dest.getBinaryDeger().replace("1", "").length()) % 2 == 1;
         return ++satir;
     }
 
@@ -273,7 +273,7 @@ public class Instructions {
         }
         dest.setDeger(result);
         Flag.getFlag().ZF = (result.getValue() == 0);
-        //TODO PF yazılcak
+        Flag.getFlag().PF = (dest.getBinaryDeger().length() - dest.getBinaryDeger().replace("1", "").length()) % 2 == 1;
         return ++satir;
     }
 
