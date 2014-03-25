@@ -18,6 +18,10 @@ public class StackElement {
         this.size = size;
         this.value = value;
     }
+    public StackElement(int size, String binary) {
+        this.size = size;
+        this.value = Integer.parseInt(binary, 2);
+    }
     public void setValue(int value){
         if(size == 0)
             this.value = value;
