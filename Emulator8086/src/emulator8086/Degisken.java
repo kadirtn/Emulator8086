@@ -111,6 +111,9 @@ public class Degisken {
             result +="0";
         return new StringBuilder(result).reverse().toString()+"h";
     }
+    public String getMostSignificantBit(){
+        return ""+getBinaryDeger().charAt(0);
+    }
     public String getBinaryDeger(){
         String result = "";
         int val = -1;
