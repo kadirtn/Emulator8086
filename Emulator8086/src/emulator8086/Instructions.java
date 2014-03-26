@@ -32,6 +32,7 @@ public class Instructions {
         int result = dest.getDeger().getValue() + src.getDeger().getValue();
         StackElement res = new StackElement(dest.size,setFlagStatesForAdd(dest.size, result));
         dest.setDeger(res);
+        Flag.getFlag().SF = dest.getMostSignificantBit().equals("1");
         Flag.getFlag().OF = dest.getMostSignificantBit().equals(src.getMostSignificantBit()) && !res.getMostSignificantBit().equals(src.getMostSignificantBit());
         Flag.getFlag().PF = (dest.getBinaryDeger().length() - dest.getBinaryDeger().replace("1", "").length()) % 2 == 1;
         return ++satir;
@@ -43,6 +44,7 @@ public class Instructions {
         int result = dest.getDeger().getValue() - src.getDeger().getValue();
         StackElement res = new StackElement(dest.size,setFlagStatesForAdd(dest.size, result));
         dest.setDeger(res);
+        Flag.getFlag().SF = dest.getMostSignificantBit().equals("1");
         Flag.getFlag().OF = dest.getMostSignificantBit().equals(src.getMostSignificantBit()) && !res.getMostSignificantBit().equals(src.getMostSignificantBit());
         Flag.getFlag().PF = (dest.getBinaryDeger().length() - dest.getBinaryDeger().replace("1", "").length()) % 2 == 1;
         return ++satir;
@@ -76,6 +78,7 @@ public class Instructions {
         int result = dest.getDeger().getValue() + src.getDeger().getValue() + (Flag.getFlag().CF ? 1 : 0);
         StackElement res = new StackElement(dest.size,setFlagStatesForAdd(dest.size, result));
         dest.setDeger(res);
+        Flag.getFlag().SF = dest.getMostSignificantBit().equals("1");
         Flag.getFlag().OF = dest.getMostSignificantBit().equals(src.getMostSignificantBit()) && !res.getMostSignificantBit().equals(src.getMostSignificantBit());
         Flag.getFlag().PF = (dest.getBinaryDeger().length() - dest.getBinaryDeger().replace("1", "").length()) % 2 == 1;
         return ++satir;
@@ -140,6 +143,8 @@ public class Instructions {
         Degisken src = list.get(1);
         int result = dest.getDeger().getValue() - src.getDeger().getValue();
         Degisken dummy = new Degisken(setFlagStatesForAdd(dest.size, result));
+        Flag.getFlag().SF = dummy.getMostSignificantBit().equals("1");
+        
         Flag.getFlag().PF = (dummy.getBinaryDeger().length() - dummy.getBinaryDeger().replace("1", "").length()) % 2 == 1;
         return ++satir;
     }

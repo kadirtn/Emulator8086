@@ -462,6 +462,8 @@ public class EmulatorFrame extends javax.swing.JFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
+        stepPointer = 0;
+        load();
         this.dispose();
     }//GEN-LAST:event_jButton2ActionPerformed
 
@@ -606,18 +608,17 @@ public class EmulatorFrame extends javax.swing.JFrame {
                         ((Komut) yeniKomut).addDegisken(new Degisken(degisken));
                     } else if (value != -1) {//Immediate
                         ((Komut) yeniKomut).addDegisken(new Degisken(value));
-                    } else if(tokens.get(0).equals("LOOP") || tokens.get(0).equals("JMP")
-                            ||tokens.get(0).equals("JAE") || tokens.get(0).equals("JA")
-                            ||tokens.get(0).equals("JBE") || tokens.get(0).equals("JB")
-                            ||tokens.get(0).equals("JAE") || tokens.get(0).equals("JA")
-                            ||tokens.get(0).equals("JE") || tokens.get(0).equals("JG")
-                            ||tokens.get(0).equals("JGE") || tokens.get(0).equals("JL")
-                            ||tokens.get(0).equals("JLE") || tokens.get(0).equals("JNE")
-                            ||tokens.get(0).equals("JNP") || tokens.get(0).equals("JP")
-                            ||tokens.get(0).equals("JPO")){
+                    } else if (tokens.get(0).equals("LOOP") || tokens.get(0).equals("JMP")
+                            || tokens.get(0).equals("JAE") || tokens.get(0).equals("JA")
+                            || tokens.get(0).equals("JBE") || tokens.get(0).equals("JB")
+                            || tokens.get(0).equals("JAE") || tokens.get(0).equals("JA")
+                            || tokens.get(0).equals("JE") || tokens.get(0).equals("JG")
+                            || tokens.get(0).equals("JGE") || tokens.get(0).equals("JL")
+                            || tokens.get(0).equals("JLE") || tokens.get(0).equals("JNE")
+                            || tokens.get(0).equals("JNP") || tokens.get(0).equals("JP")
+                            || tokens.get(0).equals("JPO")) {
                         ((Komut) yeniKomut).functionLine = functionMap.get(tokens.get(1));
-                    }
-                    else {//Memory
+                    } else {//Memory
                         if (degisken.contains("[") && degisken.contains("]")) {
 
                             ((Komut) yeniKomut).addDegisken(new Degisken(degisken.substring(0, degisken.indexOf("[")), variableMap.get(degisken.substring(0, degisken.indexOf("["))).getType() == Memory.VariableType.DB ? 1 : 2, Integer.parseInt(degisken.substring(degisken.indexOf("[") + 1, degisken.indexOf("]")))));
@@ -664,15 +665,16 @@ public class EmulatorFrame extends javax.swing.JFrame {
                 } else {
                     satir = komutIslet(satir, (Komut) line);
                 }
-                if(satir == -1)
+                if (satir == -1) {
                     break;
+                }
                 careTaker.kaydet(satir);
-                
+
                 if (satir == komutList.length) {
                     break;
                 }
             }
-        } catch (Exception ex) {  
+        } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.WARNING_MESSAGE);
         }
     }
