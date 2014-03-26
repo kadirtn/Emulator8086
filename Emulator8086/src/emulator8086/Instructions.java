@@ -34,7 +34,7 @@ public class Instructions {
         dest.setDeger(res);
         Flag.getFlag().SF = dest.getMostSignificantBit().equals("1");
         Flag.getFlag().OF = dest.getMostSignificantBit().equals(src.getMostSignificantBit()) && !res.getMostSignificantBit().equals(src.getMostSignificantBit());
-        Flag.getFlag().PF = (dest.getBinaryDeger().length() - dest.getBinaryDeger().replace("1", "").length()) % 2 == 1;
+        Flag.getFlag().PF = (dest.getBinaryDeger().length() - dest.getBinaryDeger().replace("1", "").length()) % 2 == 0;
         return ++satir;
     }
     public static int SUB(int satir, Komut komut) throws Exception {
@@ -46,7 +46,7 @@ public class Instructions {
         dest.setDeger(res);
         Flag.getFlag().SF = dest.getMostSignificantBit().equals("1");
         Flag.getFlag().OF = dest.getMostSignificantBit().equals(src.getMostSignificantBit()) && !res.getMostSignificantBit().equals(src.getMostSignificantBit());
-        Flag.getFlag().PF = (dest.getBinaryDeger().length() - dest.getBinaryDeger().replace("1", "").length()) % 2 == 1;
+        Flag.getFlag().PF = (dest.getBinaryDeger().length() - dest.getBinaryDeger().replace("1", "").length()) % 2 == 0;
         return ++satir;
     }
 
@@ -80,7 +80,7 @@ public class Instructions {
         dest.setDeger(res);
         Flag.getFlag().SF = dest.getMostSignificantBit().equals("1");
         Flag.getFlag().OF = dest.getMostSignificantBit().equals(src.getMostSignificantBit()) && !res.getMostSignificantBit().equals(src.getMostSignificantBit());
-        Flag.getFlag().PF = (dest.getBinaryDeger().length() - dest.getBinaryDeger().replace("1", "").length()) % 2 == 1;
+        Flag.getFlag().PF = (dest.getBinaryDeger().length() - dest.getBinaryDeger().replace("1", "").length()) % 2 == 0;
         return ++satir;
     }
 
@@ -92,58 +92,23 @@ public class Instructions {
         String result = "";
         int length;
         String destOperand = dest.getBinaryDeger(dest.size);
-        String srcOperand = src.getBinaryDeger(src.size);
+        String srcOperand = src.getBinaryDeger(dest.size);
         
-        if(destOperand.length()<srcOperand.length())
-            length = destOperand.length();
-        else
-            length = srcOperand.length();
+
         
-        for(int i=0; i<length; i++){
-            result += Integer.parseInt(destOperand[i]);
-        }
+        for(int i= 0; i < destOperand.length(); i++)
+            result = result + ((destOperand.charAt(i) == '1' && srcOperand.charAt(i) == '1') ? '1' : '0');
 
         System.out.println("dest "+destOperand);
         System.out.println("src "+srcOperand);
         
-      //  if()
-
-        //kararsızlık var kontrol edilmeli
-     /*   if (list.get(0).tur == DegiskenTur.REGISTER && list.get(1).tur == DegiskenTur.REGISTER) {
-            operand1 = Register.getRegister().getValue(list.get(0).deger);
-            operand2 = Register.getRegister().getValue(list.get(1).deger);
-
-            if (operand1 == 1 && operand2 == 1) {
-                result = 1;
-            } else {
-                result = 0;
-            }
-            Register.getRegister().setValue(list.get(0).deger, result);
-        } else if (list.get(0).tur == DegiskenTur.REGISTER && list.get(1).tur == DegiskenTur.IMMEDIATE) {
-            operand1 = Register.getRegister().getValue(list.get(0).deger);
-            operand2 = list.get(1).value;
-
-            if (operand1 == 1 && operand2 == 1) {
-                result = 1;
-            } else {
-                result = 0;
-            }
-            Register.getRegister().setValue(list.get(0).deger, result);
-
-        } else if (list.get(0).tur == DegiskenTur.REGISTER && list.get(1).tur == DegiskenTur.MEMORY) {
-            result = Register.getRegister().getValue(list.get(0).deger) + EmulatorFrame.variableMap.get(list.get(1).deger).getValue(list.get(1).value);
-            Register.getRegister().setValue(list.get(0).deger, setFlagStatesForAdd(list.get(0).size, result));
-        } else if (list.get(0).tur == DegiskenTur.MEMORY && list.get(1).tur == DegiskenTur.REGISTER) {
-            result = EmulatorFrame.variableMap.get(list.get(0).deger).getValue(list.get(0).value) + Register.getRegister().getValue(list.get(1).deger);
-            EmulatorFrame.variableMap.get(list.get(0).deger).setValue(list.get(0).value, setFlagStatesForAdd(list.get(0).size, result));
-        } else if (list.get(0).tur == DegiskenTur.MEMORY && list.get(1).tur == DegiskenTur.IMMEDIATE) {
-            result = EmulatorFrame.variableMap.get(list.get(0).deger).getValue(list.get(0).value) + list.get(1).value;
-            EmulatorFrame.variableMap.get(list.get(0).deger).setValue(list.get(0).value, setFlagStatesForAdd(list.get(0).size, result));
-        } else if (list.get(0).tur == DegiskenTur.MEMORY && list.get(1).tur == DegiskenTur.MEMORY) {
-            result = EmulatorFrame.variableMap.get(list.get(0).deger).getValue(list.get(0).value) + list.get(1).value;
-            EmulatorFrame.variableMap.get(list.get(0).deger).setValue(list.get(0).value, setFlagStatesForAdd(list.get(0).size, result));
-        }
-             */
+        dest.setBinaryDeger(dest.size, result);
+        Flag.getFlag().CF = false;
+        Flag.getFlag().OF = false;
+        Flag.getFlag().ZF = dest.getDeger().getValue() == 0;
+        Flag.getFlag().SF = dest.getMostSignificantBit().equals("1");
+        Flag.getFlag().PF = (dest.getBinaryDeger().length() - dest.getBinaryDeger().replace("1", "").length()) % 2 == 0;
+        
         return ++satir;
     }
 
@@ -177,7 +142,7 @@ public class Instructions {
         
         dest.setDeger(result);
         Flag.getFlag().ZF = (result.getValue() == 0);
-        Flag.getFlag().PF = (dest.getBinaryDeger().length() - dest.getBinaryDeger().replace("1", "").length()) % 2 == 1;
+        Flag.getFlag().PF = (dest.getBinaryDeger().length() - dest.getBinaryDeger().replace("1", "").length()) % 2 == 0;
         return ++satir;
     }
 
@@ -193,8 +158,31 @@ public class Instructions {
         return -1;
     }
 
-    public static int IMUL(int satir, Komut komut) {
-        return -1;
+    public static int IMUL(int satir, Komut komut) throws Exception {
+        List<Degisken> list = komut.getDegiskenList();
+        Degisken src = list.get(0);
+        int result;
+        long lngresult;
+        switch(src.size){
+            case 1:
+                result = src.getDeger().getValue() * Register.getRegister().getValue("AL");
+                Flag.getFlag().CF = result >= 256;
+                Flag.getFlag().OF = result >= 256;
+                Register.getRegister().setValue("AX", result);
+                break;
+            case 2:
+                long srcval = src.getDeger().getValue();
+                long regval = Register.getRegister().getValue("AX");
+                lngresult = srcval * regval;
+                Flag.getFlag().CF = new Long(lngresult).compareTo(new Long(256*256)) >= 0;
+                Flag.getFlag().OF = new Long(lngresult).compareTo(new Long(256*256)) >= 0;
+                long axValue = lngresult % 65536;
+                long dxValue = (lngresult - (lngresult % (256 * 256))) /(256 * 256);
+                Register.getRegister().setValue("AX", new Long(axValue).intValue());
+                Register.getRegister().setValue("DX", new Long(dxValue).intValue());
+                break;
+        }
+        return ++satir;
     }
 
     public static int INC(int satir, Komut komut) throws Exception {
@@ -205,7 +193,7 @@ public class Instructions {
         
         dest.setDeger(result);
         Flag.getFlag().ZF = (result.getValue() == 0);
-        Flag.getFlag().PF = (dest.getBinaryDeger().length() - dest.getBinaryDeger().replace("1", "").length()) % 2 == 1;
+        Flag.getFlag().PF = (dest.getBinaryDeger().length() - dest.getBinaryDeger().replace("1", "").length()) % 2 == 0;
         return ++satir;
     }
 
@@ -302,8 +290,31 @@ public class Instructions {
         return ++satir;
     }
 
-    public static int MUL(int satir, Komut komut) {
-        return -1;
+    public static int MUL(int satir, Komut komut) throws Exception {
+        List<Degisken> list = komut.getDegiskenList();
+        Degisken src = list.get(0);
+        int result;
+        long lngresult;
+        switch(src.size){
+            case 1:
+                result = src.getDeger().getValue() * Register.getRegister().getValue("AL");
+                Flag.getFlag().CF = result >= 256;
+                Flag.getFlag().OF = result >= 256;
+                Register.getRegister().setValue("AX", result);
+                break;
+            case 2:
+                long srcval = src.getDeger().getValue();
+                long regval = Register.getRegister().getValue("AX");
+                lngresult = srcval * regval;
+                Flag.getFlag().CF = new Long(lngresult).compareTo(new Long(256*256)) >= 0;
+                Flag.getFlag().OF = new Long(lngresult).compareTo(new Long(256*256)) >= 0;
+                long axValue = lngresult % 65536;
+                long dxValue = (lngresult - (lngresult % (256 * 256))) /(256 * 256);
+                Register.getRegister().setValue("AX", new Long(axValue).intValue());
+                Register.getRegister().setValue("DX", new Long(dxValue).intValue());
+                break;
+        }
+        return ++satir;
     }
 
     public static int NEG(int satir, Komut komut) throws Exception {
@@ -320,7 +331,7 @@ public class Instructions {
         }
         dest.setDeger(result);
         Flag.getFlag().ZF = (result.getValue() == 0);
-        Flag.getFlag().PF = (dest.getBinaryDeger().length() - dest.getBinaryDeger().replace("1", "").length()) % 2 == 1;
+        Flag.getFlag().PF = (dest.getBinaryDeger().length() - dest.getBinaryDeger().replace("1", "").length()) % 2 == 0;
         Flag.getFlag().SF = dest.getMostSignificantBit().equals("1");
         Flag.getFlag().OF = (dest.size == 1 && dest.getDeger().getValue() == 128) || (dest.size == 2 && dest.getDeger().getValue() == 32768); 
         return ++satir;
@@ -402,7 +413,7 @@ public class Instructions {
         StackElement res = new StackElement(dest.size,setFlagStatesForAdd(dest.size, result));
         dest.setDeger(res);
         Flag.getFlag().OF = dest.getMostSignificantBit().equals(src.getMostSignificantBit()) && !res.getMostSignificantBit().equals(src.getMostSignificantBit());
-        Flag.getFlag().PF = (dest.getBinaryDeger().length() - dest.getBinaryDeger().replace("1", "").length()) % 2 == 1;
+        Flag.getFlag().PF = (dest.getBinaryDeger().length() - dest.getBinaryDeger().replace("1", "").length()) % 2 == 0;
         return ++satir;
     }
 
