@@ -6,6 +6,10 @@
 
 package steps;
 
+import emulator8086.Degisken;
+import emulator8086.EmulatorFrame;
+import emulator8086.Register;
+
 /**
  *
  * @author kadirtuna
@@ -34,5 +38,35 @@ public class StackElement {
     }
     public int getValue(){
         return value;
+    }
+    public String getMostSignificantBit(){
+        return ""+getBinaryDeger().charAt(0);
+    }
+    
+    public String getBinaryDeger(){
+        String result = "";
+        int val = value;
+        while(val >= 2){
+            int karakter = val % 2;
+            result += getChar(karakter);
+            val = (val-karakter)/2;
+        }
+        result += getChar(val);
+        if(size == 1)
+            result = fillWithZero(8,result);
+        if(size == 2)
+            result = fillWithZero(16,result);
+        return new StringBuilder(result).reverse().toString();
+    }
+    private String getChar(int val){
+        if(val < 10)
+            return val+"";
+        return ((char)(55+val))+"";
+    }
+    private String fillWithZero(int lngth, String result) {
+        while(result.length() < lngth){
+            result+="0";
+        }
+        return result;
     }
 }
