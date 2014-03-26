@@ -86,11 +86,30 @@ public class Instructions {
 
     public static int AND(int satir, Komut komut) throws Exception {
         List<Degisken> list = komut.getDegiskenList();
-        int result;
-        int operand1, operand2;
+        Degisken dest = list.get(0);
+        Degisken src = list.get(1);
+        
+        String result = "";
+        int length;
+        String destOperand = dest.getBinaryDeger(dest.size);
+        String srcOperand = src.getBinaryDeger(src.size);
+        
+        if(destOperand.length()<srcOperand.length())
+            length = destOperand.length();
+        else
+            length = srcOperand.length();
+        
+        for(int i=0; i<length; i++){
+            result += Integer.parseInt(destOperand[i]);
+        }
+
+        System.out.println("dest "+destOperand);
+        System.out.println("src "+srcOperand);
+        
+      //  if()
 
         //kararsızlık var kontrol edilmeli
-        if (list.get(0).tur == DegiskenTur.REGISTER && list.get(1).tur == DegiskenTur.REGISTER) {
+     /*   if (list.get(0).tur == DegiskenTur.REGISTER && list.get(1).tur == DegiskenTur.REGISTER) {
             operand1 = Register.getRegister().getValue(list.get(0).deger);
             operand2 = Register.getRegister().getValue(list.get(1).deger);
 
@@ -124,6 +143,7 @@ public class Instructions {
             result = EmulatorFrame.variableMap.get(list.get(0).deger).getValue(list.get(0).value) + list.get(1).value;
             EmulatorFrame.variableMap.get(list.get(0).deger).setValue(list.get(0).value, setFlagStatesForAdd(list.get(0).size, result));
         }
+             */
         return ++satir;
     }
 
