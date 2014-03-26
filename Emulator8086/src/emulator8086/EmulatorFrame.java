@@ -485,9 +485,9 @@ public class EmulatorFrame extends javax.swing.JFrame {
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         // TODO add your handling code here:
-        stepPointer = komutList.length;
+        stepPointer = careTaker.getSize() - 1;
         load();
-        stepPointer = komutList.length + 1;
+        stepPointer = careTaker.getSize();
         load();
     }//GEN-LAST:event_jButton5ActionPerformed
 
