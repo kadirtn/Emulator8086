@@ -13,7 +13,7 @@ import steps.StackElement;
 
 /**
  *
- * @author kadirtuna
+ * @author gizem
  */
 public class Instructions {
 
@@ -139,16 +139,52 @@ public class Instructions {
         return ++satir;
     }
 
-    public static int DIV(int satir, Komut komut) {
-        return -1;
+    public static int DIV(int satir, Komut komut) throws Exception {
+        List<Degisken> list = komut.getDegiskenList();
+        Degisken src = list.get(0);
+        switch(src.size){
+            case 1:
+                int ax = Register.getRegister().getValue("AX");
+                int ah = ax % src.getDeger().getValue();
+                int al = (ax - (ax % src.getDeger().getValue())) / src.getDeger().getValue();
+                Register.getRegister().setValue("AH", ah);
+                Register.getRegister().setValue("AL", al);
+                break;
+            case 2:
+                long dxax = (Register.getRegister().getValue("AX").longValue() * 256 * 256) + Register.getRegister().getValue("AX").longValue();
+                long ldx = dxax % src.getDeger().getValue().longValue();
+                long lax = (dxax - (dxax % src.getDeger().getValue().longValue())) / src.getDeger().getValue().longValue();
+                Register.getRegister().setValue("DX", new Long(ldx).intValue());
+                Register.getRegister().setValue("AX", new Long(lax).intValue());
+                break;
+        }
+        return ++satir;
     }
 
     public static int HLT(int satir, Komut komut) {
         return -1;//-1 = programı sonlandır
     }
 
-    public static int IDIV(int satir, Komut komut) {
-        return -1;
+    public static int IDIV(int satir, Komut komut) throws Exception {
+        List<Degisken> list = komut.getDegiskenList();
+        Degisken src = list.get(0);
+        switch(src.size){
+            case 1:
+                int ax = Register.getRegister().getValue("AX");
+                int ah = ax % src.getDeger().getValue();
+                int al = (ax - (ax % src.getDeger().getValue())) / src.getDeger().getValue();
+                Register.getRegister().setValue("AH", ah);
+                Register.getRegister().setValue("AL", al);
+                break;
+            case 2:
+                long dxax = (Register.getRegister().getValue("AX").longValue() * 256 * 256) + Register.getRegister().getValue("AX").longValue();
+                long ldx = dxax % src.getDeger().getValue().longValue();
+                long lax = (dxax - (dxax % src.getDeger().getValue().longValue())) / src.getDeger().getValue().longValue();
+                Register.getRegister().setValue("DX", new Long(ldx).intValue());
+                Register.getRegister().setValue("AX", new Long(lax).intValue());
+                break;
+        }
+        return ++satir;
     }
 
     public static int IMUL(int satir, Komut komut) throws Exception {

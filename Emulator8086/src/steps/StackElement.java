@@ -12,7 +12,7 @@ import emulator8086.Register;
 
 /**
  *
- * @author kadirtuna
+ * @author gizem
  */
 public class StackElement {
     public int size;
@@ -36,8 +36,8 @@ public class StackElement {
             this.value = value % mod;
         }
     }
-    public int getValue(){
-        return value;
+    public Integer getValue(){
+        return new Integer(value);
     }
     public String getMostSignificantBit(){
         return ""+getBinaryDeger().charAt(0);

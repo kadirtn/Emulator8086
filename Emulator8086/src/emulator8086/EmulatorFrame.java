@@ -23,7 +23,7 @@ import steps.CareTaker;
 
 /**
  *
- * @author PRowLeR
+ * @author gizem
  */
 public class EmulatorFrame extends javax.swing.JFrame {
 
@@ -44,6 +44,7 @@ public class EmulatorFrame extends javax.swing.JFrame {
         initComponents();
         stepPointer = 0;
         careTaker = new CareTaker();
+        
         systemMemory = new MemoryView(1024);
         functionMap = new HashMap<String, Integer>();
         variableMap = new HashMap<String, Memory>();
@@ -570,7 +571,13 @@ public class EmulatorFrame extends javax.swing.JFrame {
     private Object[] asmToLineList(String[] listContent) {
         Object[] resultList = new Object[listContent.length];
         for (int i = 0; i < listContent.length; i++) {
-            StringTokenizer st = new StringTokenizer(listContent[i], " ,");
+            StringTokenizer st;
+            if (listContent[i].contains(";")) {
+                listContent[i] = listContent[i].substring(0, listContent[i].indexOf(";"));
+            }
+            
+            st = new StringTokenizer(listContent[i], " ,");
+
             List<String> tokens = new ArrayList<String>();
             while (st.hasMoreTokens()) {
                 tokens.add(st.nextToken());
@@ -599,7 +606,7 @@ public class EmulatorFrame extends javax.swing.JFrame {
                 Line yeniFonksiyonTanimi = new FonksiyonTanimi(listContent[i], listContent[i].substring(0, listContent[i].indexOf(":")), i);
                 functionMap.put(listContent[i].substring(0, listContent[i].indexOf(":")), i);
                 resultList[i] = yeniFonksiyonTanimi;
-            } else {
+            } else{
                 Line yeniKomut = new Komut(listContent[i], tokens.get(0), i);
                 for (int j = 1; j < tokens.size(); j++) {
                     String degisken = tokens.get(j);
@@ -629,7 +636,6 @@ public class EmulatorFrame extends javax.swing.JFrame {
                 }
                 resultList[i] = yeniKomut;
             }
-
         }
         return resultList;
     }

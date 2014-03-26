@@ -21,7 +21,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
  *
- * @author PRowLeR
+ * @author gizem
  */
 public class NewJFrame extends javax.swing.JFrame {
     File openedFileToSave = null;
@@ -221,7 +221,7 @@ public class NewJFrame extends javax.swing.JFrame {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
         String[] lines = parseAsm();
-        if(lines[0].length() > 0)
+        if(lines.length > 0)
             new EmulatorFrame(lines).setVisible(true);
         else
             JOptionPane.showMessageDialog(this, "Nothing to emulate, open an asm file or write some asm!", "Error", JOptionPane.WARNING_MESSAGE );  
@@ -264,7 +264,20 @@ public class NewJFrame extends javax.swing.JFrame {
 
     private String[] parseAsm() {
         String[] lines = jTextArea1.getText().toUpperCase().split("\\n");
-        return lines;
+        int gercekSatir = 0;
+        for(int i = 0; i < lines.length;i++){
+            if(lines[i].contains(";"))
+                lines[i] = lines[i].substring(0,lines[i].indexOf(";"));
+            if(lines[i].replaceAll(" ", "").length() > 0)
+                gercekSatir++;
+        }
+        String[] result = new String[gercekSatir];
+        int resultIndex = 0;
+        for(int i = 0; i < lines.length;i++){
+            if(lines[i].replaceAll(" ", "").length() > 0)
+                result[resultIndex++] = lines[i];
+        }
+        return result;
 
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
