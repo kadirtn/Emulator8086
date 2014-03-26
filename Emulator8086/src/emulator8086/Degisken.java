@@ -135,6 +135,27 @@ public class Degisken {
             result = fillWithZero(16,result);
         return new StringBuilder(result).reverse().toString();
     }
+    public String getBinaryDeger(int boyut){
+        String result = "";
+        int val = -1;
+        if(tur == DegiskenTur.REGISTER)
+            val = Register.getRegister().getValue(deger);
+        else if(tur == DegiskenTur.MEMORY)
+            val = EmulatorFrame.variableMap.get(deger).getValue(value);
+        else
+            val = value;
+        while(val >= 2){
+            int karakter = val % 2;
+            result += getChar(karakter);
+            val = (val-karakter)/2;
+        }
+        result += getChar(val);
+        if(boyut == 1)
+            result = fillWithZero(8,result);
+        if(boyut == 2)
+            result = fillWithZero(16,result);
+        return new StringBuilder(result).reverse().toString();
+    }
     private String getChar(int val){
         if(val < 10)
             return val+"";
