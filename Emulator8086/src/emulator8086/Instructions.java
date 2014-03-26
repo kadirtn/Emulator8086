@@ -320,8 +320,6 @@ public class Instructions {
             result.setValue(65535 - result.getValue());
         }
         dest.setDeger(result);
-        Flag.getFlag().ZF = (result.getValue() == 0);
-        Flag.getFlag().PF = (dest.getBinaryDeger().length() - dest.getBinaryDeger().replace("1", "").length()) % 2 == 1;
         return ++satir;
     }
 
