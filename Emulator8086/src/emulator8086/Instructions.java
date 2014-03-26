@@ -90,18 +90,11 @@ public class Instructions {
         Degisken src = list.get(1);
         
         String result = "";
-        int length;
         String destOperand = dest.getBinaryDeger(dest.size);
         String srcOperand = src.getBinaryDeger(dest.size);
-        
-
-        
         for(int i= 0; i < destOperand.length(); i++)
-            result = result + ((destOperand.charAt(i) == '1' && srcOperand.charAt(i) == '1') ? '1' : '0');
+            result += ((destOperand.charAt(i) == '1' && srcOperand.charAt(i) == '1') ? '1' : '0');
 
-        System.out.println("dest "+destOperand);
-        System.out.println("src "+srcOperand);
-        
         dest.setBinaryDeger(dest.size, result);
         Flag.getFlag().CF = false;
         Flag.getFlag().OF = false;
@@ -359,12 +352,46 @@ public class Instructions {
         return ++satir;
     }
 
-    public static int OR(int satir, Komut komut) {
-        return -1;
+    public static int OR(int satir, Komut komut) throws Exception {
+        List<Degisken> list = komut.getDegiskenList();
+        Degisken dest = list.get(0);
+        Degisken src = list.get(1);
+        
+        String result = "";
+        String destOperand = dest.getBinaryDeger(dest.size);
+        String srcOperand = src.getBinaryDeger(dest.size);
+        for(int i= 0; i < destOperand.length(); i++)
+            result += ((destOperand.charAt(i) == '1' || srcOperand.charAt(i) == '1') ? '1' : '0');
+
+        dest.setBinaryDeger(dest.size, result);
+        Flag.getFlag().CF = false;
+        Flag.getFlag().OF = false;
+        Flag.getFlag().ZF = dest.getDeger().getValue() == 0;
+        Flag.getFlag().SF = dest.getMostSignificantBit().equals("1");
+        Flag.getFlag().PF = (dest.getBinaryDeger().length() - dest.getBinaryDeger().replace("1", "").length()) % 2 == 0;
+        
+        return ++satir;
     }
 
-    public static int XOR(int satir, Komut komut) {
-        return -1;
+    public static int XOR(int satir, Komut komut) throws Exception {
+        List<Degisken> list = komut.getDegiskenList();
+        Degisken dest = list.get(0);
+        Degisken src = list.get(1);
+        
+        String result = "";
+        String destOperand = dest.getBinaryDeger(dest.size);
+        String srcOperand = src.getBinaryDeger(dest.size);
+        for(int i= 0; i < destOperand.length(); i++)
+            result += (((destOperand.charAt(i) == '1' && srcOperand.charAt(i) == '0') || (destOperand.charAt(i) == '0' && srcOperand.charAt(i) == '1')) ? '1' : '0');
+
+        dest.setBinaryDeger(dest.size, result);
+        Flag.getFlag().CF = false;
+        Flag.getFlag().OF = false;
+        Flag.getFlag().ZF = dest.getDeger().getValue() == 0;
+        Flag.getFlag().SF = dest.getMostSignificantBit().equals("1");
+        Flag.getFlag().PF = (dest.getBinaryDeger().length() - dest.getBinaryDeger().replace("1", "").length()) % 2 == 0;
+        
+        return ++satir;
     }
 
     public static int STD(int satir, Komut komut) {
