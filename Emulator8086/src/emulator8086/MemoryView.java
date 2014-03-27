@@ -11,7 +11,7 @@ import java.util.HashMap;
 
 /**
  *
- * @author kadirtuna
+ * @author gizem
  */
 public class MemoryView {
     

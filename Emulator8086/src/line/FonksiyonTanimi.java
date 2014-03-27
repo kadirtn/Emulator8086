@@ -8,7 +8,7 @@ package line;
 
 /**
  *
- * @author kadirtuna
+ * @author gizem
  */
 public class FonksiyonTanimi extends Line{
     public String fonksiyonAdi;

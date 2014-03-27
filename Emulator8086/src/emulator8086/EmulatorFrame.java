@@ -586,7 +586,16 @@ public class EmulatorFrame extends javax.swing.JFrame {
                     && (tokens.get(1).toLowerCase().equals("db"))) {
                 List<Integer> variables = new ArrayList<>();
                 for (int j = 2; j < tokens.size(); j++) {
-                    variables.add(isAValue(tokens.get(j)));
+                    String currToken = tokens.get(j);
+                    if(currToken.contains("'") || currToken.contains("\"")){
+                        currToken = currToken.replaceAll("\"", "");
+                        currToken = currToken.replaceAll("'", "");
+                        for(int k = 0; k < currToken.length();k++){
+                            variables.add((int)currToken.charAt(k));
+                        }
+                    }
+                    else
+                        variables.add(isAValue(currToken));
                 }
                 variableMap.put(tokens.get(0), new Memory(Memory.VariableType.DB, variables));
 
@@ -645,7 +654,18 @@ public class EmulatorFrame extends javax.swing.JFrame {
             if (degisken.length() > 0) {
                 if (degisken.endsWith("H")) {
                     return Integer.parseInt(degisken.substring(0, degisken.length() - 1), 16);
-                } else {
+                } 
+                else if(degisken.contains("\"") || degisken.contains("'")){
+                    degisken= degisken.replaceAll("\"", "").replaceAll("'", "");
+                    int result = 0;
+                    for(int i = 0;i < degisken.length();i++){
+                        int var = (int)degisken.charAt(degisken.length() - 1 - i);
+                        for(int j = 0; j < i; j++)
+                            var = var *  256;
+                        result += var;
+                    }
+                    return result;
+                }else {
                     return Integer.parseInt(degisken);
                 }
             }

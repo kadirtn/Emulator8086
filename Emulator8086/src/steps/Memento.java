@@ -12,7 +12,7 @@ import java.util.HashMap;
 
 /**
  *
- * @author kadirtuna
+ * @author gizem
  */
 public class Memento {
     public HashMap<String,Integer> registers;

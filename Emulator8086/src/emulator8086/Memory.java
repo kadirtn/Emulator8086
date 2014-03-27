@@ -10,7 +10,7 @@ import java.util.List;
 
 /**
  *
- * @author kadirtuna
+ * @author gizem
  */
 public class Memory {
     

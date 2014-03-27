@@ -7,7 +7,7 @@ package line;
 
 /**
  *
- * @author kadirtuna
+ * @author gizem
  */
 public class Variable extends Line {
     public String name;

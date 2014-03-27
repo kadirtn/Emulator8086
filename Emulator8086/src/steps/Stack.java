@@ -12,7 +12,7 @@ import java.util.List;
 
 /**
  *
- * @author kadirtuna
+ * @author gizem
  */
 public class Stack {
     List<StackElement>stackList = null;

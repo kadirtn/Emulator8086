@@ -8,7 +8,7 @@ package emulator8086;
 
 /**
  *
- * @author kadirtuna
+ * @author gizem
  */
 public class NewInteger{
     public int value = 0;

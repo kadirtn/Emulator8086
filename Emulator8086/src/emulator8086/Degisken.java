@@ -9,7 +9,7 @@ import steps.StackElement;
 
 /**
  *
- * @author PRowLeR
+ * @author gizem
  */
 public class Degisken {
 

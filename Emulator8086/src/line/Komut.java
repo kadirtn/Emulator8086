@@ -12,7 +12,7 @@ import java.util.List;
 
 /**
  *
- * @author PRowLeR
+ * @author gizem
  */
 public class Komut extends Line {
     public String komut; //ADD

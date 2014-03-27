@@ -14,7 +14,7 @@ import java.util.List;
 
 /**
  *
- * @author kadirtuna
+ * @author gizem
  */
 public class CareTaker {
     private List<Memento> mementoList = new ArrayList<Memento>(); 

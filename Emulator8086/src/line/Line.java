@@ -8,7 +8,7 @@ package line;
 
 /**
  *
- * @author kadirtuna
+ * @author gizem
  */
 public class Line {// Genel Asm satır sınıfı. 
     //Satır;
