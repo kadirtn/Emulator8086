@@ -44,11 +44,16 @@ public class EmulatorFrame extends javax.swing.JFrame {
         initComponents();
         stepPointer = 0;
         careTaker = new CareTaker();
-        
+
         systemMemory = new MemoryView(1024);
         functionMap = new HashMap<String, Integer>();
         variableMap = new HashMap<String, Memory>();
+        try{
         komutList = asmToLineList(listContent);
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.WARNING_MESSAGE);
+        }
+        
         System.out.println("function size" + functionMap.size());
         System.out.println("function" + functionMap.get("k1"));
         for (int i = 0; i < komutList.length; i++) {
@@ -568,14 +573,14 @@ public class EmulatorFrame extends javax.swing.JFrame {
     private javax.swing.JTextField registerDL;
     // End of variables declaration//GEN-END:variables
 
-    private Object[] asmToLineList(String[] listContent) {
+    private Object[] asmToLineList(String[] listContent) throws Exception {
         Object[] resultList = new Object[listContent.length];
         for (int i = 0; i < listContent.length; i++) {
             StringTokenizer st;
             if (listContent[i].contains(";")) {
                 listContent[i] = listContent[i].substring(0, listContent[i].indexOf(";"));
             }
-            
+
             st = new StringTokenizer(listContent[i], " ,");
 
             List<String> tokens = new ArrayList<String>();
@@ -587,15 +592,15 @@ public class EmulatorFrame extends javax.swing.JFrame {
                 List<Integer> variables = new ArrayList<>();
                 for (int j = 2; j < tokens.size(); j++) {
                     String currToken = tokens.get(j);
-                    if(currToken.contains("'") || currToken.contains("\"")){
+                    if (currToken.contains("'") || currToken.contains("\"")) {
                         currToken = currToken.replaceAll("\"", "");
                         currToken = currToken.replaceAll("'", "");
-                        for(int k = 0; k < currToken.length();k++){
-                            variables.add((int)currToken.charAt(k));
+                        for (int k = 0; k < currToken.length(); k++) {
+                            variables.add((int) currToken.charAt(k));
                         }
-                    }
-                    else
+                    } else {
                         variables.add(isAValue(currToken));
+                    }
                 }
                 variableMap.put(tokens.get(0), new Memory(Memory.VariableType.DB, variables));
 
@@ -607,7 +612,7 @@ public class EmulatorFrame extends javax.swing.JFrame {
                 for (int j = 2; j < tokens.size(); j++) {
                     variables.add(isAValue(tokens.get(j)));
                 }
-                variableMap.put(tokens.get(1), new Memory(Memory.VariableType.DW, variables));
+                variableMap.put(tokens.get(0), new Memory(Memory.VariableType.DW, variables));
                 Line var = new Variable(listContent[i], 2, tokens.get(0), i);
                 resultList[i] = var;
 
@@ -615,13 +620,33 @@ public class EmulatorFrame extends javax.swing.JFrame {
                 Line yeniFonksiyonTanimi = new FonksiyonTanimi(listContent[i], listContent[i].substring(0, listContent[i].indexOf(":")), i);
                 functionMap.put(listContent[i].substring(0, listContent[i].indexOf(":")), i);
                 resultList[i] = yeniFonksiyonTanimi;
-            } else{
+            }
+        }
+        for (int i = 0; i < listContent.length; i++) {
+            StringTokenizer st;
+            if (listContent[i].contains(";")) {
+                listContent[i] = listContent[i].substring(0, listContent[i].indexOf(";"));
+            }
+
+            st = new StringTokenizer(listContent[i], " ,");
+
+            List<String> tokens = new ArrayList<String>();
+            while (st.hasMoreTokens()) {
+                tokens.add(st.nextToken());
+            }
+            if (tokens.size() > 1
+                    && (tokens.get(1).toLowerCase().equals("db"))) {
+            } else if (tokens.size() > 1
+                    && (tokens.get(1).toLowerCase().equals("dw"))) {
+            } else if (listContent[i].contains(":")) {//Fonksiyon Tanimi
+            } else {
+                tokens.set(0, tokens.get(0).toUpperCase());
                 Line yeniKomut = new Komut(listContent[i], tokens.get(0), i);
                 for (int j = 1; j < tokens.size(); j++) {
                     String degisken = tokens.get(j);
                     int value = isAValue(degisken);
-                    if (isARegister(degisken)) {//Register
-                        ((Komut) yeniKomut).addDegisken(new Degisken(degisken));
+                    if (isARegister(degisken.toUpperCase())) {//Register
+                        ((Komut) yeniKomut).addDegisken(new Degisken(degisken.toUpperCase()));
                     } else if (value != -1) {//Immediate
                         ((Komut) yeniKomut).addDegisken(new Degisken(value));
                     } else if (tokens.get(0).equals("LOOP") || tokens.get(0).equals("JMP")
@@ -633,7 +658,10 @@ public class EmulatorFrame extends javax.swing.JFrame {
                             || tokens.get(0).equals("JLE") || tokens.get(0).equals("JNE")
                             || tokens.get(0).equals("JNP") || tokens.get(0).equals("JP")
                             || tokens.get(0).equals("JPO")) {
-                        ((Komut) yeniKomut).functionLine = functionMap.get(tokens.get(1));
+                        Integer line = functionMap.get(tokens.get(1));
+                        if(line == null)
+                            throw new Exception("Fonksiyon tanımlı değil: "+tokens.get(1));
+                        ((Komut) yeniKomut).functionLine = line.intValue();
                     } else {//Memory
                         if (degisken.contains("[") && degisken.contains("]")) {
 
@@ -652,20 +680,23 @@ public class EmulatorFrame extends javax.swing.JFrame {
     private int isAValue(String degisken) {
         try {
             if (degisken.length() > 0) {
-                if (degisken.endsWith("H")) {
+                if (degisken.toUpperCase().endsWith("H")) {
                     return Integer.parseInt(degisken.substring(0, degisken.length() - 1), 16);
-                } 
-                else if(degisken.contains("\"") || degisken.contains("'")){
-                    degisken= degisken.replaceAll("\"", "").replaceAll("'", "");
+                }
+                if (degisken.toUpperCase().endsWith("B")) {
+                    return Integer.parseInt(degisken.substring(0, degisken.length() - 1), 2);
+                } else if (degisken.contains("\"") || degisken.contains("'")) {
+                    degisken = degisken.replaceAll("\"", "").replaceAll("'", "");
                     int result = 0;
-                    for(int i = 0;i < degisken.length();i++){
-                        int var = (int)degisken.charAt(degisken.length() - 1 - i);
-                        for(int j = 0; j < i; j++)
-                            var = var *  256;
+                    for (int i = 0; i < degisken.length(); i++) {
+                        int var = (int) degisken.charAt(degisken.length() - 1 - i);
+                        for (int j = 0; j < i; j++) {
+                            var = var * 256;
+                        }
                         result += var;
                     }
                     return result;
-                }else {
+                } else {
                     return Integer.parseInt(degisken);
                 }
             }
@@ -707,7 +738,7 @@ public class EmulatorFrame extends javax.swing.JFrame {
 
     private int komutIslet(int satir, Komut komut) throws Exception {
         //gelen komutların ilgili instruction a yönlendirilip işletilmesi
-        switch (komut.komut) {
+        switch (komut.komut.toUpperCase()) {
             case "ADC":
                 return Instructions.ADC(satir, komut);
             case "ADD":

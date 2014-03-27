@@ -6,10 +6,6 @@
 
 package steps;
 
-import emulator8086.Degisken;
-import emulator8086.EmulatorFrame;
-import emulator8086.Register;
-
 /**
  *
  * @author gizem

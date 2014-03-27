@@ -34,7 +34,7 @@ public class Register {
         return register;
     }
     public Integer getValue(String reg){//parametre olarak yollanan register değeri decimal olarak döndürülüyor
-        switch (reg) {
+        switch (reg.toUpperCase()) {
             case "AX":
                 return registers.get("AL") + registers.get("AH") * 256;
             case "BX":
@@ -49,7 +49,7 @@ public class Register {
     }
     public String getHexValue(String reg){//parametre olarak yollanan register değeri hexadecimal olarak döndürülüyor
         String result = "";
-        Integer value = getValue(reg);
+        Integer value = getValue(reg.toUpperCase());
         if(value == null)
             return "NULL";
         int val = value.intValue();
@@ -59,7 +59,7 @@ public class Register {
             val = (val-karakter)/16;
         }
         result += getChar(val);
-        if(reg.contains("X"))
+        if(reg.toUpperCase().contains("X"))
             result = fillWithZero(4,result);
         else
             result = fillWithZero(2,result);
@@ -74,7 +74,7 @@ public class Register {
     }
     public String getBinaryValue(String reg){//parametre olarak yollanan register değeri binary olarak döndürülüyor
         String result = "";
-        Integer value = getValue(reg);
+        Integer value = getValue(reg.toUpperCase());
         if(value == null)
             return "NULL";
         int val = value.intValue();
@@ -84,7 +84,7 @@ public class Register {
             val = (val-karakter)/2;
         }
         result += getChar(val);
-        if(reg.contains("X"))
+        if(reg.toUpperCase().contains("X"))
             result = fillWithZero(16,result);
         else
             result = fillWithZero(8,result);
@@ -106,7 +106,7 @@ public class Register {
         return result;
     }
     public void setValue(String reg, int value) throws Exception{//reg değeri olarak yollanan register a value alanındaki değer set edilir.
-        switch (reg) {
+        switch (reg.toUpperCase()) {
             case "AX":
                 if(value >= 256 * 256)
                     throw new Exception("Boyut Hatası!");
@@ -134,7 +134,7 @@ public class Register {
             default:
                 if(value >= 256)
                     throw new Exception("Boyut Hatası!");
-                registers.put(reg,value);
+                registers.put(reg.toUpperCase(),value);
                 break;
         }
     }
