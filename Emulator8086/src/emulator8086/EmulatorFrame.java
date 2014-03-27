@@ -48,12 +48,12 @@ public class EmulatorFrame extends javax.swing.JFrame {
         systemMemory = new MemoryView(1024);
         functionMap = new HashMap<>();
         variableMap = new HashMap<>();
-        try{
-        komutList = asmToLineList(listContent);
+        try {
+            komutList = asmToLineList(listContent);
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.WARNING_MESSAGE);
         }
-        
+
         System.out.println("function size" + functionMap.size());
         System.out.println("function" + functionMap.get("k1"));
         for (int i = 0; i < komutList.length; i++) {
@@ -636,6 +636,9 @@ public class EmulatorFrame extends javax.swing.JFrame {
             } else if (listContent[i].contains(":")) {//Fonksiyon Tanimi
             } else {
                 tokens.set(0, tokens.get(0).toUpperCase());
+                if (notAKomut(listContent[i])) {
+                    throw new Exception("Parse edilemiyor.");
+                }
                 Line yeniKomut = new Komut(listContent[i], tokens.get(0), i);
                 for (int j = 1; j < tokens.size(); j++) {
                     String degisken = tokens.get(j);
@@ -654,8 +657,9 @@ public class EmulatorFrame extends javax.swing.JFrame {
                             || tokens.get(0).equals("JNP") || tokens.get(0).equals("JP")
                             || tokens.get(0).equals("JPO")) {
                         Integer line = functionMap.get(tokens.get(1));
-                        if(line == null)
-                            throw new Exception("Fonksiyon tanımlı değil: "+tokens.get(1));
+                        if (line == null) {
+                            throw new Exception("Fonksiyon tanımlı değil: " + tokens.get(1));
+                        }
                         ((Komut) yeniKomut).functionLine = line.intValue();
                     } else {//Memory
                         if (degisken.contains("[") && degisken.contains("]")) {
@@ -670,6 +674,57 @@ public class EmulatorFrame extends javax.swing.JFrame {
             }
         }
         return resultList;
+    }
+
+    private boolean notAKomut(String komut) {
+        if (komut.equals("ADC")
+                || komut.equals("ADD")
+                || komut.equals("AND")
+                || komut.equals("CLC")
+                || komut.equals("CLD")
+                || komut.equals("CMP")
+                || komut.equals("DEC")
+                || komut.equals("DIV")
+                || komut.equals("HLT")
+                || komut.equals("IDIV")
+                || komut.equals("IMUL")
+                || komut.equals("INC")
+                || komut.equals("JA")
+                || komut.equals("JAE")
+                || komut.equals("JB")
+                || komut.equals("JBE")
+                || komut.equals("JE")
+                || komut.equals("JG")
+                || komut.equals("JGE")
+                || komut.equals("JL")
+                || komut.equals("JLE")
+                || komut.equals("JMP")
+                || komut.equals("JNE")
+                || komut.equals("JNP")
+                || komut.equals("JP")
+                || komut.equals("JPO")
+                || komut.equals("LEA")
+                || komut.equals("LOOP")
+                || komut.equals("MOV")
+                || komut.equals("MUL")
+                || komut.equals("NEG")
+                || komut.equals("NOP")
+                || komut.equals("NOT")
+                || komut.equals("OR")
+                || komut.equals("POP")
+                || komut.equals("PUSH")
+                || komut.equals("ROL")
+                || komut.equals("ROR")
+                || komut.equals("SBB")
+                || komut.equals("SHL")
+                || komut.equals("SHR")
+                || komut.equals("STC")
+                || komut.equals("STD")
+                || komut.equals("SUB")
+                || komut.equals("XOR")) {
+            return false;
+        }
+        return true;
     }
 
     private int isAValue(String degisken) {
@@ -717,7 +772,7 @@ public class EmulatorFrame extends javax.swing.JFrame {
                 } else {
                     satir = komutIslet(satir, (Komut) line);
                 }
-                if (satir == -1) {
+                if (satir == -1) {//HLT gibi instruction larda -1 döndürülür ve sonlandırılır
                     break;
                 }
                 careTaker.kaydet(satir);

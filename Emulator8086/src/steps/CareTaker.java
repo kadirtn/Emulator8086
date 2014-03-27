@@ -9,7 +9,6 @@ package steps;
 import emulator8086.Flag;
 import emulator8086.Register;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 /**
