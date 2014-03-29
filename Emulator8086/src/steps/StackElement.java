@@ -12,9 +12,9 @@ package steps;
  */
 public class StackElement {
     public int size;
-    private int value;
+    private long value;
 
-    public StackElement(int size, int value) {
+    public StackElement(int size, long value) {
         this.size = size;
         this.value = value;
     }
@@ -32,18 +32,26 @@ public class StackElement {
             this.value = value % mod;
         }
     }
-    public Integer getValue(){
-        return new Integer(value);
+    public Long getValue(){
+        return new Long(value);
     }
     public String getMostSignificantBit(){
         return ""+getBinaryDeger().charAt(0);
     }
-    
+    public Long getSignedValue(){
+        if(getMostSignificantBit().equals("0"))
+            return new Long(value);
+        else{
+            //reverse binary
+            String reversed = getBinaryDeger().replaceAll("1","2").replaceAll("0", "1").replaceAll("2", "0");
+            return new Long(-1 * (Integer.parseInt(reversed, 2) + 1));
+        }
+    }
     public String getBinaryDeger(){
         String result = "";
-        int val = value;
+        long val = value;
         while(val >= 2){
-            int karakter = val % 2;
+            long karakter = val % 2;
             result += getChar(karakter);
             val = (val-karakter)/2;
         }
@@ -54,7 +62,7 @@ public class StackElement {
             result = fillWithZero(16,result);
         return new StringBuilder(result).reverse().toString();
     }
-    private String getChar(int val){
+    private String getChar(long val){
         if(val < 10)
             return val+"";
         return ((char)(55+val))+"";

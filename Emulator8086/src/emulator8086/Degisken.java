@@ -64,9 +64,9 @@ public class Degisken {
 
     public void setDeger(StackElement element) throws Exception {
         if (tur == DegiskenTur.REGISTER && (element.size == size || element.size == 0)) {
-            Register.getRegister().setValue(deger, element.getValue());
+            Register.getRegister().setValue(deger, element.getValue().intValue());
         } else if (tur == DegiskenTur.MEMORY && (element.size == size || element.size == 0)) {
-            EmulatorFrame.variableMap.get(deger).setValue(value, element.getValue());
+            EmulatorFrame.variableMap.get(deger).setValue(value, element.getValue().intValue());
         } else if ((tur == DegiskenTur.REGISTER && element.size != size) || (tur == DegiskenTur.MEMORY && element.size != size)) {
             throw new Exception("Boyut Hatası.");
         } else {

@@ -102,32 +102,42 @@ public class Register {
     public void setValue(String reg, int value) throws Exception{//reg değeri olarak yollanan register a value alanındaki değer set edilir.
         switch (reg.toUpperCase()) {
             case "AX":
-                if(value >= 256 * 256)
+                if(value >= 256 * 256 || value < -1*256*256)
                     throw new Exception("Boyut Hatası!");
+                if(value < 0)
+                    value += 256*256;
                 registers.put("AL", value %256);
                 registers.put("AH", (value - value%256) / 256);
                 break;
             case "BX":
-                if(value >= 256 * 256)
+                if(value >= 256 * 256 || value < -1*256*256)
                     throw new Exception("Boyut Hatası!");
+                if(value < 0)
+                    value += 256*256;
                 registers.put("BL", value %256);
                 registers.put("BH", (value - value%256) / 256);
                 break;
             case "CX":
-                if(value >= 256 * 256)
+                if(value >= 256 * 256 || value < -1*256*256)
                     throw new Exception("Boyut Hatası!");
+                if(value < 0)
+                    value += 256*256;
                 registers.put("CL", value %256);
                 registers.put("CH", (value - value%256) / 256);
                 break;
             case "DX":
-                if(value >= 256 * 256)
+                if(value >= 256 * 256 || value < -1*256*256)
                     throw new Exception("Boyut Hatası!");
+                if(value < 0)
+                    value += 256*256;
                 registers.put("DL", value %256);
                 registers.put("DH", (value - value%256) / 256);
                 break;
             default:
-                if(value >= 256)
+                if(value >= 256 || value < -1*256)
                     throw new Exception("Boyut Hatası!");
+                if(value < 0)
+                    value += 256;
                 registers.put(reg.toUpperCase(),value);
                 break;
         }
