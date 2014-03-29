@@ -54,11 +54,9 @@ public class EmulatorFrame extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.WARNING_MESSAGE);
         }
 
-        System.out.println("function size" + functionMap.size());
-        System.out.println("function" + functionMap.get("k1"));
         for (int i = 0; i < komutList.length; i++) {
             System.out.println(i + ": " + ((Line) komutList[i]).toString());
-        }
+        } 
         careTaker.kaydet(0);
         executeKomuts();// memory ye komutlar doldurulmak isteniyorsa
 
@@ -636,7 +634,7 @@ public class EmulatorFrame extends javax.swing.JFrame {
             } else if (listContent[i].contains(":")) {//Fonksiyon Tanimi
             } else {
                 tokens.set(0, tokens.get(0).toUpperCase());
-                if (notAKomut(listContent[i])) {
+                if (!isAKomut(listContent[i])) {
                     throw new Exception("Parse edilemiyor.");
                 }
                 Line yeniKomut = new Komut(listContent[i], tokens.get(0), i);
@@ -676,7 +674,7 @@ public class EmulatorFrame extends javax.swing.JFrame {
         return resultList;
     }
 
-    private boolean notAKomut(String komut) {
+    private boolean isAKomut(String komut) {
         if (komut.equals("ADC")
                 || komut.equals("ADD")
                 || komut.equals("AND")
@@ -751,7 +749,6 @@ public class EmulatorFrame extends javax.swing.JFrame {
                 }
             }
         } catch (Exception e) {
-            System.out.println(degisken + " is not a value");
         }
         return -1;
     }

@@ -63,12 +63,6 @@ public class Register {
             result = fillWithZero(4,result);
         else
             result = fillWithZero(2,result);
-        if(result.endsWith("A") ||
-                result.endsWith("B") ||
-                result.endsWith("C") ||
-                result.endsWith("D") ||
-                result.endsWith("E"))
-            result +="0";
         return new StringBuilder(result).reverse().toString()+"h";
         
     }
