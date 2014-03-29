@@ -610,8 +610,8 @@ public class EmulatorFrame extends javax.swing.JFrame {
                 resultList[i] = var;
 
             } else if (listContent[i].contains(":")) {//Fonksiyon Tanimi
-                Line yeniFonksiyonTanimi = new FonksiyonTanimi(listContent[i], listContent[i].substring(0, listContent[i].indexOf(":")), i);
-                functionMap.put(listContent[i].substring(0, listContent[i].indexOf(":")), i);
+                Line yeniFonksiyonTanimi = new FonksiyonTanimi(tokens.get(0), listContent[i].substring(0, tokens.get(0).indexOf(":")), i);
+                functionMap.put(tokens.get(0).substring(0, tokens.get(0).indexOf(":")), i);
                 resultList[i] = yeniFonksiyonTanimi;
             }
         }
