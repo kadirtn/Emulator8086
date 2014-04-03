@@ -165,11 +165,12 @@ public class NewJFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem4ActionPerformed
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-        if(fileSaved)
+        if(fileSaved){
             jTextArea1.setText("");
+            openedFileToSave = null;
+        }
         else{
-            int dialogButton = JOptionPane.YES_NO_OPTION;
-                JOptionPane.showConfirmDialog (null, "Would You Like to Save your text First?","Warning",dialogButton);
+                int dialogButton = JOptionPane.showConfirmDialog (null, "Would You Like to Save your text First?","Warning",JOptionPane.YES_NO_OPTION);
 
                 if(dialogButton == JOptionPane.YES_OPTION){ //The ISSUE is here
 
