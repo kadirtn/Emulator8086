@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package emulator8086;
 
 import java.io.BufferedWriter;
@@ -24,6 +23,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  * @author gizem
  */
 public class NewJFrame extends javax.swing.JFrame {
+
     File openedFileToSave = null;
     boolean fileSaved = true;
 
@@ -142,61 +142,187 @@ public class NewJFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
-        JFileChooser chooser = new JFileChooser();
-        FileNameExtensionFilter filter = new FileNameExtensionFilter(
-            "ASM Files", "asm", "txt");
-        chooser.setFileFilter(filter);
-        chooser.setDialogTitle("Assembly dosyası seçiniz");
-        chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-        int returnVal = chooser.showOpenDialog(this);
-        if(returnVal == JFileChooser.APPROVE_OPTION) {
-           FileReader fr;
-            try {
-                openedFileToSave = chooser.getSelectedFile();
-                fr = new FileReader( openedFileToSave);
-                jTextArea1.read(fr, "jTextArea1");
-                fileSaved = true;
-            } catch (FileNotFoundException ex) {
-                Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (IOException ex) {
-                Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
+        if (fileSaved) {
+            JFileChooser chooser = new JFileChooser();
+            FileNameExtensionFilter filter = new FileNameExtensionFilter(
+                    "ASM Files", "asm", "txt");
+            chooser.setFileFilter(filter);
+            chooser.setDialogTitle("Open");
+            chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+            int returnVal = chooser.showOpenDialog(this);
+            if (returnVal == JFileChooser.APPROVE_OPTION) {
+                FileReader fr;
+                try {
+                    openedFileToSave = chooser.getSelectedFile();
+                    fr = new FileReader(openedFileToSave);
+                    jTextArea1.read(fr, "jTextArea1");
+                    fileSaved = true;
+                } catch (FileNotFoundException ex) {
+                    Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (IOException ex) {
+                    Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
-            }
-    }//GEN-LAST:event_jMenuItem4ActionPerformed
+        } else {
+            int dialogButton = JOptionPane.showConfirmDialog(null, "Would You Like to Save your text First?", "Warning", JOptionPane.YES_NO_OPTION);
 
-    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-        if(fileSaved){
-            jTextArea1.setText("");
-            openedFileToSave = null;
-        }
-        else{
-                int dialogButton = JOptionPane.showConfirmDialog (null, "Would You Like to Save your text First?","Warning",JOptionPane.YES_NO_OPTION);
-
-                if(dialogButton == JOptionPane.YES_OPTION){ //The ISSUE is here
-
+            if (dialogButton == JOptionPane.YES_OPTION) { //The ISSUE is here
+                if (openedFileToSave == null) {
                     JFileChooser saveFile = new JFileChooser();
 
                     FileNameExtensionFilter filter = new FileNameExtensionFilter(
-                        "ASM Files", "asm");
+                            "ASM Files", "asm");
                     saveFile.setFileFilter(filter);
                     int saveOption = saveFile.showSaveDialog(this);
-                    if(saveOption == JFileChooser.APPROVE_OPTION){
+                    if (saveOption == JFileChooser.APPROVE_OPTION) {
 
-                        try{
+                        try {
                             String filename = saveFile.getSelectedFile().getPath();
-                            if(!filename.endsWith(".asm"))
+                            if (!filename.endsWith(".asm")) {
                                 filename = filename.concat(".asm");
+                            }
                             BufferedWriter fileWriter = new BufferedWriter(new FileWriter(filename));
                             fileWriter.write(jTextArea1.getText());
                             fileWriter.close();
                             fileSaved = true;
                             openedFileToSave = saveFile.getSelectedFile();
-                            
-                        }catch(Exception ex){
+
+                            JFileChooser chooser2 = new JFileChooser();
+                            FileNameExtensionFilter filter2 = new FileNameExtensionFilter(
+                                    "ASM Files", "asm", "txt");
+                            chooser2.setFileFilter(filter2);
+                            chooser2.setDialogTitle("Open");
+                            chooser2.setFileSelectionMode(JFileChooser.FILES_ONLY);
+                            int returnVal = chooser2.showOpenDialog(this);
+                            if (returnVal == JFileChooser.APPROVE_OPTION) {
+                                FileReader fr;
+                                try {
+                                    openedFileToSave = chooser2.getSelectedFile();
+                                    fr = new FileReader(openedFileToSave);
+                                    jTextArea1.read(fr, "jTextArea1");
+                                    fileSaved = true;
+                                } catch (FileNotFoundException ex) {
+                                    Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
+                                } catch (IOException ex) {
+                                    Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+                            }
+
+                        } catch (Exception ex) {
 
                         }
                     }
+                } else {
+                    String filename = openedFileToSave.getPath();
+                    BufferedWriter fileWriter;
+                    try {
+                        fileWriter = new BufferedWriter(new FileWriter(filename));
+                        fileWriter.write(jTextArea1.getText());
+                        fileWriter.close();
+                    } catch (IOException ex) {
+                        Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+
+                    fileSaved = true;
+
+                    JFileChooser chooser2 = new JFileChooser();
+                    FileNameExtensionFilter filter2 = new FileNameExtensionFilter(
+                            "ASM Files", "asm", "txt");
+                    chooser2.setFileFilter(filter2);
+                    chooser2.setDialogTitle("Open");
+                    chooser2.setFileSelectionMode(JFileChooser.FILES_ONLY);
+                    int returnVal = chooser2.showOpenDialog(this);
+                    if (returnVal == JFileChooser.APPROVE_OPTION) {
+                        FileReader fr;
+                        try {
+                            openedFileToSave = chooser2.getSelectedFile();
+                            fr = new FileReader(openedFileToSave);
+                            jTextArea1.read(fr, "jTextArea1");
+                            fileSaved = true;
+                        } catch (FileNotFoundException ex) {
+                            Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
+                        } catch (IOException ex) {
+                            Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
                 }
+            } else {
+                JFileChooser chooser = new JFileChooser();
+                FileNameExtensionFilter filter = new FileNameExtensionFilter(
+                        "ASM Files", "asm", "txt");
+                chooser.setFileFilter(filter);
+                chooser.setDialogTitle("Open");
+                chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+                int returnVal = chooser.showOpenDialog(this);
+                if (returnVal == JFileChooser.APPROVE_OPTION) {
+                    FileReader fr;
+                    try {
+                        openedFileToSave = chooser.getSelectedFile();
+                        fr = new FileReader(openedFileToSave);
+                        jTextArea1.read(fr, "jTextArea1");
+                        fileSaved = true;
+                    } catch (FileNotFoundException ex) {
+                        Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (IOException ex) {
+                        Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }
+
+        }
+    }//GEN-LAST:event_jMenuItem4ActionPerformed
+
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        if (fileSaved) {
+            jTextArea1.setText("");
+            openedFileToSave = null;
+            fileSaved = true;
+        } else {
+            int dialogButton = JOptionPane.showConfirmDialog(null, "Would You Like to Save your text First?", "Warning", JOptionPane.YES_NO_OPTION);
+
+            if (dialogButton == JOptionPane.YES_OPTION) { //The ISSUE is here
+                if (openedFileToSave == null) {
+                    JFileChooser saveFile = new JFileChooser();
+
+                    FileNameExtensionFilter filter = new FileNameExtensionFilter(
+                            "ASM Files", "asm");
+                    saveFile.setFileFilter(filter);
+                    int saveOption = saveFile.showSaveDialog(this);
+                    if (saveOption == JFileChooser.APPROVE_OPTION) {
+
+                        try {
+                            String filename = saveFile.getSelectedFile().getPath();
+                            if (!filename.endsWith(".asm")) {
+                                filename = filename.concat(".asm");
+                            }
+                            BufferedWriter fileWriter = new BufferedWriter(new FileWriter(filename));
+                            fileWriter.write(jTextArea1.getText());
+                            fileWriter.close();
+                            jTextArea1.setText("");
+                            fileSaved = true;
+                            openedFileToSave = null;
+
+                        } catch (Exception ex) {
+
+                        }
+                    }
+                } else {
+                    String filename = openedFileToSave.getPath();
+                    BufferedWriter fileWriter;
+                    try {
+                        fileWriter = new BufferedWriter(new FileWriter(filename));
+                        fileWriter.write(jTextArea1.getText());
+                        fileWriter.close();
+                    } catch (IOException ex) {
+                        Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    fileSaved = true;
+                }
+            } else {
+                jTextArea1.setText("");
+                openedFileToSave = null;
+                fileSaved = true;
+            }
         }
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
@@ -205,27 +331,56 @@ public class NewJFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextArea1KeyTyped
 
     private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
-        FileOutputStream fos;
-        try {
-            fos = new FileOutputStream(openedFileToSave);
-            byte[] b=jTextArea1.getText().getBytes();
-            fos.write(b);
-            fos.close();
-            fileSaved = true;
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
+        if (!fileSaved) {
+            if (openedFileToSave != null) {
+                FileOutputStream fos;
+                try {
+                    fos = new FileOutputStream(openedFileToSave);
+                    byte[] b = jTextArea1.getText().getBytes();
+                    fos.write(b);
+                    fos.close();
+                    fileSaved = true;
+                } catch (FileNotFoundException ex) {
+                    Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (IOException ex) {
+                    Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            } else {
+                JFileChooser saveFile = new JFileChooser();
+
+                FileNameExtensionFilter filter = new FileNameExtensionFilter(
+                        "ASM Files", "asm");
+                saveFile.setFileFilter(filter);
+                int saveOption = saveFile.showSaveDialog(this);
+                if (saveOption == JFileChooser.APPROVE_OPTION) {
+
+                    try {
+                        String filename = saveFile.getSelectedFile().getPath();
+                        if (!filename.endsWith(".asm")) {
+                            filename = filename.concat(".asm");
+                        }
+                        BufferedWriter fileWriter = new BufferedWriter(new FileWriter(filename));
+                        fileWriter.write(jTextArea1.getText());
+                        fileWriter.close();
+                        fileSaved = true;
+                        openedFileToSave = saveFile.getSelectedFile();
+
+                    } catch (Exception ex) {
+
+                    }
+                }
+            }
         }
     }//GEN-LAST:event_jMenuItem3ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
         String[] lines = parseAsm();
-        if(lines.length > 0)
+        if (lines.length > 0) {
             new EmulatorFrame(lines).setVisible(true);
-        else
-            JOptionPane.showMessageDialog(this, "Nothing to emulate, open an asm file or write some asm!", "Error", JOptionPane.WARNING_MESSAGE );  
+        } else {
+            JOptionPane.showMessageDialog(this, "Nothing to emulate, open an asm file or write some asm!", "Error", JOptionPane.WARNING_MESSAGE);
+        }
     }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
@@ -266,17 +421,20 @@ public class NewJFrame extends javax.swing.JFrame {
     private String[] parseAsm() {
         String[] lines = jTextArea1.getText().split("\\n");
         int gercekSatir = 0;
-        for(int i = 0; i < lines.length;i++){
-            if(lines[i].contains(";"))
-                lines[i] = lines[i].substring(0,lines[i].indexOf(";"));
-            if(lines[i].replaceAll(" ", "").length() > 0)
+        for (int i = 0; i < lines.length; i++) {
+            if (lines[i].contains(";")) {
+                lines[i] = lines[i].substring(0, lines[i].indexOf(";"));
+            }
+            if (lines[i].replaceAll(" ", "").length() > 0) {
                 gercekSatir++;
+            }
         }
         String[] result = new String[gercekSatir];
         int resultIndex = 0;
-        for(int i = 0; i < lines.length;i++){
-            if(lines[i].replaceAll(" ", "").length() > 0)
+        for (int i = 0; i < lines.length; i++) {
+            if (lines[i].replaceAll(" ", "").length() > 0) {
                 result[resultIndex++] = lines[i];
+            }
         }
         return result;
 
@@ -295,6 +453,5 @@ public class NewJFrame extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextArea jTextArea1;
     // End of variables declaration//GEN-END:variables
-
 
 }
