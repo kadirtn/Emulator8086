@@ -26,8 +26,7 @@ public class MemoryUpdater {
             case "CLC":
                 EmulatorFrame.systemMemory.set(EmulatorFrame.bellekAdresi,248);
                 EmulatorFrame.memoList = new int[1];
-                EmulatorFrame.memoList[0] = EmulatorFrame.bellekAdresi;
-                EmulatorFrame.bellekAdresi += 1;
+                EmulatorFrame.memoList[0] = EmulatorFrame.bellekAdresi++;
                 break;
             case "CLD":
                 break;
@@ -40,8 +39,7 @@ public class MemoryUpdater {
             case "HLT":
                 EmulatorFrame.systemMemory.set(EmulatorFrame.bellekAdresi,244);
                 EmulatorFrame.memoList = new int[1];
-                EmulatorFrame.memoList[0] = EmulatorFrame.bellekAdresi;
-                EmulatorFrame.bellekAdresi += 1;
+                EmulatorFrame.memoList[0] = EmulatorFrame.bellekAdresi++;
                 break;
             case "IDIV":
                 break;
@@ -90,8 +88,7 @@ public class MemoryUpdater {
             case "NOP":
                 EmulatorFrame.systemMemory.set(EmulatorFrame.bellekAdresi,144);
                 EmulatorFrame.memoList = new int[1];
-                EmulatorFrame.memoList[0] = EmulatorFrame.bellekAdresi;
-                EmulatorFrame.bellekAdresi += 1;
+                EmulatorFrame.memoList[0] = EmulatorFrame.bellekAdresi++;
                 break;
             case "NOT":
                 break;
