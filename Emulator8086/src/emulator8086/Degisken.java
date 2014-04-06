@@ -35,7 +35,7 @@ public class Degisken {
     }
 
     public Degisken(String reg) {
-        reg = reg.toUpperCase();
+        reg = reg.toUpperCase().replaceAll("İ", "I");
         tur = DegiskenTur.REGISTER;
         deger = reg;
         if (reg.equals("AX") || reg.equals("BX") || reg.equals("CX") || reg.equals("DX")) {

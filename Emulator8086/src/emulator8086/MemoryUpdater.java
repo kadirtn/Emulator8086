@@ -16,7 +16,7 @@ import steps.StackElement;
 public class MemoryUpdater {
     
     public static void updateMemory(Komut komut, StackElement res) {
-        switch (komut.komut.toUpperCase()) {
+        switch (komut.komut.toUpperCase().replaceAll("İ", "I")) {
             case "ADC":
                 break;
             case "ADD":

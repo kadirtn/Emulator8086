@@ -628,7 +628,7 @@ public class EmulatorFrame extends javax.swing.JFrame {
                     && (tokens.get(1).toLowerCase().equals("dw"))) {
             } else if (listContent[i].contains(":")) {//Fonksiyon Tanimi
             } else {
-                tokens.set(0, tokens.get(0).toUpperCase());
+                tokens.set(0, tokens.get(0).toUpperCase().replaceAll("İ", "I"));
                 if (!isAKomut(listContent[i])) {
                     throw new Exception("Parse edilemiyor.");
                 }
@@ -636,8 +636,8 @@ public class EmulatorFrame extends javax.swing.JFrame {
                 for (int j = 1; j < tokens.size(); j++) {
                     String degisken = tokens.get(j);
                     int value = isAValue(degisken);
-                    if (isARegister(degisken.toUpperCase())) {//Register
-                        ((Komut) yeniKomut).addDegisken(new Degisken(degisken.toUpperCase()));
+                    if (isARegister(degisken.toUpperCase().replaceAll("İ", "I"))) {//Register
+                        ((Komut) yeniKomut).addDegisken(new Degisken(degisken.toUpperCase().replaceAll("İ", "I")));
                     } else if (value != -1) {//Immediate
                         ((Komut) yeniKomut).addDegisken(new Degisken(value));
                     } else if (tokens.get(0).equals("LOOP") || tokens.get(0).equals("JMP")
@@ -723,10 +723,10 @@ public class EmulatorFrame extends javax.swing.JFrame {
     private int isAValue(String degisken) {
         try {
             if (degisken.length() > 0) {
-                if (degisken.toUpperCase().endsWith("H")) {
+                if (degisken.toUpperCase().replaceAll("İ", "I").endsWith("H")) {
                     return Integer.parseInt(degisken.substring(0, degisken.length() - 1), 16);
                 }
-                if (degisken.toUpperCase().endsWith("B")) {
+                if (degisken.toUpperCase().replaceAll("İ", "I").endsWith("B")) {
                     return Integer.parseInt(degisken.substring(0, degisken.length() - 1), 2);
                 } else if (degisken.contains("\"") || degisken.contains("'")) {
                     degisken = degisken.replaceAll("\"", "").replaceAll("'", "");
@@ -785,7 +785,7 @@ public class EmulatorFrame extends javax.swing.JFrame {
 
     private int komutIslet(int satir, Komut komut) throws Exception {
         //gelen komutların ilgili instruction a yönlendirilip işletilmesi
-        switch (komut.komut.toUpperCase()) {
+        switch (komut.komut.toUpperCase().replaceAll("İ", "I")) {
             case "ADC":
                 return Instructions.ADC(satir, komut);
             case "ADD":
