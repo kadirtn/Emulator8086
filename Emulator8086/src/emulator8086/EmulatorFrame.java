@@ -468,14 +468,18 @@ public class EmulatorFrame extends javax.swing.JFrame {
 
     private void singleStep(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_singleStep
         // TODO add your handling code here:
-        stepPointer++;
-        load();
+        if (stepPointer < careTaker.getSize()) {
+            stepPointer++;
+            load();
+        }
     }//GEN-LAST:event_singleStep
 
     private void stepBack(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stepBack
         // TODO add your handling code here:
-        stepPointer--;
-        load();
+        if (stepPointer > 0) {
+            stepPointer--;
+            load();
+        }
     }//GEN-LAST:event_stepBack
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
