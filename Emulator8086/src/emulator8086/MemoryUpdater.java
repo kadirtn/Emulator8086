@@ -29,6 +29,9 @@ public class MemoryUpdater {
                 EmulatorFrame.memoList[0] = EmulatorFrame.bellekAdresi++;
                 break;
             case "CLD":
+                EmulatorFrame.systemMemory.set(EmulatorFrame.bellekAdresi,252);
+                EmulatorFrame.memoList = new int[1];
+                EmulatorFrame.memoList[0] = EmulatorFrame.bellekAdresi++;
                 break;
             case "CMP":
                 break;
@@ -45,7 +48,7 @@ public class MemoryUpdater {
                 break;
             case "IMUL":
                 break;
-            case "INC":
+            case "INC":                
                 break;
             case "JA":
                 break;
