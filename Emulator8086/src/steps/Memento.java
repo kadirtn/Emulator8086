@@ -18,7 +18,8 @@ public class Memento {
     public HashMap<String,Integer> registers;
     public boolean[] flags;
     public int satir;
-    public Memento(int satir){
+    public int[] memoryAddressList;
+    public Memento(){
         registers = new HashMap<String,Integer>();
         registers.put("AX", Register.getRegister().getValue("AX"));
         registers.put("BX", Register.getRegister().getValue("BX"));
@@ -31,6 +32,11 @@ public class Memento {
         flags[3] = Flag.getFlag().OF;
         flags[4] = Flag.getFlag().PF;
         flags[5] = Flag.getFlag().DF;
+    }
+    public void setSatir(int satir){
         this.satir = satir;
+    }
+    public void setMemoryAddressList(int[] memoryAddressList){
+        this.memoryAddressList = memoryAddressList;
     }
 }

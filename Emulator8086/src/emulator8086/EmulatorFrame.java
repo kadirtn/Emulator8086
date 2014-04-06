@@ -20,6 +20,7 @@ import javax.swing.JOptionPane;
 import line.Line;
 import line.Variable;
 import steps.CareTaker;
+import steps.Memento;
 
 /**
  *
@@ -33,21 +34,18 @@ public class EmulatorFrame extends javax.swing.JFrame {
     public EmulatorFrame() {
         initComponents();
     }
-    public MemoryView systemMemory;
     public HashMap<String, Integer> functionMap;
     public static HashMap<String, Memory> variableMap;
+    public static MemoryView systemMemory;
+    public static int bellekAdresi = 0;
+    public static int[] memoList = null;
     Object[] komutList = null;
     CareTaker careTaker = null;
     int stepPointer;
 
     public EmulatorFrame(String[] listContent) {
         initComponents();
-        stepPointer = 0;
-        careTaker = new CareTaker();
-
-        systemMemory = new MemoryView(1024);
-        functionMap = new HashMap<>();
-        variableMap = new HashMap<>();
+        resetAll();
         try {
             komutList = asmToLineList(listContent);
         } catch (Exception ex) {
@@ -56,30 +54,23 @@ public class EmulatorFrame extends javax.swing.JFrame {
 
         for (int i = 0; i < komutList.length; i++) {
             System.out.println(i + ": " + ((Line) komutList[i]).toString());
-        } 
-        careTaker.kaydet(0);
+        }
         executeKomuts();// memory ye komutlar doldurulmak isteniyorsa
 
         //asm JList doldurma
         jList2 = new javax.swing.JList(komutList);
         jList2.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        jList2.setEnabled(false);
+        jList2.setAutoscrolls(true);
         jScrollPane3.setViewportView(jList2);
 
         //bellek JList doldurma
         jList1 = new javax.swing.JList(systemMemory.getList());
-        jList1.setCellRenderer(new DefaultListCellRenderer() {
-
-            @Override
-            public Component getListCellRendererComponent(JList list,
-                    Object value, int index, boolean isSelected,
-                    boolean cellHasFocus) {
-                super.getListCellRendererComponent(list, value, index, false,
-                        false);
-
-                return this;
-            }
-        });
+        jList1.setSelectionMode(javax.swing.ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+        jList1.setEnabled(false);
+        jList1.setAutoscrolls(true);
         jScrollPane2.setViewportView(jList1);
+
         load();
 
     }
@@ -759,9 +750,11 @@ public class EmulatorFrame extends javax.swing.JFrame {
 
     private void executeKomuts() {
         int satir = 0;
+        int satirBuffer = 0;
         try {
             while (true) {
                 Line line = (Line) komutList[satir];
+                Memento mement = new Memento();
                 if (line instanceof Variable) {
                     satir++;
                 } else if (line instanceof FonksiyonTanimi) {
@@ -769,10 +762,13 @@ public class EmulatorFrame extends javax.swing.JFrame {
                 } else {
                     satir = komutIslet(satir, (Komut) line);
                 }
+                mement.setSatir(satirBuffer);
+                mement.setMemoryAddressList(memoList);
+                careTaker.kaydet(mement);
                 if (satir == -1) {//HLT gibi instruction larda -1 döndürülür ve sonlandırılır
                     break;
                 }
-                careTaker.kaydet(satir);
+                satirBuffer = satir;
 
                 if (satir == komutList.length) {
                     break;
@@ -890,7 +886,15 @@ public class EmulatorFrame extends javax.swing.JFrame {
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.WARNING_MESSAGE);
         }
-        jList2.setSelectedIndex(careTaker.get(stepPointer).satir);
+        Memento mement = careTaker.get(stepPointer);
+        jList2.setSelectedIndex(mement.satir);
+        jList2.ensureIndexIsVisible(mement.satir);
+        if (mement.memoryAddressList != null) {
+            jList1.setSelectedIndices(mement.memoryAddressList);
+            jList1.ensureIndexIsVisible(mement.memoryAddressList[0]);
+        } else {
+            jList1.clearSelection();
+        }
         registerAH.setText(Register.getRegister().getHexValue("AH"));
         registerAL.setText(Register.getRegister().getHexValue("AL"));
         registerBH.setText(Register.getRegister().getHexValue("BH"));
@@ -905,6 +909,32 @@ public class EmulatorFrame extends javax.swing.JFrame {
         flagPF.setText(Flag.getFlag().PF ? "1" : "0");
         flagSF.setText(Flag.getFlag().SF ? "1" : "0");
         flagZF.setText(Flag.getFlag().ZF ? "1" : "0");
+    }
+
+    private void resetAll() {
+        stepPointer = 0;
+        careTaker = new CareTaker();
+
+        systemMemory = new MemoryView(1024);
+        functionMap = new HashMap<>();
+        variableMap = new HashMap<>();
+        bellekAdresi = 0;
+        memoList = null;
+        try {
+            Register.getRegister().setValue("AX", 0);
+            Register.getRegister().setValue("BX", 0);
+            Register.getRegister().setValue("CX", 0);
+            Register.getRegister().setValue("DX", 0);
+            Flag.getFlag().CF = false;
+            Flag.getFlag().DF = false;
+            Flag.getFlag().OF = false;
+            Flag.getFlag().SF = false;
+            Flag.getFlag().PF = false;
+            Flag.getFlag().ZF = false;
+
+        } catch (Exception ex) {
+            Logger.getLogger(EmulatorFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
 }

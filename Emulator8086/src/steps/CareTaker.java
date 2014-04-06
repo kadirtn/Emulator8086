@@ -17,8 +17,8 @@ import java.util.List;
  */
 public class CareTaker {
     private List<Memento> mementoList = new ArrayList<Memento>(); 
-    public void kaydet(int satir){
-        mementoList.add(new Memento(satir));
+    public void kaydet(Memento memento){
+        mementoList.add(memento);
     }
     public Memento get(int i){
         return mementoList.get(i);

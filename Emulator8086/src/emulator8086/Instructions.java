@@ -22,6 +22,7 @@ public class Instructions {
         Degisken dest = list.get(0);
         Degisken src = list.get(1);
         dest.setDeger(src.getDeger());
+        MemoryUpdater.updateMemory(komut, src.getDeger());
         return ++satir;
     }
 
@@ -35,6 +36,7 @@ public class Instructions {
         Flag.getFlag().SF = dest.getMostSignificantBit().equals("1");
         Flag.getFlag().OF = dest.getMostSignificantBit().equals(src.getMostSignificantBit()) && !res.getMostSignificantBit().equals(src.getMostSignificantBit());
         Flag.getFlag().PF = (dest.getBinaryDeger().length() - dest.getBinaryDeger().replace("1", "").length()) % 2 == 0;
+        MemoryUpdater.updateMemory(komut, res);
         return ++satir;
     }
 
@@ -48,6 +50,7 @@ public class Instructions {
         Flag.getFlag().SF = dest.getMostSignificantBit().equals("1");
         Flag.getFlag().OF = dest.getMostSignificantBit().equals(src.getMostSignificantBit()) && !res.getMostSignificantBit().equals(src.getMostSignificantBit());
         Flag.getFlag().PF = (dest.getBinaryDeger().length() - dest.getBinaryDeger().replace("1", "").length()) % 2 == 0;
+        MemoryUpdater.updateMemory(komut, res);
         return ++satir;
     }
 
@@ -60,6 +63,7 @@ public class Instructions {
         } else {
             throw new Exception("Push edilen değer register veya memory olmalı");
         }
+        MemoryUpdater.updateMemory(komut, null);
         return ++satir;
     }
 
@@ -70,6 +74,7 @@ public class Instructions {
             throw new Exception("Pop edilen destination boyutu word(2 byte) olmalı.");
         }
         dest.setDeger(element);
+        MemoryUpdater.updateMemory(komut, null);
         return ++satir;
     }
 
@@ -83,6 +88,7 @@ public class Instructions {
         Flag.getFlag().SF = dest.getMostSignificantBit().equals("1");
         Flag.getFlag().OF = dest.getMostSignificantBit().equals(src.getMostSignificantBit()) && !res.getMostSignificantBit().equals(src.getMostSignificantBit());
         Flag.getFlag().PF = (dest.getBinaryDeger().length() - dest.getBinaryDeger().replace("1", "").length()) % 2 == 0;
+        MemoryUpdater.updateMemory(komut, res);
         return ++satir;
     }
 
@@ -104,17 +110,20 @@ public class Instructions {
         Flag.getFlag().ZF = dest.getDeger().getValue() == 0;
         Flag.getFlag().SF = dest.getMostSignificantBit().equals("1");
         Flag.getFlag().PF = (dest.getBinaryDeger().length() - dest.getBinaryDeger().replace("1", "").length()) % 2 == 0;
+        MemoryUpdater.updateMemory(komut, dest.getDeger());
 
         return ++satir;
     }
 
     public static int CLC(int satir, Komut komut) {
         Flag.getFlag().CF = false;
+        MemoryUpdater.updateMemory(komut, null);
         return ++satir;
     }
 
     public static int CLD(int satir, Komut komut) {
         Flag.getFlag().DF = false;
+        MemoryUpdater.updateMemory(komut, null);
         return ++satir;
     }
 
@@ -127,6 +136,7 @@ public class Instructions {
         Flag.getFlag().SF = dummy.getMostSignificantBit().equals("1");
 
         Flag.getFlag().PF = (dummy.getBinaryDeger().length() - dummy.getBinaryDeger().replace("1", "").length()) % 2 == 1;
+        MemoryUpdater.updateMemory(komut, null);
         return ++satir;
     }
 
@@ -139,6 +149,7 @@ public class Instructions {
         dest.setDeger(result);
         Flag.getFlag().ZF = (result.getValue() == 0);
         Flag.getFlag().PF = (dest.getBinaryDeger().length() - dest.getBinaryDeger().replace("1", "").length()) % 2 == 0;
+        MemoryUpdater.updateMemory(komut, null);
         return ++satir;
     }
 
@@ -161,10 +172,12 @@ public class Instructions {
                 Register.getRegister().setValue("AX", new Long(lax).intValue());
                 break;
         }
+        MemoryUpdater.updateMemory(komut, null);
         return ++satir;
     }
 
     public static int HLT(int satir, Komut komut) {
+        MemoryUpdater.updateMemory(komut, null);
         return -1;//-1 = programı sonlandır
     }
 
@@ -191,6 +204,7 @@ public class Instructions {
                 Register.getRegister().setValue("AX", new Long(lax).intValue());
                 break;
         }
+        MemoryUpdater.updateMemory(komut, null);
         return ++satir;
     }
 
@@ -218,6 +232,7 @@ public class Instructions {
                 Register.getRegister().setValue("DX", new Long(dxValue).intValue());
                 break;
         }
+        MemoryUpdater.updateMemory(komut, null);
         return ++satir;
     }
 
@@ -230,6 +245,7 @@ public class Instructions {
         dest.setDeger(result);
         Flag.getFlag().ZF = (result.getValue() == 0);
         Flag.getFlag().PF = (dest.getBinaryDeger().length() - dest.getBinaryDeger().replace("1", "").length()) % 2 == 0;
+        MemoryUpdater.updateMemory(komut, null);
         return ++satir;
     }
 
@@ -237,6 +253,7 @@ public class Instructions {
         if (!Flag.getFlag().CF && !Flag.getFlag().ZF) {
             return komut.functionLine;
         }
+        MemoryUpdater.updateMemory(komut, null);
         return ++satir;
     }
 
@@ -244,6 +261,7 @@ public class Instructions {
         if (!Flag.getFlag().CF) {
             return komut.functionLine;
         }
+        MemoryUpdater.updateMemory(komut, null);
         return ++satir;
     }
 
@@ -251,6 +269,7 @@ public class Instructions {
         if (Flag.getFlag().CF) {
             return komut.functionLine;
         }
+        MemoryUpdater.updateMemory(komut, null);
         return ++satir;
     }
 
@@ -258,6 +277,7 @@ public class Instructions {
         if (Flag.getFlag().CF && Flag.getFlag().ZF) {
             return komut.functionLine;
         }
+        MemoryUpdater.updateMemory(komut, null);
         return ++satir;
     }
 
@@ -265,6 +285,7 @@ public class Instructions {
         if (Flag.getFlag().ZF) {
             return komut.functionLine;
         }
+        MemoryUpdater.updateMemory(komut, null);
         return ++satir;
     }
 
@@ -272,6 +293,7 @@ public class Instructions {
         if (!Flag.getFlag().ZF && Flag.getFlag().SF == Flag.getFlag().OF) {
             return komut.functionLine;
         }
+        MemoryUpdater.updateMemory(komut, null);
         return ++satir;
     }
 
@@ -279,6 +301,7 @@ public class Instructions {
         if (Flag.getFlag().SF == Flag.getFlag().OF) {
             return komut.functionLine;
         }
+        MemoryUpdater.updateMemory(komut, null);
         return ++satir;
     }
 
@@ -286,10 +309,12 @@ public class Instructions {
         if (Flag.getFlag().SF != Flag.getFlag().OF) {
             return komut.functionLine;
         }
+        MemoryUpdater.updateMemory(komut, null);
         return ++satir;
     }
 
     public static int JMP(int satir, Komut komut) {
+        MemoryUpdater.updateMemory(komut, null);
         return komut.functionLine;
     }
 
@@ -297,6 +322,7 @@ public class Instructions {
         if (Flag.getFlag().SF != Flag.getFlag().OF && Flag.getFlag().ZF) {
             return komut.functionLine;
         }
+        MemoryUpdater.updateMemory(komut, null);
         return ++satir;
     }
 
@@ -304,6 +330,7 @@ public class Instructions {
         if (!Flag.getFlag().ZF) {
             return komut.functionLine;
         }
+        MemoryUpdater.updateMemory(komut, null);
         return ++satir;
     }
 
@@ -311,6 +338,7 @@ public class Instructions {
         if (!Flag.getFlag().PF) {
             return komut.functionLine;
         }
+        MemoryUpdater.updateMemory(komut, null);
         return ++satir;
     }
 
@@ -318,6 +346,7 @@ public class Instructions {
         if (Flag.getFlag().PF) {
             return komut.functionLine;
         }
+        MemoryUpdater.updateMemory(komut, null);
         return ++satir;
     }
 
@@ -325,6 +354,7 @@ public class Instructions {
         if (!Flag.getFlag().PF) {
             return komut.functionLine;
         }
+        MemoryUpdater.updateMemory(komut, null);
         return ++satir;
     }
 
@@ -337,6 +367,7 @@ public class Instructions {
         if (Register.getRegister().getValue("CX") != 0) {
             return komut.functionLine;
         }
+        MemoryUpdater.updateMemory(komut, null);
         return ++satir;
     }
 
@@ -363,6 +394,7 @@ public class Instructions {
                 Register.getRegister().setValue("DX", new Long(dxValue).intValue());
                 break;
         }
+        MemoryUpdater.updateMemory(komut, null);
         return ++satir;
     }
 
@@ -383,12 +415,14 @@ public class Instructions {
         Flag.getFlag().PF = (dest.getBinaryDeger().length() - dest.getBinaryDeger().replace("1", "").length()) % 2 == 0;
         Flag.getFlag().SF = dest.getMostSignificantBit().equals("1");
         Flag.getFlag().OF = (dest.size == 1 && dest.getDeger().getValue() == 128) || (dest.size == 2 && dest.getDeger().getValue() == 32768);
+        MemoryUpdater.updateMemory(komut, null);
         return ++satir;
     }
 
     public static int NOP(int satir, Komut komut) {
         //beklemeye sebep olan komut, etkisi yok 
         //Do nothing
+        MemoryUpdater.updateMemory(komut, null);
         return ++satir;
     }
 
@@ -405,6 +439,7 @@ public class Instructions {
             result.setValue(65535 - result.getValue().intValue());
         }
         dest.setDeger(result);
+        MemoryUpdater.updateMemory(komut, null);
         return ++satir;
     }
 
@@ -427,6 +462,7 @@ public class Instructions {
         Flag.getFlag().SF = dest.getMostSignificantBit().equals("1");
         Flag.getFlag().PF = (dest.getBinaryDeger().length() - dest.getBinaryDeger().replace("1", "").length()) % 2 == 0;
 
+        MemoryUpdater.updateMemory(komut, null);
         return ++satir;
     }
 
@@ -449,16 +485,19 @@ public class Instructions {
         Flag.getFlag().SF = dest.getMostSignificantBit().equals("1");
         Flag.getFlag().PF = (dest.getBinaryDeger().length() - dest.getBinaryDeger().replace("1", "").length()) % 2 == 0;
 
+        MemoryUpdater.updateMemory(komut, null);
         return ++satir;
     }
 
     public static int STD(int satir, Komut komut) {
         Flag.getFlag().DF = true;
+        MemoryUpdater.updateMemory(komut, null);
         return ++satir;
     }
 
     public static int STC(int satir, Komut komut) {
         Flag.getFlag().CF = true;
+        MemoryUpdater.updateMemory(komut, null);
         return ++satir;
     }
 
@@ -473,6 +512,7 @@ public class Instructions {
             throw new Exception("Wrong types for ROL instruction");
         }
         dest.setDeger(new StackElement(dest.size, result));
+        MemoryUpdater.updateMemory(komut, null);
         return ++satir;
     }
 
@@ -487,6 +527,7 @@ public class Instructions {
             throw new Exception("Wrong types for ROL instruction");
         }
         dest.setDeger(new StackElement(dest.size, result));
+        MemoryUpdater.updateMemory(komut, null);
         return ++satir;
     }
 
@@ -499,6 +540,7 @@ public class Instructions {
         dest.setDeger(res);
         Flag.getFlag().OF = dest.getMostSignificantBit().equals(src.getMostSignificantBit()) && !res.getMostSignificantBit().equals(src.getMostSignificantBit());
         Flag.getFlag().PF = (dest.getBinaryDeger().length() - dest.getBinaryDeger().replace("1", "").length()) % 2 == 0;
+        MemoryUpdater.updateMemory(komut, null);
         return ++satir;
     }
 
@@ -513,6 +555,7 @@ public class Instructions {
             throw new Exception("Wrong types for ROL instruction");
         }
         dest.setDeger(new StackElement(dest.size, result));
+        MemoryUpdater.updateMemory(komut, null);
         return ++satir;
     }
 
@@ -527,6 +570,7 @@ public class Instructions {
             throw new Exception("Wrong types for ROL instruction");
         }
         dest.setDeger(new StackElement(dest.size, result));
+        MemoryUpdater.updateMemory(komut, null);
         return ++satir;
     }
 
@@ -581,4 +625,5 @@ public class Instructions {
         }
         return result;
     }
+
 }
