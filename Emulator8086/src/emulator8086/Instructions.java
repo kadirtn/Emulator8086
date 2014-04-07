@@ -63,7 +63,7 @@ public class Instructions {
         } else {
             throw new Exception("Push edilen değer register veya memory olmalı");
         }
-        MemoryUpdater.updateMemory(komut, null);
+        MemoryUpdater.updateMemory(komut, degisken.getDeger());
         return ++satir;
     }
 
@@ -74,7 +74,7 @@ public class Instructions {
             throw new Exception("Pop edilen destination boyutu word(2 byte) olmalı.");
         }
         dest.setDeger(element);
-        MemoryUpdater.updateMemory(komut, null);
+        MemoryUpdater.updateMemory(komut, dest.getDeger());
         return ++satir;
     }
 
@@ -439,7 +439,7 @@ public class Instructions {
             result.setValue(65535 - result.getValue().intValue());
         }
         dest.setDeger(result);
-        MemoryUpdater.updateMemory(komut, null);
+        MemoryUpdater.updateMemory(komut, dest.getDeger());
         return ++satir;
     }
 
@@ -462,7 +462,7 @@ public class Instructions {
         Flag.getFlag().SF = dest.getMostSignificantBit().equals("1");
         Flag.getFlag().PF = (dest.getBinaryDeger().length() - dest.getBinaryDeger().replace("1", "").length()) % 2 == 0;
 
-        MemoryUpdater.updateMemory(komut, null);
+        MemoryUpdater.updateMemory(komut, dest.getDeger());
         return ++satir;
     }
 
@@ -485,7 +485,7 @@ public class Instructions {
         Flag.getFlag().SF = dest.getMostSignificantBit().equals("1");
         Flag.getFlag().PF = (dest.getBinaryDeger().length() - dest.getBinaryDeger().replace("1", "").length()) % 2 == 0;
 
-        MemoryUpdater.updateMemory(komut, null);
+        MemoryUpdater.updateMemory(komut, dest.getDeger());
         return ++satir;
     }
 
