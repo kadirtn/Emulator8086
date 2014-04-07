@@ -115,19 +115,19 @@ public class Instructions {
         return ++satir;
     }
 
-    public static int CLC(int satir, Komut komut) {
+    public static int CLC(int satir, Komut komut) throws Exception {
         Flag.getFlag().CF = false;
         MemoryUpdater.updateMemory(komut, null);
         return ++satir;
     }
 
-    public static int CLD(int satir, Komut komut) {
+    public static int CLD(int satir, Komut komut) throws Exception {
         Flag.getFlag().DF = false;
         MemoryUpdater.updateMemory(komut, null);
         return ++satir;
     }
 
-    public static int CMP(int satir, Komut komut) {
+    public static int CMP(int satir, Komut komut) throws Exception {
         List<Degisken> list = komut.getDegiskenList();
         Degisken dest = list.get(0);
         Degisken src = list.get(1);
@@ -176,7 +176,7 @@ public class Instructions {
         return ++satir;
     }
 
-    public static int HLT(int satir, Komut komut) {
+    public static int HLT(int satir, Komut komut) throws Exception {
         MemoryUpdater.updateMemory(komut, null);
         return -1;//-1 = programı sonlandır
     }
@@ -249,7 +249,7 @@ public class Instructions {
         return ++satir;
     }
 
-    public static int JA(int satir, Komut komut) {
+    public static int JA(int satir, Komut komut) throws Exception {
         if (!Flag.getFlag().CF && !Flag.getFlag().ZF) {
             return komut.functionLine;
         }
@@ -257,7 +257,7 @@ public class Instructions {
         return ++satir;
     }
 
-    public static int JAE(int satir, Komut komut) {
+    public static int JAE(int satir, Komut komut) throws Exception {
         if (!Flag.getFlag().CF) {
             return komut.functionLine;
         }
@@ -265,7 +265,7 @@ public class Instructions {
         return ++satir;
     }
 
-    public static int JB(int satir, Komut komut) {
+    public static int JB(int satir, Komut komut) throws Exception {
         if (Flag.getFlag().CF) {
             return komut.functionLine;
         }
@@ -273,7 +273,7 @@ public class Instructions {
         return ++satir;
     }
 
-    public static int JBE(int satir, Komut komut) {
+    public static int JBE(int satir, Komut komut) throws Exception {
         if (Flag.getFlag().CF && Flag.getFlag().ZF) {
             return komut.functionLine;
         }
@@ -281,7 +281,7 @@ public class Instructions {
         return ++satir;
     }
 
-    public static int JE(int satir, Komut komut) {
+    public static int JE(int satir, Komut komut) throws Exception {
         if (Flag.getFlag().ZF) {
             return komut.functionLine;
         }
@@ -289,7 +289,7 @@ public class Instructions {
         return ++satir;
     }
 
-    public static int JG(int satir, Komut komut) {
+    public static int JG(int satir, Komut komut) throws Exception {
         if (!Flag.getFlag().ZF && Flag.getFlag().SF == Flag.getFlag().OF) {
             return komut.functionLine;
         }
@@ -297,7 +297,7 @@ public class Instructions {
         return ++satir;
     }
 
-    public static int JGE(int satir, Komut komut) {
+    public static int JGE(int satir, Komut komut) throws Exception {
         if (Flag.getFlag().SF == Flag.getFlag().OF) {
             return komut.functionLine;
         }
@@ -305,7 +305,7 @@ public class Instructions {
         return ++satir;
     }
 
-    public static int JL(int satir, Komut komut) {
+    public static int JL(int satir, Komut komut) throws Exception {
         if (Flag.getFlag().SF != Flag.getFlag().OF) {
             return komut.functionLine;
         }
@@ -313,12 +313,12 @@ public class Instructions {
         return ++satir;
     }
 
-    public static int JMP(int satir, Komut komut) {
+    public static int JMP(int satir, Komut komut) throws Exception {
         MemoryUpdater.updateMemory(komut, null);
         return komut.functionLine;
     }
 
-    public static int JLE(int satir, Komut komut) {
+    public static int JLE(int satir, Komut komut) throws Exception {
         if (Flag.getFlag().SF != Flag.getFlag().OF && Flag.getFlag().ZF) {
             return komut.functionLine;
         }
@@ -326,7 +326,7 @@ public class Instructions {
         return ++satir;
     }
 
-    public static int JNE(int satir, Komut komut) {
+    public static int JNE(int satir, Komut komut) throws Exception {
         if (!Flag.getFlag().ZF) {
             return komut.functionLine;
         }
@@ -334,7 +334,7 @@ public class Instructions {
         return ++satir;
     }
 
-    public static int JNP(int satir, Komut komut) {
+    public static int JNP(int satir, Komut komut) throws Exception {
         if (!Flag.getFlag().PF) {
             return komut.functionLine;
         }
@@ -342,7 +342,7 @@ public class Instructions {
         return ++satir;
     }
 
-    public static int JP(int satir, Komut komut) {
+    public static int JP(int satir, Komut komut) throws Exception {
         if (Flag.getFlag().PF) {
             return komut.functionLine;
         }
@@ -350,7 +350,7 @@ public class Instructions {
         return ++satir;
     }
 
-    public static int JPO(int satir, Komut komut) {
+    public static int JPO(int satir, Komut komut) throws Exception {
         if (!Flag.getFlag().PF) {
             return komut.functionLine;
         }
@@ -419,7 +419,7 @@ public class Instructions {
         return ++satir;
     }
 
-    public static int NOP(int satir, Komut komut) {
+    public static int NOP(int satir, Komut komut) throws Exception {
         //beklemeye sebep olan komut, etkisi yok 
         //Do nothing
         MemoryUpdater.updateMemory(komut, null);
@@ -489,13 +489,13 @@ public class Instructions {
         return ++satir;
     }
 
-    public static int STD(int satir, Komut komut) {
+    public static int STD(int satir, Komut komut) throws Exception {
         Flag.getFlag().DF = true;
         MemoryUpdater.updateMemory(komut, null);
         return ++satir;
     }
 
-    public static int STC(int satir, Komut komut) {
+    public static int STC(int satir, Komut komut) throws Exception {
         Flag.getFlag().CF = true;
         MemoryUpdater.updateMemory(komut, null);
         return ++satir;
