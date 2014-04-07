@@ -629,7 +629,7 @@ public class EmulatorFrame extends javax.swing.JFrame {
             } else if (listContent[i].contains(":")) {//Fonksiyon Tanimi
             } else {
                 tokens.set(0, tokens.get(0).toUpperCase().replaceAll("İ", "I"));
-                if (!isAKomut(listContent[i])) {
+                if (!isAKomut(tokens.get(0))) {
                     throw new Exception("Parse edilemiyor.");
                 }
                 Line yeniKomut = new Komut(listContent[i], tokens.get(0), i);
@@ -715,9 +715,9 @@ public class EmulatorFrame extends javax.swing.JFrame {
                 || komut.equals("STD")
                 || komut.equals("SUB")
                 || komut.equals("XOR")) {
-            return false;
+            return true;
         }
-        return true;
+        return false;
     }
 
     private int isAValue(String degisken) {

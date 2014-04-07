@@ -415,7 +415,7 @@ public class Instructions {
         Flag.getFlag().PF = (dest.getBinaryDeger().length() - dest.getBinaryDeger().replace("1", "").length()) % 2 == 0;
         Flag.getFlag().SF = dest.getMostSignificantBit().equals("1");
         Flag.getFlag().OF = (dest.size == 1 && dest.getDeger().getValue() == 128) || (dest.size == 2 && dest.getDeger().getValue() == 32768);
-        MemoryUpdater.updateMemory(komut, null);
+        MemoryUpdater.updateMemory(komut, dest.getDeger());
         return ++satir;
     }
 

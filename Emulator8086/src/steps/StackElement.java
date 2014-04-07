@@ -35,6 +35,19 @@ public class StackElement {
     public Long getValue(){
         return new Long(value);
     }
+    public int getLowValue(){
+        return new Integer(new Long((value + 256) %256).toString()).intValue();
+    }
+    public int getHighValue(){
+        int vallue = new Integer(new Long(value).toString());
+        if(size > 1){
+            int temp = (vallue + 256) %256;
+            temp = (vallue - temp)/256;
+            return temp;
+        }
+        return 0;
+        
+    }
     public String getMostSignificantBit(){
         return ""+getBinaryDeger().charAt(0);
     }
