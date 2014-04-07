@@ -21,17 +21,11 @@ public class MemoryUpdater {
             case "OR":
             case "AND":
             case "XOR":
-            case "MUL":
-            case "DIV":
-            case "IDIV":
-            case "IMUL":
             case "ROL":
             case "ROR":
             case "SBB":
             case "SHL":
             case "SHR":
-            case "STC":
-            case "STD":
             case "SUB":
                 if (res.size == 1) {
                     EmulatorFrame.systemMemory.set(EmulatorFrame.bellekAdresi, res.getLowValue());
@@ -39,15 +33,25 @@ public class MemoryUpdater {
                     EmulatorFrame.memoList[0] = EmulatorFrame.bellekAdresi++;
                 } else {
                     EmulatorFrame.systemMemory.set(EmulatorFrame.bellekAdresi, res.getLowValue());
-                    EmulatorFrame.systemMemory.set(EmulatorFrame.bellekAdresi+1, res.getHighValue());
+                    EmulatorFrame.systemMemory.set(EmulatorFrame.bellekAdresi + 1, res.getHighValue());
                     EmulatorFrame.memoList = new int[2];
                     EmulatorFrame.memoList[0] = EmulatorFrame.bellekAdresi++;
                     EmulatorFrame.memoList[1] = EmulatorFrame.bellekAdresi++;
                 }
                 break;
-         
+
+            case "STC":
+                EmulatorFrame.systemMemory.set(EmulatorFrame.bellekAdresi, 249);
+                EmulatorFrame.memoList = new int[1];
+                EmulatorFrame.memoList[0] = EmulatorFrame.bellekAdresi++;
+                break;
             case "CLC":
                 EmulatorFrame.systemMemory.set(EmulatorFrame.bellekAdresi, 248);
+                EmulatorFrame.memoList = new int[1];
+                EmulatorFrame.memoList[0] = EmulatorFrame.bellekAdresi++;
+                break;
+            case "STD":
+                EmulatorFrame.systemMemory.set(EmulatorFrame.bellekAdresi, 253);
                 EmulatorFrame.memoList = new int[1];
                 EmulatorFrame.memoList[0] = EmulatorFrame.bellekAdresi++;
                 break;
@@ -85,7 +89,7 @@ public class MemoryUpdater {
             case "JGE":
             case "JL":
             case "JLE":
-            case "JMP":    
+            case "JMP":
             case "JNE":
             case "JNP":
             case "JP":
@@ -100,14 +104,14 @@ public class MemoryUpdater {
                 break;
             case "MOV":
             case "NEG":
-            case "NOT":    
-                 if (res.size == 1) {
+            case "NOT":
+                if (res.size == 1) {
                     EmulatorFrame.systemMemory.set(EmulatorFrame.bellekAdresi, res.getLowValue());
                     EmulatorFrame.memoList = new int[1];
                     EmulatorFrame.memoList[0] = EmulatorFrame.bellekAdresi++;
                 } else {
                     EmulatorFrame.systemMemory.set(EmulatorFrame.bellekAdresi, res.getLowValue());
-                    EmulatorFrame.systemMemory.set(EmulatorFrame.bellekAdresi+1, res.getHighValue());
+                    EmulatorFrame.systemMemory.set(EmulatorFrame.bellekAdresi + 1, res.getHighValue());
                     EmulatorFrame.memoList = new int[2];
                     EmulatorFrame.memoList[0] = EmulatorFrame.bellekAdresi++;
                     EmulatorFrame.memoList[1] = EmulatorFrame.bellekAdresi++;
@@ -126,13 +130,56 @@ public class MemoryUpdater {
                     EmulatorFrame.memoList[0] = EmulatorFrame.bellekAdresi++;
                 } else {
                     EmulatorFrame.systemMemory.set(EmulatorFrame.bellekAdresi, res.getLowValue());
-                    EmulatorFrame.systemMemory.set(EmulatorFrame.bellekAdresi+1, res.getHighValue());
+                    EmulatorFrame.systemMemory.set(EmulatorFrame.bellekAdresi + 1, res.getHighValue());
                     EmulatorFrame.memoList = new int[2];
                     EmulatorFrame.memoList[0] = EmulatorFrame.bellekAdresi++;
                     EmulatorFrame.memoList[1] = EmulatorFrame.bellekAdresi++;
                 }
                 break;
 
+            case "MUL":
+            case "IMUL":
+                if(res.size == 1){
+                    EmulatorFrame.systemMemory.set(EmulatorFrame.bellekAdresi, Register.getRegister().getValue("AL"));
+                    EmulatorFrame.systemMemory.set(EmulatorFrame.bellekAdresi + 1, Register.getRegister().getValue("AH"));
+                    EmulatorFrame.memoList = new int[2];
+                    EmulatorFrame.memoList[0] = EmulatorFrame.bellekAdresi++;
+                    EmulatorFrame.memoList[1] = EmulatorFrame.bellekAdresi++;
+                }
+                else{
+                    EmulatorFrame.systemMemory.set(EmulatorFrame.bellekAdresi, Register.getRegister().getValue("AL"));
+                    EmulatorFrame.systemMemory.set(EmulatorFrame.bellekAdresi + 1, Register.getRegister().getValue("AH"));
+                    EmulatorFrame.systemMemory.set(EmulatorFrame.bellekAdresi + 2, Register.getRegister().getValue("DL"));
+                    EmulatorFrame.systemMemory.set(EmulatorFrame.bellekAdresi + 3, Register.getRegister().getValue("DH"));
+                    EmulatorFrame.memoList = new int[4];
+                    EmulatorFrame.memoList[0] = EmulatorFrame.bellekAdresi++;
+                    EmulatorFrame.memoList[1] = EmulatorFrame.bellekAdresi++;
+                    EmulatorFrame.memoList[2] = EmulatorFrame.bellekAdresi++;
+                    EmulatorFrame.memoList[3] = EmulatorFrame.bellekAdresi++;
+                }
+                break;
+
+            case "DIV":
+            case "IDIV":
+                if(res.size == 1){
+                    EmulatorFrame.systemMemory.set(EmulatorFrame.bellekAdresi, Register.getRegister().getValue("AL"));//bölüm
+                    EmulatorFrame.systemMemory.set(EmulatorFrame.bellekAdresi + 1, Register.getRegister().getValue("AH"));//kalan
+                    EmulatorFrame.memoList = new int[2];
+                    EmulatorFrame.memoList[0] = EmulatorFrame.bellekAdresi++;
+                    EmulatorFrame.memoList[1] = EmulatorFrame.bellekAdresi++;
+                }
+                else{
+                    EmulatorFrame.systemMemory.set(EmulatorFrame.bellekAdresi, Register.getRegister().getValue("AL"));//bölüm
+                    EmulatorFrame.systemMemory.set(EmulatorFrame.bellekAdresi + 1, Register.getRegister().getValue("AH"));//bölüm
+                    EmulatorFrame.systemMemory.set(EmulatorFrame.bellekAdresi + 2, Register.getRegister().getValue("DL"));//kalan
+                    EmulatorFrame.systemMemory.set(EmulatorFrame.bellekAdresi + 3, Register.getRegister().getValue("DH"));//kalan
+                    EmulatorFrame.memoList = new int[4];
+                    EmulatorFrame.memoList[0] = EmulatorFrame.bellekAdresi++;
+                    EmulatorFrame.memoList[1] = EmulatorFrame.bellekAdresi++;
+                    EmulatorFrame.memoList[2] = EmulatorFrame.bellekAdresi++;
+                    EmulatorFrame.memoList[3] = EmulatorFrame.bellekAdresi++;
+                }
+                break;
         }
 
     }

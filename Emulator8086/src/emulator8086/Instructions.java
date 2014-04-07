@@ -22,7 +22,7 @@ public class Instructions {
         Degisken dest = list.get(0);
         Degisken src = list.get(1);
         dest.setDeger(src.getDeger());
-        MemoryUpdater.updateMemory(komut, src.getDeger());
+        MemoryUpdater.updateMemory(komut, dest.getDeger());
         return ++satir;
     }
 
@@ -172,7 +172,7 @@ public class Instructions {
                 Register.getRegister().setValue("AX", new Long(lax).intValue());
                 break;
         }
-        MemoryUpdater.updateMemory(komut, null);
+        MemoryUpdater.updateMemory(komut, src.getDeger());
         return ++satir;
     }
 
@@ -204,7 +204,7 @@ public class Instructions {
                 Register.getRegister().setValue("AX", new Long(lax).intValue());
                 break;
         }
-        MemoryUpdater.updateMemory(komut, null);
+        MemoryUpdater.updateMemory(komut, src.getDeger());
         return ++satir;
     }
 
@@ -232,7 +232,7 @@ public class Instructions {
                 Register.getRegister().setValue("DX", new Long(dxValue).intValue());
                 break;
         }
-        MemoryUpdater.updateMemory(komut, null);
+        MemoryUpdater.updateMemory(komut, src.getDeger());
         return ++satir;
     }
 
@@ -394,7 +394,7 @@ public class Instructions {
                 Register.getRegister().setValue("DX", new Long(dxValue).intValue());
                 break;
         }
-        MemoryUpdater.updateMemory(komut, null);
+        MemoryUpdater.updateMemory(komut, src.getDeger());
         return ++satir;
     }
 
@@ -512,7 +512,7 @@ public class Instructions {
             throw new Exception("Wrong types for ROL instruction");
         }
         dest.setDeger(new StackElement(dest.size, result));
-        MemoryUpdater.updateMemory(komut, null);
+        MemoryUpdater.updateMemory(komut, dest.getDeger());
         return ++satir;
     }
 
@@ -527,7 +527,7 @@ public class Instructions {
             throw new Exception("Wrong types for ROL instruction");
         }
         dest.setDeger(new StackElement(dest.size, result));
-        MemoryUpdater.updateMemory(komut, null);
+        MemoryUpdater.updateMemory(komut, dest.getDeger());
         return ++satir;
     }
 
@@ -540,7 +540,7 @@ public class Instructions {
         dest.setDeger(res);
         Flag.getFlag().OF = dest.getMostSignificantBit().equals(src.getMostSignificantBit()) && !res.getMostSignificantBit().equals(src.getMostSignificantBit());
         Flag.getFlag().PF = (dest.getBinaryDeger().length() - dest.getBinaryDeger().replace("1", "").length()) % 2 == 0;
-        MemoryUpdater.updateMemory(komut, null);
+        MemoryUpdater.updateMemory(komut, dest.getDeger());
         return ++satir;
     }
 
@@ -555,7 +555,7 @@ public class Instructions {
             throw new Exception("Wrong types for ROL instruction");
         }
         dest.setDeger(new StackElement(dest.size, result));
-        MemoryUpdater.updateMemory(komut, null);
+        MemoryUpdater.updateMemory(komut, dest.getDeger());
         return ++satir;
     }
 
@@ -570,7 +570,7 @@ public class Instructions {
             throw new Exception("Wrong types for ROL instruction");
         }
         dest.setDeger(new StackElement(dest.size, result));
-        MemoryUpdater.updateMemory(komut, null);
+        MemoryUpdater.updateMemory(komut, dest.getDeger());
         return ++satir;
     }
 
